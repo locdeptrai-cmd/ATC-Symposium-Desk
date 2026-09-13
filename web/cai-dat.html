@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071018">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ATC Desk">
+  <meta name="author" content="Lộc đẹp trai">
+  <meta name="creator" content="created by Lộc đẹp trai">
+  <meta name="description" content="Cài ATC Symposium Desk lên iPhone và Android để dùng offline trong hội trường.">
+  <title>Cài đặt máy — ATC Symposium Desk</title>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <img class="icon" src="icons/icon-192.png" alt="">
+      <div class="brand">
+        <h1>Cài đặt máy</h1>
+        <p>iPhone và Android — chạy offline sau khi cài một lần</p>
+      </div>
+    </header>
+    <nav class="suite-nav" aria-label="Bộ ứng dụng">
+      <a href="index.html">Hội trường</a>
+      <a href="glossary.html">Thuật ngữ</a>
+      <a href="recordings.html">REDA</a>
+      <a class="is-current" href="cai-dat.html">Cài máy</a>
+    </nav>
+
+    <section class="card install-card" id="apkCard" hidden>
+      <header><h2>Android native — tải APK từ máy này</h2></header>
+      <p>App native dịch <b>cả câu</b> trên máy (ML Kit). Tải file, mở trên điện thoại, cho phép cài nguồn này, rồi lần đầu bấm <b>Tải gói dịch EN+VI</b> (~60 MB).</p>
+      <p>
+        <a class="primary-link" id="apkLink" href="/ATC-Desk.apk">Tải ATC-Desk.apk</a>
+        <span id="apkMeta" class="hint"></span>
+      </p>
+    </section>
+
+    <section class="help">
+      <h2>App iOS / Android (cùng một mã)</h2>
+      <p class="hint">PWA trên điện thoại <b>không dịch cả câu</b> (Chrome Translator chỉ có trên máy tính). App native (Capacitor) dùng ML Kit trên máy — một codebase cho cả iPhone và Android. Tải APK (Android) hoặc mở project iOS trên Mac, rồi tải gói EN+VI một lần khi còn Wi-Fi; hội trường tắt mạng.</p>
+      <ol>
+        <li>Android: nếu máy tính đang chạy <code>ATC-Desk.exe</code>, bấm <b>Tải ATC-Desk.apk</b> ở trên (cùng Wi-Fi). Hoặc copy <code>phat-hanh/ATC-Desk.apk</code> sang điện thoại rồi mở file.</li>
+        <li>iOS native: trên Mac mở <code>ios/App/App.xcworkspace</code>, chọn team ký, Run vào iPhone. Không build IPA được từ Windows.</li>
+        <li>Không có Mac: iPhone dùng PWA HTTPS ở bước dưới (glossary / câu đáp, không dịch nguyên câu).</li>
+        <li>Lần đầu còn mạng: bấm <b>Tải gói dịch EN+VI</b> (~60 MB). Sau đó airplane mode vẫn dịch cả câu.</li>
+      </ol>
+      <p class="hint">Phần dưới là cách PWA (ghim icon) — đủ tra cứu / câu đáp, không phải dịch nguyên câu trên điện thoại.</p>
+    </section>
+
+    <section class="help">
+      <h2>Vì sao cần bước PWA này</h2>
+      <p class="hint">Safari và Chrome chỉ lưu app (service worker) khi trang là HTTPS. Máy tính phát Wi-Fi + HTTPS cổng 8766. Cài chứng chỉ một lần, ghim icon ra màn hình chính, tắt mạng vẫn dịch / tra cứu / lập trường.</p>
+    </section>
+
+    <section class="card install-card">
+      <header><h2>1. Cài chứng chỉ nội bộ (một lần)</h2></header>
+      <p>Tải file CA do máy tính này tạo, rồi bật tin cậy. Không gửi file này ra ngoài hội nghị.</p>
+      <p><a class="primary-link" href="certs/ATC-Desk-CA.cer">Tải ATC-Desk-CA.cer</a></p>
+      <h3>iPhone / iPad</h3>
+      <ol>
+        <li>Mở file .cer vừa tải → Cài hồ sơ.</li>
+        <li>Cài đặt → Cài đặt chung → VPN và quản lý thiết bị → ATC Symposium Desk Local CA → Cài.</li>
+        <li>Cài đặt → Cài đặt chung → Giới thiệu → Cài đặt tin cậy chứng chỉ → bật tin cậy cho CA này.</li>
+      </ol>
+      <h3>Android</h3>
+      <ol>
+        <li>Mở file .cer → cài chứng chỉ CA (VPN và ứng dụng / Wi‑Fi tùy máy).</li>
+        <li>Hoặc mở trang HTTPS, bấm Nâng cao → Tiếp tục (Chrome vẫn cho lưu app).</li>
+      </ol>
+    </section>
+
+    <section class="card install-card">
+      <header><h2>2. Mở bản HTTPS rồi ghim app</h2></header>
+      <p>Trên điện thoại, cùng Wi-Fi với máy tính đang chạy <code>ATC-Desk.exe</code> (hoặc <code>MO_APP</code>). Đổi cổng <b>8765 → 8766</b> và <b>http → https</b>.</p>
+      <h3>iPhone — Safari</h3>
+      <ol>
+        <li>Mở <code>https://&lt;IPv4-máy-tính&gt;:8766/</code></li>
+        <li>Nút Chia sẻ → Thêm vào Màn hình chính → Thêm.</li>
+        <li>Mở icon <b>ATC Desk</b>. Huy hiệu “ĐÃ LƯU MÁY” là đã cache xong.</li>
+      </ol>
+      <h3>Android — Chrome</h3>
+      <ol>
+        <li>Mở cùng địa chỉ HTTPS.</li>
+        <li>Menu ⋮ → Cài đặt ứng dụng / Thêm vào màn hình chính.</li>
+        <li>Hoặc bấm <b>Cài ATC Desk</b> trên banner.</li>
+      </ol>
+    </section>
+
+    <section class="card install-card">
+      <header><h2>3. Dùng offline trong hội trường</h2></header>
+      <ul class="install-ok">
+        <li>Dịch thuật ngữ, hai luồng EN/VI, câu đáp, tra cứu, lập trường, TTS máy — không cần mạng.</li>
+        <li>Nghe nói → chữ: tải gói nhận giọng của máy (iOS: Siri / Nhận dạng giọng nói English; Android: Voice typing English offline).</li>
+        <li>Không gọi Google Translate.</li>
+      </ul>
+      <p class="hint">Máy tính chỉ cần bật lúc cài lần đầu (và khi muốn cập nhật app). Sau đó điện thoại tự chạy.</p>
+    </section>
+
+    <p><a href="index.html">← Về hội trường</a></p>
+    <p class="creator-sig">created by Lộc đẹp trai</p>
+  </div>
+  <script src="js/creator-lock.js"></script>
+  <script src="js/pwa.js"></script>
+  <script>
+    fetch("/app-info.json", { cache: "no-store" })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (info) {
+        if (!info || !info.apk) return;
+        var card = document.getElementById("apkCard");
+        var meta = document.getElementById("apkMeta");
+        if (card) card.hidden = false;
+        if (meta) {
+          var mb = (Number(info.apkBytes) / 1048576).toFixed(1);
+          meta.textContent = " (" + mb + " MB, bản " + (info.version || "") + ")";
+        }
+      })
+      .catch(function () {});
+  </script>
+</body>
+</html>

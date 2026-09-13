@@ -1,0 +1,460 @@
+domain	abbr	en	vi	note	source
+phraseology		ACKNOWLEDGE	Xác nhận đã nhận	Doc 4444 Ch.12 / Annex 10 Vol II — Let me know that you have received and understood this message.	doc4444
+phraseology		AFFIRM	Khẳng định	Doc 4444 Ch.12 / Annex 10 Vol II — Yes. Không dùng AFFIRMATIVE.	doc4444
+phraseology		APPROVED	Được chấp thuận	Doc 4444 Ch.12 — Permission for proposed action granted.	doc4444
+phraseology		BREAK	Tách phần thông báo	Doc 4444 Ch.12 — Separation between portions of a message.	doc4444
+phraseology		BREAK BREAK	Tách thông báo giữa các tàu	Doc 4444 Ch.12 — Separation between messages to different aircraft in a busy environment.	doc4444
+phraseology		CANCEL	Hủy	Doc 4444 Ch.12 — Annul the previously transmitted clearance.	doc4444
+phraseology		CHECK	Kiểm tra	Doc 4444 Ch.12 — Examine a system or procedure. No answer is normally expected.	doc4444
+phraseology		CLEARED	Được phép	Doc 4444 Ch.12 — Authorized to proceed under the conditions specified.	doc4444
+phraseology		CONFIRM	Xác nhận lại	Doc 4444 Ch.12 — I request verification of clearance, instruction, action or information.	doc4444
+phraseology		CONTACT	Liên lạc	Doc 4444 Ch.12 — Establish communications with…	doc4444
+phraseology		CORRECT	Đúng	Doc 4444 Ch.12 — True or accurate.	doc4444
+phraseology		CORRECTION	Đính chính	Doc 4444 Ch.12 — An error has been made; the correct version is…	doc4444
+phraseology		DISREGARD	Bỏ qua	Doc 4444 Ch.12 — Ignore.	doc4444
+phraseology		HOW DO YOU READ	Nghe thế nào	Doc 4444 Ch.12 / Annex 10 Vol II — What is the readability of my transmission?	doc4444
+phraseology		I SAY AGAIN	Tôi nhắc lại	Doc 4444 Ch.12 — I repeat for clarity or emphasis.	doc4444
+phraseology		MONITOR	Nghe canh	Doc 4444 Ch.12 — Listen out on (frequency).	doc4444
+phraseology		NEGATIVE	Phủ định	Doc 4444 Ch.12 — No; permission not granted; that is not correct.	doc4444
+phraseology		READ BACK	Đọc lại	Doc 4444 Ch.12 — Repeat all, or the specified part, of this message back to me exactly as received.	doc4444
+phraseology		RECLEARED	Huấn lệnh lại	Doc 4444 Ch.12 — A change has been made to your last clearance; this new clearance supersedes the previous one.	doc4444
+phraseology		REPORT	Báo cáo	Doc 4444 Ch.12 — Pass me the following information…	doc4444
+phraseology		REQUEST	Yêu cầu	Doc 4444 Ch.12 — I should like to know… / I wish to obtain…	doc4444
+phraseology		ROGER	Đã nhận	Doc 4444 Ch.12 — I have received all of your last transmission. Không dùng thay read-back.	doc4444
+phraseology		SAY AGAIN	Nhắc lại	Doc 4444 Ch.12 — Repeat all, or the following part, of your last transmission.	doc4444
+phraseology		SPEAK SLOWER	Nói chậm hơn	Doc 4444 Ch.12 — Reduce your rate of speech.	doc4444
+phraseology		STANDBY	Chờ	Doc 4444 Ch.12 — Wait and I will call you.	doc4444
+phraseology		UNABLE	Không thực hiện được	Doc 4444 Ch.12 — I cannot comply with your request, instruction or clearance.	doc4444
+phraseology		VERIFY	Xác minh	Doc 4444 Ch.12 — Check and confirm with originator.	doc4444
+phraseology		WILCO	Sẽ chấp hành	Doc 4444 Ch.12 — I understand your message and will comply with it.	doc4444
+phraseology		WORDS TWICE	Lặp từng nhóm từ	Doc 4444 Ch.12 — Communication is difficult; every word or group of words in this message will be sent twice.	doc4444
+phraseology		OUT	Kết thúc liên lạc	Annex 10 Vol II — This exchange of transmissions is ended and no response is expected.	doc4444
+phraseology	FL	FLIGHT LEVEL (number)	Mức bay (số)	Doc 4444 §12.3.1.1 — Description of levels.	doc4444
+phraseology		(number) FEET	(số) feet	Doc 4444 §12.3.1.1 — Mô tả mức / độ cao.	doc4444
+phraseology		(number) METRES	(số) mét	Doc 4444 §12.3.1.1 — Mô tả mức / độ cao.	doc4444
+phraseology		CLIMB TO (level)	Lên (mức)	Doc 4444 §12.3.1.2 — Level change instruction.	doc4444
+phraseology		DESCEND TO (level)	Xuống (mức)	Doc 4444 §12.3.1.2 — Level change instruction.	doc4444
+phraseology		MAINTAIN (level)	Giữ (mức)	Doc 4444 §12.3.1.2 — Maintain assigned level.	doc4444
+phraseology		CLIMB TO AND MAINTAIN BLOCK (level) TO (level)	Lên và giữ khối mức (mức) đến (mức)	Doc 4444 §12.3.1.2 — Climb to a level within a vertical block.	doc4444
+phraseology		DESCEND TO AND MAINTAIN BLOCK (level) TO (level)	Xuống và giữ khối mức (mức) đến (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		STOP CLIMB AT (level)	Dừng leo tại (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		STOP DESCENT AT (level)	Dừng hạ tại (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		CONTINUE CLIMB TO (level)	Tiếp tục leo lên (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		CONTINUE DESCENT TO (level)	Tiếp tục hạ xuống (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		EXPEDITE CLIMB	Khẩn trương leo	Doc 4444 §12.3.1.2 — Rate of climb.	doc4444
+phraseology		EXPEDITE DESCENT	Khẩn trương hạ	Doc 4444 §12.3.1.2 — Rate of descent.	doc4444
+phraseology		CLIMB AT (number) FEET PER MINUTE OR GREATER	Leo với tốc độ thẳng đứng (số) feet/phút hoặc lớn hơn	Doc 4444 §12.3.1.2	doc4444
+phraseology		DESCEND AT (number) FEET PER MINUTE OR GREATER	Hạ với tốc độ thẳng đứng (số) feet/phút hoặc lớn hơn	Doc 4444 §12.3.1.2	doc4444
+phraseology		REPORT LEAVING (level)	Báo cáo rời (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		REPORT REACHING (level)	Báo cáo đạt (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		REPORT PASSING (level)	Báo cáo qua (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		WHEN READY CLIMB TO (level)	Khi sẵn sàng thì lên (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		WHEN READY DESCEND TO (level)	Khi sẵn sàng thì xuống (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		EXPECT (level)	Dự kiến (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		CROSS (significant point) AT (level)	Qua (điểm) tại (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		CROSS (significant point) AT OR ABOVE (level)	Qua (điểm) tại hoặc trên (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		CROSS (significant point) AT OR BELOW (level)	Qua (điểm) tại hoặc dưới (mức)	Doc 4444 §12.3.1.2	doc4444
+phraseology		MAINTAIN (level) UNTIL (significant point)	Giữ (mức) đến (điểm)	Doc 4444 §12.3.1.2	doc4444
+phraseology		MINIMUM FUEL	Nhiên liệu tối thiểu	Doc 4444 §12.3.1.3 — Pilot advisory; not a MAYDAY/PAN.	doc4444
+phraseology		NO DELAY EXPECTED	Không dự kiến chậm	Doc 4444 §12.3.1.3 — ATC reply to MINIMUM FUEL.	doc4444
+phraseology		CONTACT (unit call sign) (frequency)	Liên lạc (đài) (tần số)	Doc 4444 §12.3.1.4 — Transfer of communication.	doc4444
+phraseology		CONTACT (unit call sign) (frequency) NOW	Liên lạc (đài) (tần số) ngay	Doc 4444 §12.3.1.4	doc4444
+phraseology		MONITOR (unit call sign) (frequency)	Nghe canh (đài) (tần số)	Doc 4444 §12.3.1.4 — Listen to a broadcast frequency.	doc4444
+phraseology		STAND BY (frequency)	Chờ trên (tần số)	Doc 4444 §12.3.1.4 — ATS will initiate communications soon.	doc4444
+phraseology		REMAIN THIS FREQUENCY	Giữ tần số này	Doc 4444 §12.3.1.4	doc4444
+phraseology		IF NO CONTACT (instructions)	Nếu không liên lạc được (chỉ thị)	Doc 4444 §12.3.1.4	doc4444
+phraseology		REQUEST CHANGE TO (frequency)	Xin đổi sang (tần số)	Doc 4444 §12.3.1.4 — Pilot request.	doc4444
+phraseology		FREQUENCY CHANGE APPROVED	Được phép đổi tần số	Doc 4444 §12.3.1.4	doc4444
+phraseology		TURN LEFT HEADING (three digits)	Rẽ trái hướng (ba số)	Doc 4444 Ch.12 — Vectoring / heading instruction. Bắt buộc đọc lại.	doc4444
+phraseology		TURN RIGHT HEADING (three digits)	Rẽ phải hướng (ba số)	Doc 4444 Ch.12 — Vectoring / heading instruction. Bắt buộc đọc lại.	doc4444
+phraseology		FLY HEADING (three digits)	Bay hướng (ba số)	Doc 4444 Ch.12 — Assigned heading.	doc4444
+phraseology		CONTINUE PRESENT HEADING	Tiếp tục hướng hiện tại	Doc 4444 Ch.12	doc4444
+phraseology		STOP TURN HEADING (three digits)	Dừng rẽ, hướng (ba số)	Doc 4444 Ch.12	doc4444
+phraseology		TURN LEFT (number) DEGREES	Rẽ trái (số) độ	Doc 4444 Ch.12	doc4444
+phraseology		TURN RIGHT (number) DEGREES	Rẽ phải (số) độ	Doc 4444 Ch.12	doc4444
+phraseology		MAKE A THREE SIXTY TURN LEFT	Quay vòng 360 độ bên trái	Doc 4444 Ch.12	doc4444
+phraseology		MAKE A THREE SIXTY TURN RIGHT	Quay vòng 360 độ bên phải	Doc 4444 Ch.12	doc4444
+phraseology		ORBIT LEFT	Vòng tại chỗ bên trái	Doc 4444 Ch.12 — Aerodrome / approach delaying.	doc4444
+phraseology		ORBIT RIGHT	Vòng tại chỗ bên phải	Doc 4444 Ch.12	doc4444
+phraseology		VECTORING FOR (purpose)	Dẫn bằng ra-đa cho (mục đích)	Doc 4444 §12.4 — ATS surveillance.	doc4444
+phraseology		THIS WILL BE A VECTORING FOR SPACING	Đây sẽ là dẫn ra-đa để giãn cách	Doc 4444 §12.4	doc4444
+phraseology		RESUME OWN NAVIGATION	Tiếp tục dẫn đường tự lực	Doc 4444 §12.4 — Kết thúc vectoring.	doc4444
+phraseology		IDENTIFIED	Đã nhận dạng	Doc 4444 §12.4 — Radar identification.	doc4444
+phraseology		RADAR CONTACT	Đã có liên lạc ra-đa	Doc 4444 §12.4	doc4444
+phraseology		RADAR CONTACT LOST	Mất liên lạc ra-đa	Doc 4444 §12.4	doc4444
+phraseology		RADAR SERVICE TERMINATED	Dịch vụ ra-đa kết thúc	Doc 4444 §12.4	doc4444
+phraseology		NOT IDENTIFIED	Chưa nhận dạng	Doc 4444 §12.4	doc4444
+phraseology		POSITION (distance) (direction) OF (fix)	Vị trí (cự ly) (hướng) so với (điểm)	Doc 4444 §12.4 — Position information.	doc4444
+phraseology		SQUAWK (code)	Đặt mã đáp (mã)	Doc 4444 §12.4.3 — SSR code. Bắt buộc đọc lại.	doc4444
+phraseology		SQUAWK IDENT	Nhận dạng (IDENT)	Doc 4444 §12.4.3	doc4444
+phraseology		SQUAWK STANDBY	Đặt mã đáp STANDBY	Doc 4444 §12.4.3	doc4444
+phraseology		SQUAWK CHARLIE	Bật Mode C	Doc 4444 §12.4.3 — Altitude reporting.	doc4444
+phraseology		STOP SQUAWK CHARLIE	Tắt Mode C	Doc 4444 §12.4.3	doc4444
+phraseology		RESET TRANSPONDER	Đặt lại đáp	Doc 4444 §12.4.3	doc4444
+phraseology		CONFIRM SQUAWK	Xác nhận mã đáp	Doc 4444 §12.4.3	doc4444
+phraseology		SQUAWK MAYDAY	Đặt mã MAYDAY	Doc 4444 §12.4.3 / §12.6 — Emergency transponder.	doc4444
+phraseology		SQUAWK SEVEN SIX ZERO ZERO	Đặt mã 7600	Doc 4444 — Mất liên lạc vô tuyến.	doc4444
+phraseology		SQUAWK SEVEN SEVEN ZERO ZERO	Đặt mã 7700	Doc 4444 — Khẩn nguy.	doc4444
+phraseology		SQUAWK SEVEN FIVE ZERO ZERO	Đặt mã 7500	Doc 4444 — Can thiệp bất hợp pháp.	doc4444
+phraseology		REDUCE SPEED TO (number) KNOTS	Giảm tốc độ đến (số) knots	Doc 4444 Ch.12 — Speed control. Bắt buộc đọc lại.	doc4444
+phraseology		INCREASE SPEED TO (number) KNOTS	Tăng tốc độ đến (số) knots	Doc 4444 Ch.12	doc4444
+phraseology		MAINTAIN (number) KNOTS	Giữ (số) knots	Doc 4444 Ch.12	doc4444
+phraseology		MAINTAIN PRESENT SPEED	Giữ tốc độ hiện tại	Doc 4444 Ch.12	doc4444
+phraseology		RESUME NORMAL SPEED	Trở lại tốc độ bình thường	Doc 4444 Ch.12	doc4444
+phraseology		NO SPEED RESTRICTIONS	Không hạn chế tốc độ	Doc 4444 Ch.12	doc4444
+phraseology		REDUCE TO MINIMUM APPROACH SPEED	Giảm đến tốc độ tiếp cận tối thiểu	Doc 4444 Ch.12	doc4444
+phraseology		MAINTAIN (number) KNOTS UNTIL (significant point)	Giữ (số) knots đến (điểm)	Doc 4444 Ch.12	doc4444
+phraseology		HOLD AT (fix)	Vòng chờ tại (điểm)	Doc 4444 Ch.12 — Holding.	doc4444
+phraseology		HOLD VISUAL	Vòng chờ nhìn thấy	Doc 4444 Ch.12	doc4444
+phraseology		HOLD ON THE (direction) OF (fix)	Vòng chờ phía (hướng) của (điểm)	Doc 4444 Ch.12	doc4444
+phraseology		EXPECTED APPROACH TIME (time)	Thời gian tiếp cận dự kiến (giờ)	Doc 4444 Ch.12 — EAT.	doc4444
+phraseology		DELAY NOT DETERMINED	Chậm chưa xác định	Doc 4444 Ch.12	doc4444
+phraseology		EXPECT FURTHER CLEARANCE AT (time)	Dự kiến huấn lệnh tiếp lúc (giờ)	Doc 4444 Ch.12	doc4444
+phraseology		REVISED EXPECTED APPROACH TIME (time)	Điều chỉnh thời gian tiếp cận dự kiến (giờ)	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED (type of approach) APPROACH	Được phép tiếp cận (loại)	Doc 4444 Ch.12 — Approach clearance.	doc4444
+phraseology		CLEARED ILS APPROACH RUNWAY (number)	Được phép tiếp cận ILS đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED VOR APPROACH RUNWAY (number)	Được phép tiếp cận VOR đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED NDB APPROACH RUNWAY (number)	Được phép tiếp cận NDB đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED RNAV APPROACH RUNWAY (number)	Được phép tiếp cận RNAV đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED RNP APPROACH RUNWAY (number)	Được phép tiếp cận RNP đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED VISUAL APPROACH RUNWAY (number)	Được phép tiếp cận nhìn thấy đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED STRAIGHT-IN APPROACH RUNWAY (number)	Được phép tiếp cận vào thẳng đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CONTINUE APPROACH	Tiếp tục tiếp cận	Doc 4444 Ch.12	doc4444
+phraseology		REPORT ESTABLISHED	Báo cáo đã vào đường	Doc 4444 Ch.12	doc4444
+phraseology		REPORT LOCALIZER ESTABLISHED	Báo cáo đã vào localizer	Doc 4444 Ch.12	doc4444
+phraseology		REPORT OUTER MARKER	Báo cáo đài đánh dấu ngoài	Doc 4444 Ch.12	doc4444
+phraseology		REPORT GLIDE PATH INTERCEPT	Báo cáo đón bắt đường hạ	Doc 4444 Ch.12	doc4444
+phraseology		INTERCEPT THE LOCALIZER	Đón bắt localizer	Doc 4444 §12.4	doc4444
+phraseology		DESCEND ON THE ILS	Hạ theo ILS	Doc 4444 Ch.12	doc4444
+phraseology		MAINTAIN (level) UNTIL GLIDE PATH INTERCEPTION	Giữ (mức) đến khi đón bắt đường hạ	Doc 4444 Ch.12	doc4444
+phraseology		GO AROUND	Vòng lại	Doc 4444 Ch.12 — Missed approach / balked landing.	doc4444
+phraseology		GO AROUND I SAY AGAIN GO AROUND	Vòng lại, tôi nhắc lại vòng lại	Doc 4444 Ch.12 — Nhấn mạnh khi nhiễu.	doc4444
+phraseology		EXECUTE MISSED APPROACH	Thực hiện tiếp cận hỏng	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED CIRCLING APPROACH	Được phép tiếp cận vòng	Doc 4444 Ch.12	doc4444
+phraseology		CIRCLE TO RUNWAY (number)	Vòng để hạ cánh đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		FOLLOW (traffic)	Theo sau (tàu bay)	Doc 4444 Ch.12	doc4444
+phraseology		NUMBER (number)	Số thứ tự (số)	Doc 4444 Ch.12 — Sequence.	doc4444
+phraseology		NUMBER (number) FOLLOW (traffic)	Số (số), theo sau (tàu bay)	Doc 4444 Ch.12	doc4444
+phraseology		EXTEND DOWNWIND	Kéo dài chân gió xuôi	Doc 4444 Ch.12 — Circuit.	doc4444
+phraseology		MAKE SHORT APPROACH	Làm tiếp cận ngắn	Doc 4444 Ch.12	doc4444
+phraseology		MAKE LONG APPROACH	Làm tiếp cận dài	Doc 4444 Ch.12	doc4444
+phraseology		REPORT DOWNWIND	Báo cáo chân gió xuôi	Doc 4444 Ch.12	doc4444
+phraseology		REPORT BASE	Báo cáo chân gió ngang	Doc 4444 Ch.12	doc4444
+phraseology		REPORT FINAL	Báo cáo vào thẳng	Doc 4444 Ch.12	doc4444
+phraseology		REPORT LONG FINAL	Báo cáo vào thẳng dài	Doc 4444 Ch.12	doc4444
+phraseology		JOIN LEFT DOWNWIND RUNWAY (number)	Nhập chân gió xuôi trái đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		JOIN RIGHT DOWNWIND RUNWAY (number)	Nhập chân gió xuôi phải đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		MAKE LEFT HAND CIRCUIT	Làm vòng trái	Doc 4444 Ch.12	doc4444
+phraseology		MAKE RIGHT HAND CIRCUIT	Làm vòng phải	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED TOUCH AND GO	Được phép chạm và cất	Doc 4444 Ch.12	doc4444
+phraseology		MAKE FULL STOP	Hạ cánh dừng hẳn	Doc 4444 Ch.12	doc4444
+phraseology		LOW APPROACH APPROVED	Được phép tiếp cận thấp	Doc 4444 Ch.12	doc4444
+phraseology		LOW PASS APPROVED	Được phép bay thấp qua	Doc 4444 Ch.12	doc4444
+phraseology		LINE UP AND WAIT	Vào đường CHC và chờ	Doc 4444 Ch.12 — Không dùng “taxi into position and hold”. Bắt buộc đọc lại.	doc4444
+phraseology		LINE UP RUNWAY (number)	Vào đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		REPORT LINED UP	Báo cáo đã vào đường CHC	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED FOR TAKE-OFF	Được phép cất cánh	Doc 4444 Ch.12 — Bắt buộc đọc lại.	doc4444
+phraseology		CLEARED FOR TAKE-OFF RUNWAY (number)	Được phép cất cánh đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		TAKE OFF IMMEDIATELY	Cất cánh ngay	Doc 4444 Ch.12	doc4444
+phraseology		ARE YOU READY FOR IMMEDIATE DEPARTURE	Sẵn sàng khởi hành ngay không	Doc 4444 Ch.12	doc4444
+phraseology		HOLD POSITION	Giữ vị trí	Doc 4444 Ch.12	doc4444
+phraseology		HOLD SHORT OF RUNWAY (number)	Dừng trước đường CHC (số)	Doc 4444 Ch.12 — Bắt buộc đọc lại.	doc4444
+phraseology		CLEARED TO LAND	Được phép hạ cánh	Doc 4444 Ch.12 — Bắt buộc đọc lại.	doc4444
+phraseology		CLEARED TO LAND RUNWAY (number)	Được phép hạ cánh đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		LANDING CLEARANCE CANCELLED	Hủy huấn lệnh hạ cánh	Doc 4444 Ch.12	doc4444
+phraseology		CONTINUE	Tiếp tục	Doc 4444 Ch.12 — Circuit / final, chưa được phép hạ cánh.	doc4444
+phraseology		REPORT RUNWAY VACATED	Báo cáo đã rời đường CHC	Doc 4444 Ch.12	doc4444
+phraseology		VACATE RUNWAY	Rời đường CHC	Doc 4444 Ch.12	doc4444
+phraseology		VACATE LEFT	Rời sang trái	Doc 4444 Ch.12	doc4444
+phraseology		VACATE RIGHT	Rời sang phải	Doc 4444 Ch.12	doc4444
+phraseology		EXPEDITE VACATING	Khẩn trương rời đường CHC	Doc 4444 Ch.12	doc4444
+phraseology		BACKTRACK APPROVED	Được phép lăn ngược chiều trên CHC	Doc 4444 Ch.12 — Bắt buộc đọc lại.	doc4444
+phraseology		CROSS RUNWAY (number)	Cắt qua đường CHC (số)	Doc 4444 Ch.12 — Bắt buộc đọc lại.	doc4444
+phraseology		AFTER THE LANDING (aircraft type) LINE UP AND WAIT	Sau tàu hạ cánh (loại), vào đường CHC và chờ	Doc 4444 Ch.12 — Conditional line-up.	doc4444
+phraseology		BEHIND THE DEPARTING (aircraft type) LINE UP	Sau tàu khởi hành (loại), vào đường CHC	Doc 4444 Ch.12 — Conditional line-up.	doc4444
+phraseology		HOLDING POINT (designator)	Điểm chờ (ký hiệu)	Doc 4444 Ch.12	doc4444
+phraseology		INTERSECTION DEPARTURE	Cất cánh từ giao cắt	Doc 4444 Ch.12	doc4444
+phraseology		FROM (intersection)	Từ (giao cắt)	Doc 4444 Ch.12	doc4444
+phraseology		FULL LENGTH AVAILABLE	Toàn bộ chiều dài khả dụng	Doc 4444 Ch.12	doc4444
+phraseology		WIND (direction) DEGREES (speed) KNOTS	Gió (hướng) độ (tốc độ) knots	Doc 4444 Ch.12 — Aerodrome wind.	doc4444
+phraseology		CAUTION WAKE TURBULENCE	Chú ý rối động lưu	Doc 4444 Ch.12	doc4444
+phraseology		CAUTION WORK IN PROGRESS	Chú ý đang thi công	Doc 4444 Ch.12	doc4444
+phraseology		BRAKING ACTION (assessment)	Hệ số phanh (đánh giá)	Doc 4444 Ch.12	doc4444
+phraseology		RUNWAY SURFACE CONDITION (condition)	Tình trạng bề mặt đường CHC (tình trạng)	Doc 4444 Ch.12	doc4444
+phraseology		TAXI TO (destination) VIA (route)	Lăn tới (điểm đến) qua (lộ trình)	Doc 4444 Ch.12 — Taxi clearance. Bắt buộc đọc lại khi liên quan đường CHC.	doc4444
+phraseology		TAXI VIA (route)	Lăn qua (lộ trình)	Doc 4444 Ch.12	doc4444
+phraseology		TAXI TO HOLDING POINT (designator)	Lăn tới điểm chờ (ký hiệu)	Doc 4444 Ch.12	doc4444
+phraseology		HOLD SHORT OF (position)	Dừng trước (vị trí)	Doc 4444 Ch.12	doc4444
+phraseology		GIVE WAY TO (traffic)	Nhường đường cho (tàu bay)	Doc 4444 Ch.12	doc4444
+phraseology		TAXI WITH CAUTION	Lăn thận trọng	Doc 4444 Ch.12	doc4444
+phraseology		PUSHBACK APPROVED	Được phép đẩy lùi	Doc 4444 §12.7 — Ground crew / flight crew.	doc4444
+phraseology		START-UP APPROVED	Được phép khởi động	Doc 4444 §12.7	doc4444
+phraseology		TAXI TO STAND (number)	Lăn về vị trí đỗ (số)	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED TO (destination) VIA (route)	Được phép đi (điểm đến) qua (đường bay)	Doc 4444 Ch.12 — Route clearance. Bắt buộc đọc lại.	doc4444
+phraseology		CLEARED VIA (SID designator) DEPARTURE	Được phép khởi hành theo SID (ký hiệu)	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED (STAR designator) ARRIVAL	Được phép đến theo STAR (ký hiệu)	Doc 4444 Ch.12	doc4444
+phraseology		CLIMB VIA SID	Leo theo SID	Doc 4444 Ch.12 — Climb via SID procedure.	doc4444
+phraseology		DESCEND VIA STAR	Hạ theo STAR	Doc 4444 Ch.12 — Descend via STAR procedure.	doc4444
+phraseology		AFTER DEPARTURE TURN LEFT	Sau khởi hành rẽ trái	Doc 4444 Ch.12	doc4444
+phraseology		AFTER DEPARTURE TURN RIGHT	Sau khởi hành rẽ phải	Doc 4444 Ch.12	doc4444
+phraseology		CLIMB STRAIGHT AHEAD	Leo thẳng	Doc 4444 Ch.12	doc4444
+phraseology		WHEN AIRBORNE	Khi đã ly khai	Doc 4444 Ch.12	doc4444
+phraseology		DIRECT TO (fix)	Bay thẳng đến (điểm)	Doc 4444 Ch.12	doc4444
+phraseology		PROCEED DIRECT (fix)	Tiếp tục bay thẳng (điểm)	Doc 4444 Ch.12	doc4444
+phraseology		INTERCEPT (aid)	Đón bắt (đài/đường dẫn)	Doc 4444 Ch.12	doc4444
+phraseology		OFFSET (number) MILES LEFT OF TRACK	Lệch (số) hải lý trái đường bay	Doc 4444 Ch.12 — Weather / strategic offset.	doc4444
+phraseology		OFFSET (number) MILES RIGHT OF TRACK	Lệch (số) hải lý phải đường bay	Doc 4444 Ch.12	doc4444
+phraseology		TRAFFIC (information)	Tàu bay (thông tin)	Doc 4444 Ch.12 — Traffic information.	doc4444
+phraseology		CLEAR OF TRAFFIC	Đã cách tàu bay	Doc 4444 Ch.12	doc4444
+phraseology		DO YOU HAVE IT IN SIGHT	Đã nhìn thấy chưa	Doc 4444 Ch.12	doc4444
+phraseology		REPORT TRAFFIC IN SIGHT	Báo cáo khi nhìn thấy tàu bay	Doc 4444 Ch.12	doc4444
+phraseology		TRAFFIC IN SIGHT	Đã nhìn thấy tàu bay	Doc 4444 Ch.12 — Pilot report.	doc4444
+phraseology		NEGATIVE CONTACT	Không nhìn thấy	Doc 4444 Ch.12 — Pilot report.	doc4444
+phraseology		LOOKING OUT	Đang quan sát	Doc 4444 Ch.12 — Pilot report.	doc4444
+phraseology		ESSENTIAL TRAFFIC	Tàu bay thiết yếu	Doc 4444 Ch.12	doc4444
+phraseology		UNKNOWN TRAFFIC	Tàu bay không xác định	Doc 4444 Ch.12	doc4444
+phraseology		NO REPORTED TRAFFIC	Không có tàu bay được báo	Doc 4444 Ch.12	doc4444
+phraseology		RUNWAY IN SIGHT	Đã nhìn thấy đường CHC	Doc 4444 Ch.12 — Pilot report.	doc4444
+phraseology		REQUEST WEATHER DEVIATION	Xin lệch hướng do thời tiết	Doc 4444 Ch.12	doc4444
+phraseology		DEVIATION APPROVED	Được phép lệch hướng	Doc 4444 Ch.12	doc4444
+phraseology		WHEN ABLE PROCEED DIRECT (fix)	Khi được thì bay thẳng (điểm)	Doc 4444 Ch.12	doc4444
+phraseology		REPORT CLEAR OF WEATHER	Báo cáo đã ra khỏi thời tiết	Doc 4444 Ch.12	doc4444
+phraseology		WIND SHEAR	Đứt gió	Doc 4444 Ch.12 — Meteorological information.	doc4444
+phraseology		MICROBURST	Microburst	Doc 4444 Ch.12	doc4444
+phraseology		MAYDAY	MAYDAY	Doc 4444 §12.6 — Distress. Lặp ba lần.	doc4444
+phraseology		PAN PAN	PAN PAN	Doc 4444 §12.6 — Urgency. Lặp ba lần.	doc4444
+phraseology		DECLARE EMERGENCY	Tuyên bố tình huống khẩn	Doc 4444 §12.6	doc4444
+phraseology		REQUEST PRIORITY	Xin ưu tiên	Doc 4444 §12.6	doc4444
+phraseology		REQUEST VECTORS	Xin dẫn ra-đa	Doc 4444 §12.4 / §12.6	doc4444
+phraseology		RELAY	Chuyển tiếp	Doc 4444 — Communications failure / relay.	doc4444
+phraseology		TRANSMITTING BLIND	Phát mù	Annex 10 Vol II — Mất liên lạc hai chiều.	doc4444
+phraseology		TCAS RA	TCAS RA	Doc 4444 Ch.12 — Pilot report of resolution advisory.	doc4444
+phraseology		UNABLE DUE TCAS RA	Không thực hiện được do TCAS RA	Doc 4444 Ch.12	doc4444
+phraseology		CLEAR OF CONFLICT RETURNING TO (clearance)	Hết xung đột, trở lại (huấn lệnh)	Doc 4444 Ch.12	doc4444
+phraseology		CLEAR OF CONFLICT RESUMED (clearance)	Hết xung đột, đã trở lại (huấn lệnh)	Doc 4444 Ch.12	doc4444
+phraseology		CHANGE YOUR CALL SIGN TO (new call sign)	Đổi dấu hiệu nhận dạng thành (dấu hiệu mới)	Doc 4444 Ch.12 — Call sign confusion.	doc4444
+phraseology		REVERT TO FLIGHT PLAN CALL SIGN	Trở lại dấu hiệu nhận dạng theo kế hoạch bay	Doc 4444 Ch.12	doc4444
+phraseology		HEAVY	HEAVY	Doc 4444 / Annex 10 — Wake turbulence category; sau call sign lúc liên lạc ban đầu.	doc4444
+phraseology		SUPER	SUPER	Doc 4444 — A380 và loại tương đương.	doc4444
+phraseology		NEGATIVE RNAV	Không trang bị RNAV	Doc 4444 Ch.12	doc4444
+phraseology		UNABLE RNAV DUE EQUIPMENT	Không RNAV được do thiết bị	Doc 4444 Ch.12	doc4444
+phraseology		RADIO CHECK	Kiểm tra vô tuyến	Annex 10 Vol II	doc4444
+phraseology		READABILITY (number)	Độ nghe (số)	Annex 10 Vol II — 1 to 5.	doc4444
+phraseology		LOUD AND CLEAR	To và rõ	Annex 10 Vol II — Readability 5.	doc4444
+phraseology		REMAIN OUTSIDE CONTROL ZONE	Ở ngoài vùng kiểm soát	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED TO ENTER CONTROL ZONE	Được phép vào vùng kiểm soát	Doc 4444 Ch.12	doc4444
+phraseology		CANCEL IFR	Hủy IFR	Doc 4444 Ch.12	doc4444
+phraseology		IFR CANCELLATION RECEIVED	Đã nhận hủy IFR	Doc 4444 Ch.12	doc4444
+phraseology		REMAIN VMC	Giữ VMC	Doc 4444 Ch.12	doc4444
+phraseology		MAINTAIN OWN SEPARATION AND VMC	Tự duy trì giãn cách và VMC	Doc 4444 Ch.12	doc4444
+phraseology		QNH (number)	QNH (số)	Doc 4444 Ch.12 — Altimeter setting. Bắt buộc đọc lại.	doc4444
+phraseology		QFE (number)	QFE (số)	Doc 4444 Ch.12 — Altimeter setting.	doc4444
+phraseology		TRANSITION LEVEL (level)	Mức chuyển tiếp (mức)	Doc 4444 Ch.12 — Bắt buộc đọc lại.	doc4444
+phraseology		TRANSITION ALTITUDE (altitude)	Độ cao chuyển tiếp (độ cao)	Doc 4444 Ch.12	doc4444
+phraseology		RUNWAY (number) IN USE	Đường CHC (số) đang dùng	Doc 4444 Ch.12 — Bắt buộc đọc lại.	doc4444
+phraseology		EXPECT RUNWAY (number)	Dự kiến đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CHANGE TO RUNWAY (number)	Đổi sang đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		RECLEARED RUNWAY (number)	Huấn lệnh lại đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CAUTION BIRD ACTIVITY	Chú ý hoạt động chim	Doc 4444 Ch.12	doc4444
+phraseology		PERSONNEL AND EQUIPMENT ON RUNWAY	Người và thiết bị trên đường CHC	Doc 4444 Ch.12	doc4444
+phraseology		Cleared to land runway 25 left.	Được phép hạ cánh đường CHC 25 trái.	Doc 4444 Ch.12 — Câu mẫu hạ cánh. Bắt buộc đọc lại.	doc4444
+phraseology		Cleared for take-off runway 07.	Được phép cất cánh đường CHC 07.	Doc 4444 Ch.12 — Câu mẫu cất cánh.	doc4444
+phraseology		Line up and wait runway 25 right.	Vào đường CHC 25 phải và chờ.	Doc 4444 Ch.12 — Câu mẫu vào CHC.	doc4444
+phraseology		Hold short of runway 14.	Dừng trước đường CHC 14.	Doc 4444 Ch.12 — Câu mẫu dừng trước CHC.	doc4444
+phraseology		Climb to flight level 150.	Lên mức bay 150.	Doc 4444 §12.3.1.2 — Câu mẫu thay đổi mức.	doc4444
+phraseology		Descend to 3000 feet QNH 1011.	Xuống 3000 feet QNH 1011.	Doc 4444 §12.3.1.2 — Câu mẫu hạ độ cao kèm QNH.	doc4444
+phraseology		Turn left heading 270.	Rẽ trái hướng 270.	Doc 4444 Ch.12 — Câu mẫu dẫn hướng.	doc4444
+phraseology		Squawk 4520.	Đặt mã đáp 4520.	Doc 4444 §12.4.3 — Câu mẫu SSR.	doc4444
+phraseology		Contact approach 119.1.	Liên lạc tiếp cận 119.1.	Doc 4444 §12.3.1.4 — Câu mẫu chuyển tần số.	doc4444
+phraseology		Cleared ILS approach runway 25 left.	Được phép tiếp cận ILS đường CHC 25 trái.	Doc 4444 Ch.12 — Câu mẫu tiếp cận.	doc4444
+phraseology		Go around.	Vòng lại.	Doc 4444 Ch.12 — Câu mẫu vòng lại.	doc4444
+phraseology		Taxi to holding point A1 via A.	Lăn tới điểm chờ A1 qua A.	Doc 4444 Ch.12 — Câu mẫu lăn.	doc4444
+phraseology		Resume own navigation.	Tiếp tục dẫn đường tự lực.	Doc 4444 §12.4 — Câu mẫu kết thúc vectoring.	doc4444
+phraseology		Reduce speed to 180 knots.	Giảm tốc độ đến 180 knots.	Doc 4444 Ch.12 — Câu mẫu tốc độ.	doc4444
+phraseology		Behind the landing Airbus, line up and wait.	Sau Airbus hạ cánh, vào đường CHC và chờ.	Doc 4444 Ch.12 — Câu mẫu huấn lệnh có điều kiện.	doc4444
+phraseology		Wind 250 degrees 8 knots, cleared to land.	Gió 250 độ 8 knots, được phép hạ cánh.	Doc 4444 Ch.12 — Câu mẫu gió kèm hạ cánh.	doc4444
+phraseology		Read back correct.	Đọc lại đúng.	Doc 4444 — Hear-back xác nhận.	doc4444
+phraseology		Negative, I say again.	Phủ định, tôi nhắc lại.	Doc 4444 Ch.12 — Sửa read-back sai.	doc4444
+phraseology		MAINTAIN	Giữ / duy trì	Doc 4444 Ch.12 / Annex 10 Vol II — Continue in accordance with the condition specified.	doc4444
+phraseology		OVER	Mời trả lời	Annex 10 Vol II — My transmission is ended and I expect a response. Không dùng thường xuyên trên VHF.	doc4444
+phraseology		I SPELL	Tôi đánh vần	Annex 10 Vol II — I shall spell the next word phonetically.	doc4444
+phraseology		SAY AGAIN ALL AFTER (the last word received)	Nhắc lại tất cả sau (từ cuối đã nhận)	Annex 10 Vol II — Repeat all of the message after…	doc4444
+phraseology		SAY AGAIN ALL BEFORE (the first word received)	Nhắc lại tất cả trước (từ đầu đã nhận)	Annex 10 Vol II	doc4444
+phraseology		THAT IS CORRECT	Đúng vậy	Doc 4444 §12.3.4.10 — Xác nhận read-back huấn lệnh có điều kiện.	doc4444
+phraseology		REQUEST PUSHBACK	Xin đẩy lùi	Doc 4444 §12.7 — Pilot transmission.	doc4444
+phraseology		PUSHBACK AT OWN DISCRETION	Đẩy lùi theo quyết định tổ lái	Doc 4444 §12.7	doc4444
+phraseology		EXPECT (number) MINUTES DELAY DUE (reason)	Dự kiến chậm (số) phút do (lý do)	Doc 4444 §12.7 / Ch.12	doc4444
+phraseology		REQUEST TOW (aircraft type) FROM (location) TO (location)	Xin kéo (loại tàu) từ (vị trí) đến (vị trí)	Doc 4444 §12.3.4.5 — Ground towing.	doc4444
+phraseology		TOW APPROVED VIA (route)	Được phép kéo qua (lộ trình)	Doc 4444 §12.3.4.5	doc4444
+phraseology		REQUEST TIME CHECK	Xin kiểm tra giờ	Doc 4444 Ch.12	doc4444
+phraseology		TIME (time)	Giờ (giờ)	Doc 4444 Ch.12	doc4444
+phraseology		REQUEST DEPARTURE INFORMATION	Xin thông tin khởi hành	Doc 4444 Ch.12	doc4444
+phraseology		REQUEST TAXI	Xin lăn	Doc 4444 Ch.12 — Pilot transmission.	doc4444
+phraseology		REQUEST START-UP	Xin khởi động	Doc 4444 §12.7 — Pilot transmission.	doc4444
+phraseology		START UP AT OWN DISCRETION	Khởi động theo quyết định tổ lái	Doc 4444 §12.7	doc4444
+phraseology		TAXI TO HOLDING POINT (designator) RUNWAY (number)	Lăn tới điểm chờ (ký hiệu) đường CHC (số)	Doc 4444 Ch.12 — Taxi clearance. Bắt buộc đọc lại khi liên quan đường CHC.	doc4444
+phraseology		TAXI TO HOLDING POINT (designator) VIA (route) HOLD SHORT OF RUNWAY (number)	Lăn tới điểm chờ (ký hiệu) qua (lộ trình), dừng trước đường CHC (số)	Doc 4444 Ch.12 — Bắt buộc đọc lại.	doc4444
+phraseology		TAKE FIRST LEFT	Rẽ trái đường thứ nhất	Doc 4444 Ch.12 — Taxi routing.	doc4444
+phraseology		TAKE FIRST RIGHT	Rẽ phải đường thứ nhất	Doc 4444 Ch.12	doc4444
+phraseology		TAKE SECOND LEFT	Rẽ trái đường thứ hai	Doc 4444 Ch.12	doc4444
+phraseology		TAKE SECOND RIGHT	Rẽ phải đường thứ hai	Doc 4444 Ch.12	doc4444
+phraseology		TAKE CONVENIENT LEFT	Rẽ trái đường thuận tiện	Doc 4444 Ch.12	doc4444
+phraseology		TAKE CONVENIENT RIGHT	Rẽ phải đường thuận tiện	Doc 4444 Ch.12	doc4444
+phraseology		TAXI VIA RUNWAY (number)	Lăn qua đường CHC (số)	Doc 4444 Ch.12 — Bắt buộc đọc lại.	doc4444
+phraseology		TAXI STRAIGHT AHEAD	Lăn thẳng	Doc 4444 Ch.12	doc4444
+phraseology		TAXI INTO HOLDING BAY	Lăn vào vị trí chờ	Doc 4444 Ch.12	doc4444
+phraseology		FOLLOW (description of aircraft or vehicle)	Theo (tàu bay hoặc xe)	Doc 4444 Ch.12	doc4444
+phraseology		GIVING WAY TO (traffic)	Đang nhường (tàu bay)	Doc 4444 Ch.12 — Pilot transmission.	doc4444
+phraseology		REQUEST BACKTRACK	Xin lăn ngược chiều trên CHC	Doc 4444 Ch.12 — Pilot transmission. Bắt buộc đọc lại.	doc4444
+phraseology		BACKTRACK RUNWAY (number)	Lăn ngược chiều đường CHC (số)	Doc 4444 Ch.12 — Bắt buộc đọc lại.	doc4444
+phraseology		CROSS RUNWAY (number) REPORT VACATED	Cắt qua đường CHC (số), báo cáo đã rời	Doc 4444 Ch.12 — Bắt buộc đọc lại. Dùng khi đài không nhìn thấy tàu cắt qua.	doc4444
+phraseology		EXPEDITE CROSSING RUNWAY (number) TRAFFIC (aircraft type) (distance) MILES FINAL	Khẩn trương cắt qua đường CHC (số), tàu (loại) còn (cự ly) hải lý vào thẳng	Doc 4444 Ch.12	doc4444
+phraseology		RUNWAY VACATED	Đã rời đường CHC	Doc 4444 Ch.12 — Pilot transmission.	doc4444
+phraseology		EXPEDITE TAXI	Khẩn trương lăn	Doc 4444 Ch.12	doc4444
+phraseology		TAXI SLOWER	Lăn chậm hơn	Doc 4444 Ch.12	doc4444
+phraseology		HOLDING	Đang giữ	Doc 4444 Ch.12 — Pilot transmission, đáp HOLD POSITION.	doc4444
+phraseology		AIR-TAXI TO (location)	Lăn trên không tới (vị trí)	Doc 4444 Ch.12 — Helicopter.	doc4444
+phraseology		AIR-TAXI VIA (route) TO (location)	Lăn trên không qua (lộ trình) tới (vị trí)	Doc 4444 Ch.12 — Helicopter.	doc4444
+phraseology		REPORT WHEN READY FOR DEPARTURE	Báo cáo khi sẵn sàng khởi hành	Doc 4444 §12.3.4.10	doc4444
+phraseology		ARE YOU READY FOR DEPARTURE	Sẵn sàng khởi hành chưa	Doc 4444 §12.3.4.10	doc4444
+phraseology		READY	Sẵn sàng	Doc 4444 §12.3.4.10 — Pilot transmission.	doc4444
+phraseology		READY FOR DEPARTURE	Sẵn sàng khởi hành	Doc 4444 §12.3.4.10 — Pilot transmission.	doc4444
+phraseology		LINE UP	Vào đường CHC	Doc 4444 §12.3.4.10 — Không dùng “taxi into position and hold”. Bắt buộc đọc lại.	doc4444
+phraseology		LINE UP. BE READY FOR IMMEDIATE DEPARTURE	Vào đường CHC. Sẵn sàng khởi hành ngay	Doc 4444 §12.3.4.10	doc4444
+phraseology		LINING UP	Đang vào đường CHC	Doc 4444 §12.3.4.10 — Pilot transmission.	doc4444
+phraseology		RUNWAY (number) CLEARED FOR TAKE-OFF	Đường CHC (số) được phép cất cánh	Doc 4444 §12.3.4.11 — Thứ tự ICAO: RUNWAY rồi CLEARED FOR TAKE-OFF. Bắt buộc đọc lại.	doc4444
+phraseology		RUNWAY (number) CLEARED FOR TAKE-OFF REPORT AIRBORNE	Đường CHC (số) được phép cất cánh, báo cáo đã ly khai	Doc 4444 §12.3.4.11	doc4444
+phraseology		TAKE OFF IMMEDIATELY OR VACATE RUNWAY	Cất cánh ngay hoặc rời đường CHC	Doc 4444 §12.3.4.11	doc4444
+phraseology		TAKE OFF IMMEDIATELY OR HOLD SHORT OF RUNWAY	Cất cánh ngay hoặc dừng trước đường CHC	Doc 4444 §12.3.4.11	doc4444
+phraseology		HOLD POSITION CANCEL TAKE-OFF I SAY AGAIN CANCEL TAKE-OFF (reasons)	Giữ vị trí, hủy cất cánh, tôi nhắc lại hủy cất cánh (lý do)	Doc 4444 §12.3.4.11 — Hủy trước khi bắt đầu lăn cất cánh.	doc4444
+phraseology		STOP IMMEDIATELY	Dừng ngay	Doc 4444 §12.3.4.11 — Hủy khi tàu đã bắt đầu lăn cất cánh. Lặp call sign.	doc4444
+phraseology		STOP IMMEDIATELY (call sign) STOP IMMEDIATELY	Dừng ngay (dấu hiệu nhận dạng) dừng ngay	Doc 4444 §12.3.4.11	doc4444
+phraseology		RIGHT TURN APPROVED	Được phép rẽ phải	Doc 4444 Ch.12 — After departure.	doc4444
+phraseology		LEFT TURN APPROVED	Được phép rẽ trái	Doc 4444 Ch.12	doc4444
+phraseology		WILL ADVISE LATER FOR RIGHT TURN	Sẽ chỉ thị sau cho rẽ phải	Doc 4444 Ch.12	doc4444
+phraseology		WILL ADVISE LATER FOR LEFT TURN	Sẽ chỉ thị sau cho rẽ trái	Doc 4444 Ch.12	doc4444
+phraseology		AFTER PASSING (level) (instructions)	Sau khi qua (mức) (chỉ thị)	Doc 4444 Ch.12	doc4444
+phraseology		CONTINUE RUNWAY HEADING	Tiếp tục hướng đường CHC	Doc 4444 Ch.12	doc4444
+phraseology		TRACK EXTENDED CENTRE LINE	Bám đường tim kéo dài	Doc 4444 Ch.12	doc4444
+phraseology		REPORT AIRBORNE	Báo cáo đã ly khai	Doc 4444 §12.3.4.11	doc4444
+phraseology		JOIN (direction) (position in circuit) RUNWAY (number)	Nhập (hướng vòng) (vị trí vòng) đường CHC (số)	Doc 4444 Ch.12 — Entering the circuit.	doc4444
+phraseology		MAKE STRAIGHT-IN APPROACH RUNWAY (number)	Làm tiếp cận vào thẳng đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CONTINUE APPROACH PREPARE FOR POSSIBLE GO AROUND	Tiếp tục tiếp cận, chuẩn bị có thể vòng lại	Doc 4444 Ch.12	doc4444
+phraseology		RUNWAY (number) CLEARED TO LAND	Đường CHC (số) được phép hạ cánh	Doc 4444 Ch.12 — Thứ tự ICAO: RUNWAY rồi CLEARED TO LAND. Bắt buộc đọc lại.	doc4444
+phraseology		CLEARED LOW APPROACH RUNWAY (number)	Được phép tiếp cận thấp đường CHC (số)	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED LOW PASS	Được phép bay thấp qua	Doc 4444 Ch.12	doc4444
+phraseology		CIRCLE THE AERODROME	Vòng quanh sân bay	Doc 4444 Ch.12 — Delaying.	doc4444
+phraseology		MAKE ANOTHER CIRCUIT	Làm thêm một vòng	Doc 4444 Ch.12	doc4444
+phraseology		ORBIT LEFT FROM PRESENT POSITION	Vòng tại chỗ bên trái từ vị trí hiện tại	Doc 4444 Ch.12	doc4444
+phraseology		ORBIT RIGHT FROM PRESENT POSITION	Vòng tại chỗ bên phải từ vị trí hiện tại	Doc 4444 Ch.12	doc4444
+phraseology		GOING AROUND	Đang vòng lại	Doc 4444 Ch.12 — Pilot transmission.	doc4444
+phraseology		CAUTION JET BLAST	Chú ý luồng phụt	Doc 4444 Ch.12	doc4444
+phraseology		CAUTION SLIPSTREAM	Chú ý luồng quạt	Doc 4444 Ch.12	doc4444
+phraseology		CAUTION WAKE TURBULENCE FROM ARRIVING (type of aircraft)	Chú ý rối động lưu từ tàu hạ cánh (loại)	Doc 4444 Ch.12	doc4444
+phraseology		CAUTION WAKE TURBULENCE FROM DEPARTING (type of aircraft)	Chú ý rối động lưu từ tàu khởi hành (loại)	Doc 4444 Ch.12	doc4444
+phraseology		LANDING GEAR APPEARS DOWN	Càng hạ cánh trông như đã ra	Doc 4444 Ch.12 — Thông tin quan sát từ đài.	doc4444
+phraseology		WHEELS APPEAR UP	Bánh trông như còn thu	Doc 4444 Ch.12	doc4444
+phraseology		CONTACT GROUND (frequency)	Liên lạc mặt đất (tần số)	Doc 4444 Ch.12 — After landing.	doc4444
+phraseology		WHEN VACATED CONTACT GROUND (frequency)	Khi đã rời CHC, liên lạc mặt đất (tần số)	Doc 4444 Ch.12	doc4444
+phraseology		YOUR STAND (designation)	Vị trí đỗ (ký hiệu)	Doc 4444 Ch.12	doc4444
+phraseology		YOUR GATE (designation)	Cầu ống (ký hiệu)	Doc 4444 Ch.12	doc4444
+phraseology		TAKE FIRST LEFT AND CONTACT GROUND (frequency)	Rẽ trái thứ nhất và liên lạc mặt đất (tần số)	Doc 4444 Ch.12	doc4444
+phraseology		RUNWAY (number) SURFACE CONDITION CODE (three digit number)	Đường CHC (số) tình trạng bề mặt mã (ba số)	Doc 4444 §12.3.1.11 (Amdt 10, từ 4/11/2021) — RCR / RWYCC.	doc4444
+phraseology		RUNWAY SURFACE CONDITION RUNWAY (number) NOT CURRENT	Tình trạng bề mặt đường CHC (số) không còn hiện hành	Doc 4444 §12.3.1.11	doc4444
+phraseology		CAUTION CONSTRUCTION WORK (location)	Chú ý thi công (vị trí)	Doc 4444 §12.3.1.11	doc4444
+phraseology		TOWER OBSERVES (weather information)	Đài quan sát (thông tin thời tiết)	Doc 4444 §12.3.1.11	doc4444
+phraseology		PILOT REPORTS (weather information)	Tổ lái báo (thông tin thời tiết)	Doc 4444 §12.3.1.11	doc4444
+phraseology		CONFIRM RVSM APPROVED	Xác nhận được phê chuẩn RVSM	Doc 4444 §12.3.1.13	doc4444
+phraseology		AFFIRM RVSM	Khẳng định RVSM	Doc 4444 §12.3.1.13 — Pilot transmission.	doc4444
+phraseology		NEGATIVE RVSM	Không RVSM	Doc 4444 §12.3.1.13 — Pilot transmission.	doc4444
+phraseology		UNABLE ISSUE CLEARANCE INTO RVSM AIRSPACE MAINTAIN (level)	Không cấp được huấn lệnh vào vùng trời RVSM, giữ (mức)	Doc 4444 §12.3.1.13	doc4444
+phraseology		UNABLE RVSM DUE TURBULENCE	Không RVSM được do rối động	Doc 4444 §12.3.1.13 — Pilot transmission.	doc4444
+phraseology		UNABLE RVSM DUE EQUIPMENT	Không RVSM được do thiết bị	Doc 4444 §12.3.1.13 — Pilot transmission.	doc4444
+phraseology		REPORT WHEN ABLE TO RESUME RVSM	Báo cáo khi có thể trở lại RVSM	Doc 4444 §12.3.1.13	doc4444
+phraseology		CONFIRM ABLE TO RESUME RVSM	Xác nhận có thể trở lại RVSM	Doc 4444 §12.3.1.13	doc4444
+phraseology		READY TO RESUME RVSM	Sẵn sàng trở lại RVSM	Doc 4444 §12.3.1.13 — Pilot transmission.	doc4444
+phraseology	GNSS	GNSS REPORTED UNRELIABLE	GNSS được báo không tin cậy	Doc 4444 §12.3.1.14	doc4444
+phraseology	GNSS	GNSS UNAVAILABLE	GNSS không khả dụng	Doc 4444 §12.3.1.14	doc4444
+phraseology		CLIMB TO REACH (level) AT (time or significant point)	Leo để đạt (mức) tại (giờ hoặc điểm)	Doc 4444 §12.3.1.2	doc4444
+phraseology		DESCEND TO REACH (level) AT (time or significant point)	Hạ để đạt (mức) tại (giờ hoặc điểm)	Doc 4444 §12.3.1.2	doc4444
+phraseology		CLIMB TO REACH (level) BY (time or significant point)	Leo để đạt (mức) trước (giờ hoặc điểm)	Doc 4444 §12.3.1.2	doc4444
+phraseology		DESCEND TO REACH (level) BY (time or significant point)	Hạ để đạt (mức) trước (giờ hoặc điểm)	Doc 4444 §12.3.1.2	doc4444
+phraseology		CLIMB IMMEDIATELY	Leo ngay	Doc 4444 §12.3.1.2	doc4444
+phraseology		DESCEND IMMEDIATELY	Hạ ngay	Doc 4444 §12.3.1.2	doc4444
+phraseology		MAINTAIN (level) UNTIL FURTHER ADVISED	Giữ (mức) đến khi có chỉ thị tiếp	Doc 4444 Ch.12	doc4444
+phraseology		MAINTAIN (level) UNTIL ADVISED BY (name of unit)	Giữ (mức) đến khi được (đài) chỉ thị	Doc 4444 Ch.12	doc4444
+phraseology		MAINTAIN (level) UNTIL (time)	Giữ (mức) đến (giờ)	Doc 4444 Ch.12	doc4444
+phraseology		MAINTAIN BLOCK (level) TO (level)	Giữ khối mức (mức) đến (mức)	Doc 4444 Ch.12	doc4444
+phraseology		IF UNABLE (alternative instructions) AND ADVISE	Nếu không thực hiện được (chỉ thị thay) và báo	Doc 4444 Ch.12	doc4444
+phraseology		TRAFFIC (number) O'CLOCK (distance)	Tàu bay hướng (số) giờ (cự ly)	Doc 4444 Ch.12 — Traffic information by clock code.	doc4444
+phraseology		TURN LEFT IMMEDIATELY HEADING (three digits) TO AVOID TRAFFIC	Rẽ trái ngay hướng (ba số) để tránh tàu bay	Doc 4444 Ch.12 — Collision avoidance.	doc4444
+phraseology		TURN RIGHT IMMEDIATELY HEADING (three digits) TO AVOID TRAFFIC	Rẽ phải ngay hướng (ba số) để tránh tàu bay	Doc 4444 Ch.12	doc4444
+phraseology		ATTENTION ALL AIRCRAFT EMERGENCY DESCENT IN PROGRESS FROM (level)	Chú ý mọi tàu bay, đang có hạ khẩn từ (mức)	Doc 4444 §12.3.2.5	doc4444
+phraseology		EMERGENCY DESCENT (intentions)	Hạ khẩn (ý định)	Doc 4444 §12.3.2.5 — Pilot transmission.	doc4444
+phraseology		TERRAIN ALERT	Cảnh báo địa hình	Doc 4444 Ch.12	doc4444
+phraseology		ENTER CONTROLLED AIRSPACE AT (level)	Vào vùng trời kiểm soát tại (mức)	Doc 4444 Ch.12	doc4444
+phraseology		LEAVE CONTROLLED AIRSPACE AT (level)	Rời vùng trời kiểm soát tại (mức)	Doc 4444 Ch.12	doc4444
+phraseology		LEAVE CONTROL ZONE	Rời vùng kiểm soát	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED TO (clearance limit) VIA (designation)	Được phép đến (giới hạn huấn lệnh) qua (ký hiệu)	Doc 4444 Ch.12 — Route clearance. Bắt buộc đọc lại.	doc4444
+phraseology		CLEARED VIA (designation)	Được phép theo (ký hiệu)	Doc 4444 Ch.12	doc4444
+phraseology		(SID designator) DEPARTURE	Khởi hành (ký hiệu SID)	Doc 4444 Ch.12	doc4444
+phraseology		COMMENCE APPROACH AT (time)	Bắt đầu tiếp cận lúc (giờ)	Doc 4444 Ch.12	doc4444
+phraseology		REPORT VISUAL	Báo cáo nhìn thấy	Doc 4444 Ch.12	doc4444
+phraseology		REPORT RUNWAY LIGHTS IN SIGHT	Báo cáo khi nhìn thấy đèn đường CHC	Doc 4444 Ch.12	doc4444
+phraseology		ADVISE ABLE TO ACCEPT VISUAL APPROACH RUNWAY (number)	Cho biết có nhận tiếp cận nhìn thấy đường CHC (số) được không	Doc 4444 Ch.12	doc4444
+phraseology		ARE YOU FAMILIAR WITH (name) APPROACH PROCEDURE	Đã quen thủ tục tiếp cận (tên) chưa	Doc 4444 Ch.12	doc4444
+phraseology		CLEARED TO (fix) HOLD AS PUBLISHED EXPECT APPROACH CLEARANCE AT (time)	Được phép đến (điểm) vòng chờ theo công bố, dự kiến huấn lệnh tiếp cận lúc (giờ)	Doc 4444 Ch.12 — Holding.	doc4444
+phraseology		HOLD (direction) AS PUBLISHED	Vòng chờ (hướng) theo công bố	Doc 4444 Ch.12	doc4444
+phraseology		REPORT SPEED	Báo cáo tốc độ	Doc 4444 Ch.12 — Speed control.	doc4444
+phraseology		DO NOT EXCEED (number) KNOTS	Không vượt (số) knots	Doc 4444 Ch.12	doc4444
+phraseology		REDUCE TO MINIMUM CLEAN SPEED	Giảm đến tốc độ sạch tối thiểu	Doc 4444 Ch.12	doc4444
+phraseology		INCREASE SPEED BY (number) KNOTS	Tăng tốc độ thêm (số) knots	Doc 4444 Ch.12	doc4444
+phraseology		REDUCE SPEED BY (number) KNOTS	Giảm tốc độ (số) knots	Doc 4444 Ch.12	doc4444
+phraseology		MAINTAIN (number) KNOTS OR GREATER	Giữ (số) knots hoặc lớn hơn	Doc 4444 Ch.12	doc4444
+phraseology		MAINTAIN (number) KNOTS OR LESS	Giữ (số) knots hoặc nhỏ hơn	Doc 4444 Ch.12	doc4444
+phraseology		REPORT HEADING AND FLIGHT LEVEL	Báo cáo hướng và mức bay	Doc 4444 §12.4 — Identification.	doc4444
+phraseology		FOR IDENTIFICATION TURN LEFT HEADING (three digits)	Để nhận dạng, rẽ trái hướng (ba số)	Doc 4444 §12.4	doc4444
+phraseology		FOR IDENTIFICATION TURN RIGHT HEADING (three digits)	Để nhận dạng, rẽ phải hướng (ba số)	Doc 4444 §12.4	doc4444
+phraseology		TRANSMIT FOR IDENTIFICATION AND REPORT HEADING	Phát để nhận dạng và báo cáo hướng	Doc 4444 §12.4	doc4444
+phraseology		HEADING IS GOOD	Hướng tốt	Doc 4444 Ch.12	doc4444
+phraseology		YOU WILL INTERCEPT (radio aid) (distance) FROM (significant point)	Sẽ đón bắt (đài) cách (cự ly) so với (điểm)	Doc 4444 §12.4	doc4444
+phraseology		EXPECT VECTOR ACROSS (localizer course)	Dự kiến dẫn cắt qua (đường localizer)	Doc 4444 §12.4	doc4444
+phraseology		THIS TURN WILL TAKE YOU THROUGH (localizer course)	Lượt rẽ này sẽ đưa qua (đường localizer)	Doc 4444 §12.4	doc4444
+phraseology		TAKING YOU THROUGH (localizer course)	Đang đưa qua (đường localizer)	Doc 4444 §12.4	doc4444
+phraseology		CONTINUE VISUALLY OR GO AROUND	Tiếp tục nhìn thấy hoặc vòng lại	Doc 4444 §12.4.2.5.8 — Missed approach / SRA-PAR.	doc4444
+phraseology		CONFIRM (level)	Xác nhận (mức)	Doc 4444 §12.4.3.14 — Level check.	doc4444
+phraseology		SQUAWK (code) AND IDENT	Đặt mã đáp (mã) và IDENT	Doc 4444 §12.4.3	doc4444
+phraseology		SQUAWK NORMAL	Đặt mã đáp NORMAL	Doc 4444 §12.4.3	doc4444
+phraseology		STOP SQUAWK	Tắt đáp	Doc 4444 §12.4.3	doc4444
+phraseology		VERIFY SQUAWK (code)	Xác minh mã đáp (mã)	Doc 4444 §12.4.3	doc4444
+phraseology	ADS-B	ADS-B IDENT	ADS-B IDENT	Doc 4444 §12.4.3	doc4444
+phraseology	ADS-B	STOP ADS-B TRANSMISSION	Tắt phát ADS-B	Doc 4444 §12.4.3	doc4444
+phraseology	ADS-B	ADS-B OUT OF SERVICE	ADS-B không hoạt động	Doc 4444 §12.4	doc4444
+phraseology		STAND BY FOR (unit call sign) (frequency)	Chờ (đài) (tần số)	Doc 4444 §12.3.1.4	doc4444
+phraseology		WHEN READY CONTACT (unit call sign) (frequency)	Khi sẵn sàng thì liên lạc (đài) (tần số)	Doc 4444 §12.3.1.4	doc4444
+phraseology		AT (significant point) CONTACT (unit call sign) (frequency)	Tại (điểm) liên lạc (đài) (tần số)	Doc 4444 §12.3.1.4	doc4444
+phraseology		INFORMATION (ATIS identification)	Thông tin (ký hiệu ATIS)	Doc 4444 Ch.12	doc4444
+phraseology		INFORMATION (letter) CURRENT	Thông tin (chữ) đang hiệu lực	Doc 4444 Ch.12	doc4444
+phraseology		VISIBILITY (distance)	Tầm nhìn (cự ly)	Doc 4444 Ch.12 — Meteorological information.	doc4444
+phraseology	RVR	RUNWAY VISUAL RANGE (distance)	Tầm nhìn đường CHC (cự ly)	Doc 4444 Ch.12	doc4444
+phraseology	RVR	RVR RUNWAY (number) NOT AVAILABLE	RVR đường CHC (số) không khả dụng	Doc 4444 Ch.12	doc4444
+phraseology		CAVOK	CAVOK	Doc 4444 Ch.12 — Ceiling and visibility OK.	doc4444
+phraseology		SKY CLEAR	Trời quang	Doc 4444 Ch.12	doc4444
+phraseology		CLOUD (amount) (height)	Mây (lượng) (độ cao đáy)	Doc 4444 Ch.12	doc4444
+phraseology		TEMPERATURE (number)	Nhiệt độ (số)	Doc 4444 Ch.12	doc4444
+phraseology		DEWPOINT (number)	Điểm sương (số)	Doc 4444 Ch.12	doc4444
+phraseology		PRESENT WEATHER (details)	Thời tiết hiện tại (chi tiết)	Doc 4444 Ch.12	doc4444
+phraseology		REPORT FLIGHT CONDITIONS	Báo cáo điều kiện bay	Doc 4444 Ch.12	doc4444
+phraseology		LOW VISIBILITY PROCEDURES IN FORCE	Đang áp dụng thủ tục tầm nhìn thấp	Doc 4444 Ch.12 / aerodrome LVP. Kiểm tra AIP địa phương.	doc4444
+phraseology		Hold position, cancel take-off I say again cancel take-off.	Giữ vị trí, hủy cất cánh, tôi nhắc lại hủy cất cánh.	Doc 4444 §12.3.4.11 — Câu mẫu hủy cất cánh.	doc4444
+phraseology		Stop immediately.	Dừng ngay.	Doc 4444 §12.3.4.11 — Câu mẫu dừng khẩn trên CHC.	doc4444
+phraseology		Runway 25 left cleared to land.	Đường CHC 25 trái được phép hạ cánh.	Doc 4444 Ch.12 — Câu mẫu thứ tự RUNWAY + CLEARED TO LAND.	doc4444
+phraseology		Runway 07 cleared for take-off.	Đường CHC 07 được phép cất cánh.	Doc 4444 §12.3.4.11 — Câu mẫu thứ tự RUNWAY + CLEARED FOR TAKE-OFF.	doc4444
+phraseology		Report when ready for departure.	Báo cáo khi sẵn sàng khởi hành.	Doc 4444 §12.3.4.10 — Câu mẫu.	doc4444
+phraseology		Continue approach, prepare for possible go around.	Tiếp tục tiếp cận, chuẩn bị có thể vòng lại.	Doc 4444 Ch.12 — Câu mẫu.	doc4444
+phraseology		When vacated contact ground 121.7.	Khi đã rời CHC, liên lạc mặt đất 121.7.	Doc 4444 Ch.12 — Câu mẫu sau hạ cánh.	doc4444
+phraseology		Taxi to holding point A1 runway 25 left via A, hold short of runway 25 left.	Lăn tới điểm chờ A1 đường CHC 25 trái qua A, dừng trước đường CHC 25 trái.	Doc 4444 Ch.12 — Câu mẫu lăn kèm hold short.	doc4444
+phraseology		Affirm RVSM.	Khẳng định RVSM.	Doc 4444 §12.3.1.13 — Câu mẫu.	doc4444
+phraseology		Unable RVSM due turbulence.	Không RVSM được do rối động.	Doc 4444 §12.3.1.13 — Câu mẫu.	doc4444
+phraseology		Traffic 2 o'clock 3 miles opposite direction.	Tàu bay 2 giờ, 3 hải lý, ngược chiều.	Doc 4444 Ch.12 — Câu mẫu thông tin tàu bay.	doc4444
+phraseology		Attention all aircraft, emergency descent in progress from flight level 370.	Chú ý mọi tàu bay, đang có hạ khẩn từ mức bay 370.	Doc 4444 §12.3.2.5 — Câu mẫu.	doc4444

@@ -1,0 +1,385 @@
+domain	abbr	en	vi	note	source
+atc	ATC	Air Traffic Control	Kiểm soát không lưu	Annex 11 / Doc 4444 — Core ATS product: TWR / APP / ACC. — Service operated by appropriate authority to promote the safe, orderly and expeditious flow of air traffic.	vatm
+atc	ATCS	Air Traffic Control Service	Dịch vụ kiểm soát không lưu	Doc 4444 Ch.1 — Provided in Classes A–E airspace as applicable. — Service provided to prevent collisions between aircraft and on the manoeuvring area between aircraft and obstructions, and to expedite and maintain an orderly flow of air traffic.	vatm
+atc	ATS	Air Traffic Services	Dịch vụ không lưu	Annex 11 — Parent of ATC, FIS, ALRS. — Generic term meaning flight information service, alerting service, air traffic advisory service, and air traffic control service.	vatm
+atc	ATM	Air Traffic Management	Quản lý không lưu	Doc 4444; Doc 9854 — Strategic + tactical layers. — Dynamic, integrated management of air traffic and airspace including ATS, ASM and ATFM.	vatm
+atc	TWR	Aerodrome Control Service	Kiểm soát tại sân bay	Doc 4444 — Tower; ground + airborne in ATZ/CTR. — ATC service for aerodrome traffic.	vatm
+atc	TWR	Aerodrome Control Tower	Đài kiểm soát tại sân bay	Annex 11 — Usually co-located with GND. — Unit established to provide ATC service to aerodrome traffic.	vatm
+atc	APP	Approach Control Service	Kiểm soát tiếp cận	Doc 4444 — TMA / CTR arrivals and departures. — ATC service for arriving or departing controlled flights.	vatm
+atc	APP	Approach Control Unit	Đơn vị kiểm soát tiếp cận	Annex 11 — May be combined with ACC. — Unit established to provide ATC service to controlled flights arriving at, or departing from, one or more aerodromes.	vatm
+atc	ACC	Area Control Service	Kiểm soát đường dài	Doc 4444 — En-route FIR sectors. — ATC service for controlled flights in control areas.	vatm
+atc	ACC	Area Control Centre	Trung tâm kiểm soát đường dài	Annex 11 — HO CHI MINH ACC / HA NOI ACC context. — Unit established to provide ATC service to controlled flights in control areas under its jurisdiction.	vatm
+atc	FIS	Flight Information Service	Dịch vụ thông báo bay	Annex 11 — Mandatory in all classes. — Service provided for the purpose of giving advice and information useful for the safe and efficient conduct of flights.	vatm
+atc	FIC	Flight Information Centre	Trung tâm thông báo bay	Annex 11 — Often co-located with ACC. — Unit established to provide flight information service and alerting service.	vatm
+atc	ALRS	Alerting Service	Dịch vụ báo động	Annex 11 — INCERFA / ALERFA / DETRESFA. — Service provided to notify appropriate organizations regarding aircraft in need of search and rescue aid, and assist such organizations as required.	vatm
+atc		Air Traffic Advisory Service	Dịch vụ tư vấn không lưu	Annex 11 — Class F. — Service provided within advisory airspace to ensure separation, in so far as practical, between aircraft operating on IFR flight plans.	vatm
+atc	AFIS	Aerodrome Flight Information Service	Dịch vụ thông báo bay sân bay	Circular 211 — Uncontrolled aerodromes. — FIS provided at an aerodrome.	vatm
+atc		Clearance	Huấn lệnh	Doc 4444 — Route, level, SID/STAR, approach. — Authorization for an aircraft to proceed under conditions specified by an ATC unit.	vatm
+atc		Air Traffic Control Clearance	Huấn lệnh ATC	Doc 4444 — Must be read back when required. — Authorization for an aircraft to proceed under conditions specified by an ATC unit. [ICAO]	vatm
+atc		Clearance Limit	Giới hạn huấn lệnh	Doc 4444 — May be a fix, airport or FIR boundary. — Point to which an aircraft is granted an ATC clearance.	vatm
+atc		ATC Instruction	Chỉ thị ATC	Doc 4444 — Climb, turn, speed, hold. — Directives issued by ATC requiring a pilot to take a specific action.	vatm
+atc		Read-back	Đọc lại huấn lệnh	Annex 10 Vol II — Safety-critical items mandatory. — Procedure whereby the receiving station repeats a received message or an appropriate part thereof back to the transmitting station so as to obtain confirmation of correct reception.	vatm
+atc		Hear-back	Nghe lại / đối chiếu đọc lại	Doc 4444 — Detect read-back errors immediately. — Controller verification that the pilot read-back is correct.	vatm
+atc	TOC	Transfer of Control	Chuyển giao kiểm soát	Doc 4444 Ch.10 — At COP or agreed level. — Transfer of responsibility for providing ATS from one unit/controller to the next.	vatm
+atc		Transferring Unit	Đơn vị chuyển giao	Doc 4444 — Must pass essential traffic info. — ATC unit in the process of transferring responsibility for providing ATS to an aircraft to the next unit.	vatm
+atc		Accepting Unit	Đơn vị tiếp nhận	Doc 4444 — Must be in a position to accept. — ATC unit next to take control of an aircraft.	vatm
+atc	COP	Coordination Point	Điểm phối hợp	LoA / Doc 4444 — Often FIR/sector boundary fix. — Point agreed between ATS units at or abeam which transfer of control takes place.	vatm
+atc	LoA	Letter of Agreement	Thỏa thuận phối hợp	Doc 4444 / Doc 9426 — Levels, COP, silent transfer. — Document specifying coordination procedures between ATS units.	vatm
+atc		Handover	Bàn giao	Ops manual — Radar handover vs procedural. — Verbal/system transfer of an identified aircraft between controllers.	vatm
+atc		Identification	Nhận dạng	Doc 4444 Ch.8 — SSR code, ADS-B, position report. — Situation which exists when the position indication of a particular aircraft is seen on a situation display and positively identified.	vatm
+atc		SSR Code	Mã SSR / squawk	Annex 10 — Discrete vs conspicuity 2000/7000. — Number assigned to a particular multiple-pulse reply signal transmitted by a transponder in Mode A/3.	vatm
+atc		Mode A	Mode A	Annex 10 — Squawk assignment. — SSR mode providing identity (4096 codes).	vatm
+atc		Mode C	Mode C	Annex 10 — Used for vertical separation verification. — SSR mode providing pressure-altitude.	vatm
+atc		Mode S	Mode S	Annex 10 — Aircraft ID, BDS registers. — SSR mode with selective addressing and data downlink.	vatm
+atc	ADS-B	ADS-B	Giám sát phụ thuộc tự động — phát quảng bá	Doc 9924 / Doc 4444 — 1090ES in VN FIR. — Automatic Dependent Surveillance — Broadcast. Aircraft broadcasts position/velocity derived from onboard nav.	vatm
+atc	ADS-C	ADS-C	Giám sát phụ thuộc tự động — hợp đồng	Doc 4444 — Oceanic / remote. — Automatic Dependent Surveillance — Contract. Reports sent per agreement with ATS unit.	vatm
+atc	CPDLC	CPDLC	Liên lạc dữ liệu kiểm soát viên–phi công	Doc 4444 / Doc 10037 — Complements voice. — Controller–Pilot Data Link Communications.	vatm
+atc	PSR	Primary Surveillance Radar	Ra-đa giám sát sơ cấp	Doc 4444 — No transponder required. — Radar system using reflected radio signals.	vatm
+atc	SSR	Secondary Surveillance Radar	Ra-đa giám sát thứ cấp	Annex 10 — Mode A/C/S. — Radar system using transponder replies.	vatm
+atc	MLAT	Multilateration	Đa trạm / đa phương	Doc 9924 — Surface and TMA. — Surveillance using time difference of arrival of transponder signals at multiple ground stations.	vatm
+atc	WAM	Wide Area Multilateration	Đa trạm diện rộng	Eurocontrol / ICAO — Complements SSR. — MLAT covering en-route or large TMA.	vatm
+atc		Situation Display	Màn hình tình huống	Doc 4444 — CWP / CICS. — Electronic display depicting position and movement of aircraft and other information.	vatm
+atc	CWP	Controller Working Position	Vị trí làm việc kiểm soát viên	Eurocontrol HMI — Radar + EFS + COM. — Workstation used by an ATCO to provide ATS.	vatm
+atc	EFS	Electronic Flight Strip	Strip điện tử	ATM systems — ERP / Anpha roster integration point. — Digital representation of a paper flight progress strip.	vatm
+atc		Flight Progress Strip	Strip tiến trình bay	Doc 4444 heritage — Still used as fallback. — Paper or electronic strip containing current flight data used by controllers.	vatm
+atc		Separation	Giãn cách	Doc 4444 Ch.5–8 — Vertical, longitudinal, lateral, radar. — Spacing between aircraft, levels or tracks to maintain safety.	vatm
+atc		Separation Minima	Tiêu chuẩn giãn cách tối thiểu	Doc 4444 — Depends on nav/surveillance. — Minimum spacing prescribed between aircraft.	vatm
+atc		Vertical Separation	Giãn cách thẳng đứng	Doc 4444 — 1000 ft below FL290 RVSM; 2000 ft otherwise / non-RVSM. — Separation obtained by requiring aircraft to operate at different levels.	vatm
+atc	RVSM	Reduced Vertical Separation Minimum	Giãn cách thẳng đứng giảm	Doc 9574 — MASPS required. — Application of 1000 ft vertical separation between FL290 and FL410 inclusive.	vatm
+atc		Horizontal Separation	Giãn cách nằm ngang	Doc 4444 — Procedural or surveillance. — Lateral or longitudinal separation.	vatm
+atc		Radar Separation	Giãn cách ra-đa	Doc 4444 Ch.8 — Typically 3 / 5 NM. — Horizontal separation based on radar/surveillance position information.	vatm
+atc		Wake Turbulence Separation	Giãn cách rối khí động	Doc 4444 — Time or distance based. — Minima based on wake category (SUPER / HEAVY / MEDIUM / LIGHT or RECAT).	vatm
+atc	RECAT	RECAT	Phân loại rối khí động cải tiến	Doc 4444 Amdt / FAA — Optimizes capacity. — Revised wake turbulence categorization (EU/US 6-category schemes).	vatm
+atc		Visual Separation	Giãn cách nhìn thấy	Doc 4444 — VMC / tower. — Separation applied by pilot or tower controller using visual acquisition.	vatm
+atc		Essential Traffic	Giao thông thiết yếu	Doc 4444 — Must be passed to pilot. — Controlled traffic to which the provision of separation by ATC is applicable, but which, in relation to a particular controlled flight is not separated by the appropriate minima.	vatm
+atc		Traffic Information	Thông tin giao thông	Doc 4444 — Clock position, level, type. — Information issued by ATS unit to alert a pilot to other known or observed traffic which may be in proximity.	vatm
+atc		Holding	Bay chờ	Doc 8168 — Standard holding pattern. — A predetermined manoeuvre which keeps an aircraft within a specified airspace while awaiting further clearance.	vatm
+atc		Holding Fix	Điểm chờ	Doc 8168 — Often IAF or waypoint. — Geographical location that serves as a reference for a holding procedure.	vatm
+atc		Speed Control	Kiểm soát tốc độ	Doc 4444 — Sequence management. — ATC instruction to maintain, increase or reduce IAS/Mach.	vatm
+atc		Vectoring	Dẫn đường bằng hướng	Doc 4444 Ch.8 — Must include reason when leaving route. — Provision of navigational guidance to aircraft in the form of specific headings, based on the use of ATS surveillance system.	vatm
+atc		Identification Squawk	Mã nhận dạng	Doc 4444 — IDENT / special position identification. — Discrete Mode A code assigned for identification.	vatm
+atc		Emergency Squawk	Mã khẩn	Doc 4444 / Annex 2 — Trigger ALRS. — Mode A 7700 (emergency), 7600 (radio fail), 7500 (unlawful interference).	vatm
+atc	RCF	Radiocommunication Failure	Mất liên lạc vô tuyến	Doc 4444 Ch.15 — Squawk 7600; proceed as filed / last clearance. — Loss of two-way communication.	vatm
+atc		Mayday	Mayday	Annex 10 — Spoken 3 times. — Distress prefix: aircraft threatened by grave and imminent danger and requiring immediate assistance.	vatm
+atc		PAN PAN	PAN PAN	Annex 10 — Spoken 3 times. — Urgency prefix: condition concerning safety of aircraft or person but not requiring immediate assistance.	vatm
+atc		Go-around	Đi vòng / bỏ tiếp cận	Doc 8168 / Doc 4444 — Follow MAP unless vectored. — A missed approach executed from a visual or instrument approach.	vatm
+atc	MAP	Missed Approach Procedure	Phương thức tiếp cận hỏng	Doc 8168 — Published in IAP. — The procedure to be followed if the approach cannot be continued.	vatm
+atc		Visual Approach	Tiếp cận nhìn thấy	Doc 4444 — Requires reported ceiling/vis as applicable. — An approach by an IFR flight when either part or all of an IAP is not completed and the approach is executed with visual reference to terrain.	vatm
+atc		Contact Approach	Tiếp cận tiếp xúc (FAA)	FAA PCG — Do not confuse with ICAO visual approach. — US-specific approach in lieu of published IAP in IMC with ground contact. Not an ICAO standard.	vatm
+atc	LVP	Low Visibility Procedures	Quy trình tầm nhìn thấp	Doc 9476 / Doc 9830 — Stop-bars, ILS critical areas. — Procedures applied at an aerodrome for the purpose of ensuring safe operations during Cat II/III or low vis conditions.	vatm
+atc		Runway Incursion	Xâm nhập đường CHC	Doc 9870 — Severity A–E. — Any occurrence at an aerodrome involving the incorrect presence of an aircraft, vehicle or person on the protected area of a surface designated for landing and take-off.	vatm
+atc		Runway Excursion	Trượt / lao khỏi đường CHC	ICAO RST — RESA, EMAS. — Veer-off or overrun off the runway surface.	vatm
+atc		Ground Movement	Di chuyển mặt đất	Doc 4444 — Taxi, push-back. — Movement of aircraft on the manoeuvring area under own power, excluding take-off and landing.	vatm
+atc		Push-back	Đẩy lùi	Doc 4444 phraseology — Requires start-up/push clearance as local. — Movement of an aircraft from a stand using a tractor/tug.	vatm
+atc		Line-up	Vào vị trí cất cánh	Doc 4444 — Conditional line-up possible. — Taxi onto the runway and await take-off clearance.	vatm
+atc		Conditional Clearance	Huấn lệnh có điều kiện	Doc 4444 — Behind the landing… line up. — Clearance given subject to a condition, typically passing traffic.	vatm
+atc	EAT	Expected Approach Time	Giờ dự kiến tiếp cận	Doc 4444 — Issued when delay expected. — Time at which ATC expects an arriving aircraft, following a delay, will leave the holding fix to complete its approach.	vatm
+atc	CTOT	Calculated Take-Off Time	Giờ cất cánh tính toán	Doc 9971 — Slot. — A time calculated and issued by ATFM, at which time the flight is expected to depart.	vatm
+atc	EET	Estimated Elapsed Time	Thời gian bay ước tính	Doc 4444 App.2 — Item 18 EET/. — Estimated time required from take-off to overfly a significant point.	vatm
+atc	ETA	Estimated Time of Arrival	Giờ đến ước tính	Doc 4444 — Update via position reports. — Time at which it is estimated that the aircraft will arrive over a specified point or aerodrome.	vatm
+atc	ATA	Actual Time of Arrival	Giờ đến thực tế	ATS messages ARR — Close FPL. — Actual time an aircraft arrived.	vatm
+atc	ATD	Actual Time of Departure	Giờ đi thực tế	DEP message — Update estimates. — Actual time an aircraft became airborne.	vatm
+atc		Position Report	Báo cáo vị trí	Doc 4444 — Compulsory vs on-request. — Report over a significant point including time and level.	vatm
+atc		Significant Point	Điểm trọng yếu	Annex 11 — Named or lat/long. — Specified geographical location used in defining ATS route or flight path and for progress reporting.	vatm
+atc	FL	Flight Level	Mực bay	Annex 2 / Doc 4444 — FL250 = 25 000 ft PA. — Surface of constant atmospheric pressure related to 1013.25 hPa, expressed in hundreds of feet.	vatm
+atc		Altitude	Độ cao so với mực nước biển	Annex 2 — QNH. — Vertical distance of a level, a point or an object considered as a point, measured from mean sea level.	vatm
+atc		Height	Độ cao so với mốc	Annex 2 — QFE / AGL. — Vertical distance measured from a specified datum.	vatm
+atc	TA	Transition Altitude	Độ cao chuyển tiếp	Doc 8168 / Doc 4444 — VN typically 10 000 ft or as AIP. — Altitude at or below which the vertical position of an aircraft is controlled by reference to altitudes.	vatm
+atc	TL	Transition Level	Mực bay chuyển tiếp	Doc 4444 — Based on QNH. — Lowest flight level available for use above the transition altitude.	vatm
+atc		Transition Layer	Tầng chuyển tiếp	Doc 4444 — Do not cruise in layer. — Airspace between the transition altitude and the transition level.	vatm
+atc	QNH	QNH	QNH	Annex 3 / Doc 8896 — hPa in ICAO. — Altimeter subscale setting to obtain elevation when on the ground; altitude AMSL in the air.	vatm
+atc	QFE	QFE	QFE	Annex 3 — Less common for en-route. — Altimeter subscale setting to obtain zero when on the ground; height AAL.	vatm
+atc	QNE	QNE	QNE / áp suất chuẩn	Annex 2 — Above TL. — Standard pressure 1013.25 hPa used for flight levels.	vatm
+atc	MSA	Minimum Safe Altitude	Độ cao an toàn tối thiểu	Doc 8168 — Emergency / lost comms. — Altitude providing 1 000 ft (2 000 ft mountainous) clearance within 25 NM of a navaid/ARP as published.	vatm
+atc	MEA	Minimum En-route Altitude	Độ cao đường bay tối thiểu	Doc 8168 — IFR en-route. — Lowest published altitude between radio fixes which assures acceptable navigational signal coverage and meets obstacle clearance.	vatm
+atc	MOCA	Minimum Obstacle Clearance Altitude	Độ cao vượt chướng ngại tối thiểu	Doc 8168 — Emergency use. — Lowest published altitude between fixes that meets obstacle clearance (signal coverage not assured).	vatm
+atc		Phraseology	Thuật ngữ vô tuyến chuẩn	Doc 4444 Ch.12; Doc 9432 — Reduce ambiguity. — Standard words and phrases prescribed for radiotelephony.	vatm
+atc		Call Sign	Hô hiệu	Annex 10 — Full then abbreviated. — Telephony designator of an aircraft, unit or station.	vatm
+atc		Blind Transmission	Phát một chiều	Annex 10 — RCF procedures. — Transmission from one station to another in circumstances where two-way communication cannot be established but it is believed the called station is able to receive.	vatm
+atm	FIR	Flight Information Region	Vùng thông báo bay	Annex 11 — VVTS Ho Chi Minh FIR; VVNB Ha Noi FIR. — Airspace of defined dimensions within which FIS and ALRS are provided.	vatm
+atm	UIR	Upper Flight Information Region	Vùng thông báo bay trên	Annex 11 — Not always designated in VN. — Upper portion of FIR when vertically split.	vatm
+atm	CTA	Control Area	Vùng kiểm soát	Annex 11 — Usually from a base altitude/FL to unlimited or UTA. — Controlled airspace extending upwards from a specified limit above the earth.	vatm
+atm	UTA	Upper Control Area	Vùng kiểm soát trên	Annex 11 — Often FL245/FL195+. — Control area in the upper airspace.	vatm
+atm	CTR	Control Zone	Khu vực kiểm soát sân bay	Annex 11 — Protects IFR in/out. — Controlled airspace extending upwards from the surface to a specified upper limit.	vatm
+atm	ATZ	Aerodrome Traffic Zone	Khu vực giao thông sân bay	Annex 2 / national — Often 2–2.5 NM / 2000 ft AAL. — Airspace of defined dimensions established around an aerodrome for protection of aerodrome traffic.	vatm
+atm	TMA	Terminal Control Area	Vùng kiểm soát tiếp cận	Annex 11 — APP jurisdiction. — Control area normally established at the confluence of ATS routes in the vicinity of one or more major aerodromes.	vatm
+atm		ATS Route	Đường hàng không ATS	Annex 11 — Designators A/B/G/R/U/UL etc. — Specified route designed for channelling the flow of traffic as necessary for the provision of ATS.	vatm
+atm		Airway	Đường hàng không	Annex 11 — Often 10 NM wide classically. — Control area or portion thereof established in the form of a corridor.	vatm
+atm	ADR	Advisory Route	Đường tư vấn	Annex 11 — Class F. — A designated route along which air traffic advisory service is available.	vatm
+atm		RNAV Route	Đường bay RNAV	Doc 9613 — Waypoint defined. — ATS route established for the use of aircraft capable of employing area navigation.	vatm
+atm	CDR	Conditional Route	Đường bay có điều kiện	Eurocontrol ASM — CDR1/2/3 categories. — ATS route that is only available under specified conditions (time, level, military activity).	vatm
+atm	FUA	Flexible Use of Airspace	Sử dụng không phận linh hoạt	Doc 10088 / Eurocontrol — ASM Level 1–3. — Airspace management concept whereby airspace is no longer designated as purely civil or military, but considered as one continuum.	vatm
+atm	ASM	Airspace Management	Quản lý vùng trời	Doc 4444; Doc 9854 — Strategic / pre-tactical / tactical. — Planning function with the primary objective of maximizing utilization of available airspace by dynamic time-sharing and, at times, segregation of airspace among various categories of users.	vatm
+atm	ATFM	Air Traffic Flow Management	Quản lý luồng không lưu	Doc 9971 — CTOT, regulations. — Service established with the objective of contributing to a safe, orderly and expeditious flow of air traffic by ensuring that ATC capacity is utilized to the maximum and traffic volume is compatible with capacities declared.	vatm
+atm		Airspace Reservation	Vùng trời dành riêng	ASM handbooks — Military exercise. — Defined volume of airspace temporarily reserved for exclusive or specific use.	vatm
+atm	D	Danger Area	Vùng nguy hiểm	Annex 15 / Annex 2 — e.g. VVD… — Airspace of defined dimensions within which activities dangerous to the flight of aircraft may exist at specified times.	vatm
+atm	R	Restricted Area	Vùng hạn chế	Annex 2 — Need permission. — Airspace of defined dimensions, above the land areas or territorial waters of a State, within which the flight of aircraft is restricted in accordance with certain specified conditions.	vatm
+atm	P	Prohibited Area	Vùng cấm	Annex 2 — No transit. — Airspace of defined dimensions, above the land areas or territorial waters of a State, within which the flight of aircraft is prohibited.	vatm
+atm	TRA	Temporary Reserved Area	Vùng dành riêng tạm thời	FUA — Published by AUP. — Airspace temporarily reserved for particular activity.	vatm
+atm	TSA	Temporary Segregated Area	Vùng tách biệt tạm thời	FUA — Military. — Airspace temporarily segregated for exclusive use of specific users.	vatm
+atm	AUP	Airspace Use Plan	Kế hoạch sử dụng vùng trời	Eurocontrol NM — Pre-tactical. — ASM message of consolidated airspace allocations for D-1.	vatm
+atm	UUP	Updated Airspace Use Plan	Kế hoạch sử dụng vùng trời cập nhật	Eurocontrol NM — Tactical ASM. — Update to AUP on the day of operations.	vatm
+atm		Airspace Classification	Phân loại vùng trời	Annex 11 App.4 — VN AIP ENR 1.4. — ICAO Classes A–G specifying ATS provided and flight rules.	vatm
+atm	A	Class A Airspace	Vùng trời hạng A	Annex 11 — Typically upper airspace. — IFR only; all flights ATC separated.	vatm
+atm	C	Class C Airspace	Vùng trời hạng C	Annex 11 — Common TMA/CTR. — IFR and VFR; IFR separated from IFR and VFR; VFR receive traffic info on VFR.	vatm
+atm	D	Class D Airspace	Vùng trời hạng D	Annex 11 — Many CTRs. — IFR and VFR; IFR separated from IFR; traffic info between IFR and VFR.	vatm
+atm	E	Class E Airspace	Vùng trời hạng E	Annex 11 — Lower en-route in some States. — IFR and VFR; IFR separated from IFR; VFR not subject to ATC clearance.	vatm
+atm	G	Class G Airspace	Vùng trời hạng G	Annex 11 — Uncontrolled. — IFR and VFR permitted; FIS if requested/possible; no ATC clearance.	vatm
+atm	FRA	Free Route Airspace	Vùng trời đường bay tự do	Eurocontrol FRA — DCT within FRA. — Airspace within which users may freely plan a route between a defined entry and exit point, with or without intermediate waypoints.	vatm
+atm	PBN	Performance-Based Navigation	Dẫn đường dựa trên hiệu năng	Doc 9613 — RNAV and RNP specs. — Area navigation based on performance requirements for aircraft operating along an ATS route, on an instrument approach procedure or in a designated airspace.	vatm
+atm	RNAV	Area Navigation	Dẫn đường vùng	Doc 9613 — RNAV 5 / RNAV 1. — Navigation method which permits aircraft operation on any desired flight path within coverage of station-referenced navaids or within limits of self-contained aids, or a combination.	vatm
+atm	RNP	Required Navigation Performance	Hiệu năng dẫn đường yêu cầu	Doc 9613 — RNP 4, RNP 1, RNP APCH. — RNAV specification that includes onboard performance monitoring and alerting.	vatm
+atm	RNP APCH	RNP APCH	Tiếp cận RNP	Doc 9613 / Doc 8168 — Baro-VNAV or SBAS. — RNP approach specification including LNAV, LNAV/VNAV, LP, LPV minima as applicable.	vatm
+atm	RNP AR	RNP AR APCH	Tiếp cận RNP cần cấp phép	Doc 9613 / Doc 9905 — Special authorization. — Authorization Required RNP approach with tighter accuracy and RF legs.	vatm
+atm		Reduced Lateral Separation	Giãn cách ngang giảm	Doc 4444 — RNP 4 / RNP 2 oceanic. — Application of PBN-based lateral minima less than classical 50/30 NM.	vatm
+atm	FLOS	Flight Level Orientation Scheme	Sơ đồ hướng mực bay	Annex 2 App.3 — Table of cruising levels. — Assignment of flight levels by direction of flight (East odd / West even or SEMI-CIRCULAR).	vatm
+atm		Semi-circular Rule	Quy tắc bán nguyệt	Annex 2 — 000–179 odd IFR in many regions. — Odd/even FL assignment by magnetic track.	vatm
+ais	AIS	Aeronautical Information Service	Dịch vụ thông tin hàng không	Annex 15 — AIP, NOTAM, AIC, PIB. — Service established for the provision of aeronautical information/data necessary for the safety, regularity and efficiency of air navigation.	vatm
+ais	AIM	Aeronautical Information Management	Quản lý thông tin hàng không	Doc 8126 / Annex 15 — AIXM; digital AIP. — Dynamic, integrated management of aeronautical information through provision and exchange of quality-assured digital aeronautical data.	vatm
+ais	AIP	Aeronautical Information Publication	Tập thông báo tin tức hàng không	Annex 15 — GEN / ENR / AD. — Publication issued by or with the authority of a State and containing aeronautical information of a lasting character essential to air navigation.	vatm
+ais	eAIP	eAIP	AIP điện tử	Annex 15 / Doc 8126 — HTML/PDF + AIXM. — AIP provided in electronic form.	vatm
+ais	AMDT	AIP Amendment	Sửa đổi AIP	Annex 15 — AIRAC or normal. — Permanent changes to the AIP.	vatm
+ais	SUP	AIP Supplement	Bổ sung AIP	Annex 15 — Temporary procedures. — Temporary changes of long duration (3 months or more) or information of short duration containing extensive text/graphics.	vatm
+ais	AIC	Aeronautical Information Circular	Thông tri tin tức hàng không	Annex 15 — Policy, charges, explanatory. — A notice containing information that does not qualify for inclusion in AIP or NOTAM but concerns flight safety, technical, administrative or legislative matters.	vatm
+ais	NOTAM	NOTAM	Điện văn NOTAM	Annex 15 — Q-line; Item A–G. — A notice distributed by means of telecommunication containing information concerning the establishment, condition or change in any aeronautical facility, service, procedure or hazard, the timely knowledge of which is essential to personnel concerned with flight operations.	vatm
+ais	SNOWTAM	SNOWTAM	NOTAM tuyết / mặt đường	Annex 15 / Doc 10066 — GRF / RCC. — A special series NOTAM given in a standard format providing a surface condition report notifying the presence or cessation of hazardous conditions due to snow, ice, slush, frost or water associated with snow, slush, ice or frost on the movement area.	vatm
+ais	ASHTAM	ASHTAM	NOTAM tro núi lửa	Annex 15 — VAAC coordination. — A special series NOTAM notifying by means of a specific format change in activity of a volcano, volcanic eruption and/or volcanic ash cloud.	vatm
+ais	AIRAC	AIRAC	Chu kỳ AIRAC	Annex 15 — Every 28 days; major changes +56 days. — Aeronautical Information Regulation And Control — system aimed at advance notification, based on common effective dates, of circumstances that necessitate significant changes in operating practices.	vatm
+ais	PIB	Pre-flight Information Bulletin	Bản tin tin tức trước chuyến bay	Annex 15 — Narrow-route / area / aerodrome. — A presentation of current NOTAM information of operational significance, prepared prior to flight.	vatm
+ais	AIXM	Aeronautical Information Exchange Model	Mô hình trao đổi tin tức hàng không	Eurocontrol / FAA — AIXM 5.1.1 common. — XML model for aeronautical information.	vatm
+ais	SWIM	System Wide Information Management	Quản lý thông tin trên toàn hệ thống	Doc 10039 — FF-ICE, digital NOTAM. — Global concept for standardized information exchange in ATM.	vatm
+ais		Digital NOTAM	NOTAM số	SWIM / Annex 15 — Machine-readable. — NOTAM encoded as AIXM temporality events rather than free text only.	vatm
+ais	IAIP	Integrated Aeronautical Information Package	Bộ tin tức hàng không tích hợp	Annex 15 — AIS output set. — Package of AIP + AMDT + SUP + NOTAM + PIB + AIC + checklists.	vatm
+ais	FPL	Flight Plan	Kế hoạch bay	Doc 4444 App.2 — ICAO 2012 format still baseline; FF-ICE emerging. — Specified information provided to ATS units, relative to an intended flight or portion of a flight of an aircraft.	vatm
+ais	RPL	Repetitive Flight Plan	Kế hoạch bay lặp	Doc 4444 — Seasonal schedules. — Flight plan related to a series of frequently recurring, regularly operated individual flights with identical basic features, submitted by an operator for retention and repetitive use by ATS units.	vatm
+ais	FPL	Filed Flight Plan	Kế hoạch bay đã nộp	Doc 4444 — Message type FPL. — The flight plan as filed with an ATS unit by the pilot or a designated representative, without any subsequent changes.	vatm
+ais	CPL	Current Flight Plan	Kế hoạch bay hiện hành	Doc 4444 — What ATC works from. — The flight plan, including changes if any, brought about by subsequent clearances.	vatm
+ais	FPL	ATS Message FPL	Điện văn FPL	Doc 4444 App.3 — AFTN / AMHS. — Filed flight plan message.	vatm
+ais	CHG	Modification Message	Điện văn sửa FPL	Doc 4444 — Before departure usually. — Message submitted to modify a filed FPL.	vatm
+ais	CNL	Cancellation Message	Điện văn hủy FPL	Doc 4444 — Flight will not operate. — Message cancelling a filed FPL.	vatm
+ais	DLA	Delay Message	Điện văn chậm	Doc 4444 — Update slot / estimates. — Message notifying delay of EOBT.	vatm
+ais	DEP	Departure Message	Điện văn khởi hành	Doc 4444 — ATD. — Message notifying actual departure.	vatm
+ais	ARR	Arrival Message	Điện văn đến	Doc 4444 — ATA. — Message notifying arrival.	vatm
+ais	ALR	Alerting Message	Điện văn báo động	Doc 4444 — SAR trigger. — ATS emergency message for INCERFA/ALERFA/DETRESFA.	vatm
+ais	RCF	Radio Failure Message	Điện văn mất liên lạc	Doc 4444 — With ALR as needed. — ATS message concerning radiocommunication failure.	vatm
+ais	EOBT	Estimated Off-Block Time	Giờ dự kiến rời vị trí đỗ	Doc 4444 — FPL Item 13. — Estimated time at which the aircraft will commence movement associated with departure.	vatm
+ais	EOBD	Estimated Off-Block Date	Ngày dự kiến rời vị trí đỗ	FPL — DOF/ in Item 18. — Date associated with EOBT.	vatm
+ais		Item 18	Ô 18 kế hoạch bay	Doc 4444 App.2 — PBN/ and SUR/ critical. — Other information field of ICAO FPL (PBN/, NAV/, COM/, DAT/, SUR/, DEP/, DEST/, DOF/, REG/, EET/, SEL/, TYP/, CODE/, DLE/, OPR/, ORGN/, PER/, ALT/N, RIF/, RMK/).	vatm
+ais	ACID	Aircraft Identification	Nhận dạng tàu bay	Doc 4444 — Item 7. — Group of letters, figures or combination which is either identical to or the coded equivalent of the aircraft call sign.	vatm
+ais	WTC	Wake Turbulence Category	Phân loại rối khí động	Doc 4444 — Affects separation. — J / H / M / L (and SUPER) as filed in FPL Item 9.	vatm
+ais		SSR Mode and Code	Mode và mã SSR	Doc 4444 — Item 10 SUR. — Item 16/10 related surveillance capability and assigned code.	vatm
+ais	AFTN	AFTN	Mạng viễn thông cố định hàng không	Annex 10 — Legacy store-and-forward. — Aeronautical Fixed Telecommunication Network.	vatm
+ais	AMHS	AMHS	Hệ thống xử lý điện văn ATS	Annex 10 Vol II/III — Replaces AFTN. — ATS Message Handling System (ISO X.400 based).	vatm
+ais	ATN	ATN	Mạng viễn thông hàng không	Annex 10 — Ground-ground and air-ground. — Aeronautical Telecommunication Network.	vatm
+ais	OLDI	OLDI	Trao đổi dữ liệu trực tuyến	Eurocontrol SPEC — ABI, ACT, PAC, MAC, LAM. — On-Line Data Interchange between ATC units.	vatm
+ais	ABI	ABI Message	Điện văn thông tin ranh giới trước	OLDI — Pre-activate. — Advanced Boundary Information OLDI message.	vatm
+ais	ACT	Activate Message	Điện văn kích hoạt	OLDI — Silent transfer. — OLDI message transferring flight data at TOC.	vatm
+met	MET	Meteorological Service for International Air Navigation	Dịch vụ khí tượng hàng không	Annex 3 — WAFC, VAAC, TCAC, MWO, AMS. — Service providing meteorological information for aviation.	vatm
+met	OPMET	OPMET	Tin khí tượng khai thác	Annex 3 — Disseminated via SADIS/WAFS. — Operational meteorological information (METAR, SPECI, TAF, SIGMET, AIRMET, AIREP, etc.).	vatm
+met	METAR	METAR	Bản tin thời tiết sân bay định kỳ	Annex 3 — Typically hourly. — Aviation routine weather report.	vatm
+met	SPECI	SPECI	Bản tin thời tiết sân bay đặc biệt	Annex 3 — Vis, RVR, weather, cloud, wind. — Aviation selected special weather report issued when specified criteria are met between METARs.	vatm
+met	TAF	TAF	Dự báo sân bay	Annex 3 — 9h / 24h / 30h validity. — Terminal Aerodrome Forecast.	vatm
+met	SIGMET	SIGMET	Bản tin thời tiết nguy hiểm đường bay	Annex 3 — TS, CAT, GR, VA, TC, SS, RDOACT CLD. — Information issued by a meteorological watch office concerning the occurrence or expected occurrence of specified en-route weather and other phenomena in the atmosphere that may affect the safety of aircraft operations.	vatm
+met	AIRMET	AIRMET	Bản tin thời tiết thấp	Annex 3 — Below FL100 typically. — Information issued by a MWO concerning specified en-route weather phenomena which may affect the safety of low-level aircraft operations.	vatm
+met	GAMET	GAMET	Dự báo khu vực thấp	Annex 3 — Used with AIRMET. — Area forecast in abbreviated plain language for low-level flights.	vatm
+met	VAA	Volcanic Ash Advisory	Khuyến cáo tro núi lửa	Annex 3 — Graphical VAG. — Advisory information on volcanic ash issued by a VAAC.	vatm
+met	TCA	Tropical Cyclone Advisory	Khuyến cáo bão nhiệt đới	Annex 3 — Position, forecast track. — Advisory issued by a TCAC.	vatm
+met	AIREP	AIREP	Báo cáo khí tượng từ tàu bay	Annex 3 / Doc 4444 — Special AIREP for severe turbulence/icing/VA. — Aircraft meteorological report (routine or special).	vatm
+met	PIREP	PIREP	Báo cáo phi công	FAA / Annex 3 — Complements AIREP. — Pilot report of meteorological conditions (more common FAA term).	vatm
+met		Wind Shear	Đứt gió	Doc 9817 — LLWAS, TDWR. — Change of wind speed and/or direction in space, including updrafts and downdrafts.	vatm
+met		Microburst	Luồng hạ đột ngột cục bộ	Doc 9817 — Take-off/landing critical. — A strong localized downdraft with an outburst of damaging winds on or near the ground.	vatm
+met	CAT	Clear Air Turbulence	Rối không khí trong	Annex 3 — SIGMET phenomenon. — Turbulence in clear air, typically near jet streams or mountain waves.	vatm
+met	CB	Cumulonimbus	Mây vũ tích	Annex 3 — Avoidance policy. — Heavy dense cloud with significant vertical extent, often thunderstorms.	vatm
+met	TS	Thunderstorm	Giông	Annex 3 — TSRA, +TSRA. — One or more sudden electrical discharges manifested by a flash of light (lightning) and a sharp rumbling sound (thunder).	vatm
+met	RVR	Runway Visual Range	Tầm nhìn đường CHC	Annex 3 / Annex 14 — Touchdown / mid / rollout. — Range over which the pilot of an aircraft on the centre line of a runway can see the runway surface markings or the lights delineating the runway or identifying its centre line.	vatm
+met		Prevailing Visibility	Tầm nhìn thịnh hành	Annex 3 — METAR VIS group. — The greatest visibility value, observed in accordance with the definition of visibility, which is reached within at least half the horizon circle or within at least half of the surface of the aerodrome.	vatm
+met	VV	Vertical Visibility	Tầm nhìn thẳng đứng	Annex 3 — When sky obscured. — Maximum distance at which an observer can see and identify objects looking vertically upwards into an obscuration.	vatm
+met		Ceiling	Trần mây	Annex 3 — BKN/OVC. — Height above the ground or water of the base of the lowest layer of cloud below 6 000 m (20 000 ft) covering more than half the sky.	vatm
+met	FEW	Cloud Amount FEW	Ít mây (1–2/8)	Annex 3 — METAR. — 1–2 oktas.	vatm
+met	SCT	Cloud Amount SCT	Mây rải (3–4/8)	Annex 3 — METAR. — 3–4 oktas.	vatm
+met	BKN	Cloud Amount BKN	Mây đứt (5–7/8)	Annex 3 — Ceiling if lowest. — 5–7 oktas.	vatm
+met	OVC	Cloud Amount OVC	Mây đặc (8/8)	Annex 3 — Ceiling. — 8 oktas.	vatm
+met		QNH in METAR	QNH trong METAR	Annex 3 — e.g. Q1013. — Pressure reduced to MSL using standard atmosphere, reported in hPa.	vatm
+met	TREND	Trend Forecast	Dự báo xu thế	Annex 3 — NOSIG / BECMG / TEMPO. — Landing forecast appended to METAR/SPECI covering next 2 hours.	vatm
+met	NOSIG	NOSIG	Không thay đổi đáng kể	Annex 3 — METAR end. — No significant change expected in TREND period.	vatm
+met	TEMPO	TEMPO	Biến đổi tạm thời	Annex 3 — TAF/TREND. — Temporary fluctuations lasting less than one hour in each instance and covering less than half the forecast period.	vatm
+met	BECMG	BECMG	Dần trở thành	Annex 3 — TAF. — Change to new conditions expected to occur at a regular or irregular rate.	vatm
+met	FM	From Group	Từ thời điểm	Annex 3 — Self-contained group. — Rapid and significant change at a specified time in TAF.	vatm
+met	PROB	Probability Group	Xác suất	Annex 3 — PROB30 TEMPO. — Probability of occurrence of an alternative value (30 or 40 percent).	vatm
+met	WAFC	World Area Forecast Centre	Trung tâm dự báo khu vực thế giới	Annex 3 — WAFC London / Washington. — Centre providing gridded WAFS forecasts (wind, temp, TURB, icing, CB, humidity).	vatm
+met	MWO	Meteorological Watch Office	Phòng canh phòng khí tượng	Annex 3 — FIR-aligned. — Office maintaining watch over meteorological conditions affecting flight operations within its area of responsibility and issuing SIGMET/AIRMET.	vatm
+met	AMO	Aerodrome Meteorological Office	Phòng khí tượng sân bay	Annex 3 — METAR/TAF originator. — Office providing MET service for an aerodrome.	vatm
+met	VAAC	Volcanic Ash Advisory Centre	Trung tâm khuyến cáo tro núi lửa	Annex 3 — Nine VAACs globally. — Centre designated to provide advisory information on volcanic ash.	vatm
+met	TCAC	Tropical Cyclone Advisory Centre	Trung tâm khuyến cáo bão nhiệt đới	Annex 3 — Tokyo / Miami / La Reunion etc. — Centre designated to provide tropical cyclone advisories.	vatm
+met		Braking Action	Hiệu quả phanh	Doc 10066 GRF — Replaced by RCC 0–6. — Report of deceleration or directional control (legacy GOOD/MEDIUM/POOR).	vatm
+met	RWYCC	Runway Condition Code	Mã tình trạng đường CHC	Doc 10066 / Annex 14 — Reported via RCR / SNOWTAM / ATIS. — Number from 0 to 6 describing runway surface condition per GRF.	vatm
+met	GRF	Global Reporting Format	Định dạng báo cáo toàn cầu	Doc 10066 — Since Nov 2021. — ICAO globally harmonized methodology for assessing and reporting runway surface conditions.	vatm
+met	ATIS	ATIS	Thông tin sân bay tự động	Annex 11 — Letter identifier; MET + ops. — Automatic Terminal Information Service — continuous broadcast of recorded non-control information.	vatm
+met	D-ATIS	D-ATIS	ATIS đường truyền dữ liệu	Annex 11 — ACARS/ATN. — Data link ATIS.	vatm
+met	VOLMET	VOLMET	Bản tin khí tượng cho tàu bay đang bay	Annex 3 / Annex 11 — HF/VHF broadcast. — Meteorological information for aircraft in flight.	vatm
+navigation	PANS-OPS	PANS-OPS	Quy trình khai thác tàu bay / thiết kế phương thức	Doc 8168 — Core design criteria. — Procedures for Air Navigation Services — Aircraft Operations (Doc 8168), Volumes I (Flight Procedures) and II (Construction of Visual and Instrument Flight Procedures).	vatm
+navigation	IFP	Instrument Flight Procedure	Phương thức bay bằng thiết bị	Doc 8168 — SID, STAR, IAP, holding. — A series of predetermined manoeuvres by reference to flight instruments with specified protection from obstacles.	vatm
+navigation	IAP	Instrument Approach Procedure	Phương thức tiếp cận bằng thiết bị	Doc 8168 — 2D / 3D. — A series of predetermined manoeuvres by reference to flight instruments with specified protection from obstacles from the initial approach fix, or where applicable, from the beginning of a defined arrival route to a point from which a landing can be completed and thereafter, if a landing is not completed, to a position at which holding or en-route obstacle clearance criteria apply.	vatm
+navigation	SID	Standard Instrument Departure	Phương thức khởi hành chuẩn bằng thiết bị	Doc 8168 — Omnidirectional vs routed. — A designated IFR departure route linking the aerodrome or a specified runway of an aerodrome with a specified significant point, normally on a designated ATS route, at which the en-route phase of a flight commences.	vatm
+navigation	STAR	Standard Instrument Arrival	Phương thức đến chuẩn bằng thiết bị	Doc 8168 — Open vs closed STAR. — A designated IFR arrival route linking a significant point, normally on an ATS route, with a point from which a published IAP can be commenced.	vatm
+navigation	IAF	Initial Approach Fix	Điểm bắt đầu đoạn đầu	Doc 8168 — May have holding. — A fix that marks the beginning of the initial segment and the end of the arrival segment, if applicable.	vatm
+navigation	IF	Intermediate Fix	Điểm trung gian	Doc 8168 — Alignment and speed reduction. — A fix that marks the end of an initial segment and the beginning of the intermediate segment.	vatm
+navigation	FAF	Final Approach Fix	Điểm bắt đầu đoạn cuối	Doc 8168 — Step-down possible. — A fix that marks the beginning of the final approach segment (non-precision / 2D).	vatm
+navigation	FAP	Final Approach Point	Điểm tiếp cận cuối (3D)	Doc 8168 — Glide path intercept. — Point of an ILS/SBAS/GBAS precision approach at which the intermediate segment intersects the glide path.	vatm
+navigation	MAPt	Missed Approach Point	Điểm tiếp cận hỏng	Doc 8168 — Often navaid or waypoint. — Point in an IAP at or before which the prescribed missed approach procedure must be initiated in order to ensure the minimum obstacle clearance is not infringed.	vatm
+navigation	DA/H	Decision Altitude/Height	Độ cao quyết định	Doc 8168 / Annex 6 — Precision / APV / LPV. — A specified altitude or height in a 3D instrument approach operation at which a missed approach must be initiated if the required visual reference to continue the approach has not been established.	vatm
+navigation	MDA/H	Minimum Descent Altitude/Height	Độ cao hạ thấp tối thiểu	Doc 8168 / Annex 6 — Non-precision. — A specified altitude or height in a 2D instrument approach operation or circling approach below which descent must not be made without the required visual reference.	vatm
+navigation	OCA/H	Obstacle Clearance Altitude/Height	Độ cao vượt chướng ngại	Doc 8168 — Basis for published minima. — The lowest altitude or the lowest height above the elevation of the relevant runway threshold or the aerodrome as applicable, used in establishing compliance with appropriate obstacle clearance criteria.	vatm
+navigation	CDFA	Continuous Descent Final Approach	Hạ cánh cuối liên tục	Doc 8168 — Preferred NPA technique. — A technique, consistent with stabilized approach procedures, for flying the final approach segment of a 2D instrument approach procedure as a continuous descent, without level-off, from an altitude/height at or above the FAF altitude/height.	vatm
+navigation	PA	Precision Approach	Tiếp cận chính xác	Annex 6 / Doc 8168 — 3D with GP. — An instrument approach based on a navigation system that provides course and glide path deviation with minima as per operations specifications (typically ILS/MLS/GLS Cat I–III).	vatm
+navigation	NPA	Non-Precision Approach	Tiếp cận không chính xác	Annex 6 — 2D; fly CDFA. — An instrument approach based on a navigation system that provides course deviation but no glide path.	vatm
+navigation	APV	Approach Procedure with Vertical Guidance	Tiếp cận có dẫn đường thẳng đứng	Annex 6 / Doc 8168 — Baro-VNAV, LPV. — An instrument approach based on a navigation system that is not required to meet the precision approach standards but provides course and glide path deviation.	vatm
+navigation	CAT I	ILS Category I	ILS Hạng I	Annex 6 / Annex 10 — Standard precision. — DH not lower than 60 m (200 ft) and either visibility not less than 800 m or RVR not less than 550 m.	vatm
+navigation	CAT II	ILS Category II	ILS Hạng II	Annex 6 — Requires LVP. — DH lower than 60 m (200 ft) but not lower than 30 m (100 ft) and RVR not less than 300 m.	vatm
+navigation	CAT III	ILS Category III	ILS Hạng III	Annex 6 — Autoland typically. — A precision approach and landing with no DH or DH below 30 m (100 ft) and RVR less than 300 m, subdivided A/B/C.	vatm
+navigation	GP	Glide Path	Đường hạ cánh ILS	Annex 10 — Typically 3.0°. — A descent profile determined for vertical guidance during a final approach.	vatm
+navigation	LOC	Localizer	Đài hướng ILS	Annex 10 — Front course / back course. — The component of ILS which provides course guidance to the runway centre line.	vatm
+navigation	TCH	Threshold Crossing Height	Độ cao qua ngưỡng CHC	Doc 8168 — Typically 15–18 m. — The height of the ILS glide path / procedure path above threshold.	vatm
+navigation	PT	Procedure Turn	Cua phương thức	Doc 8168 — 45/180 or 80/260. — A manoeuvre in which a turn is made away from a designated track followed by a turn in the opposite direction to permit the aircraft to intercept and proceed along the reciprocal of the designated track.	vatm
+navigation		Base Turn	Cua cơ sở	Doc 8168 — Racetrack alternative. — A turn executed by the aircraft during the initial approach between the end of the outbound track and the beginning of the intermediate or final approach track. The tracks are not reciprocal.	vatm
+navigation		Racetrack Procedure	Phương thức đường đua	Doc 8168 — Holding-pattern shape. — A procedure designed to enable the aircraft to reduce altitude during the initial approach segment and/or intercept the intermediate or final approach track.	vatm
+navigation		Holding Pattern	Vòng chờ	Doc 8168 Vol II P4 — Entry: direct / parallel / offset. — A predetermined manoeuvre which keeps an aircraft within a specified airspace while awaiting further clearance. Standard: right turns, 1 min inbound ≤ FL140, 1.5 min above.	vatm
+navigation		Primary Area	Vùng chính	Doc 8168 — MOC 100%. — Area symmetrically disposed about the nominal flight track in which full obstacle clearance is provided.	vatm
+navigation		Secondary Area	Vùng phụ	Doc 8168 — Buffer. — Area along the outer edges of the primary area in which MOC reduces from 100% to 0%.	vatm
+navigation	MOC	Minimum Obstacle Clearance	Giãn cách chướng ngại tối thiểu	Doc 8168 — e.g. 300 m initial; 150 m intermediate; 75 m NPA final. — The minimum vertical clearance that must exist between aircraft and obstacles in the primary area of a segment.	vatm
+navigation	PDG	Procedure Design Gradient	Độ dốc thiết kế phương thức	Doc 8168 — Minimum 3.3% departure. — The published climb gradient for a SID or missed approach when greater than the minimum.	vatm
+navigation		Turning Departure	Khởi hành có cua	Doc 8168 — Turn altitude / turn fix. — Departure involving a turn of more than 15°.	vatm
+navigation		Straight Departure	Khởi hành thẳng	Doc 8168 — Simpler protection. — Departure in which the initial departure track is within 15° of the runway alignment.	vatm
+navigation		Omnidirectional Departure	Khởi hành mọi hướng	Doc 8168 — Sectors / restrictions. — Departure procedure designed where no track guidance is provided.	vatm
+navigation	VSS	Visual Segment Surface	Bề mặt đoạn nhìn thấy	Doc 8168 / Annex 14 — APV / PA alignment. — Obstacle protection surface for the visual segment of an approach.	vatm
+navigation	OAS	Obstacle Assessment Surface	Bề mặt đánh giá chướng ngại	Doc 8168 Vol II — Cat I/II/III. — Surfaces used in ILS collision-risk / CRM assessment.	vatm
+navigation	CRM	Collision Risk Model	Mô hình rủi ro va chạm	Doc 8168 — Complements OAS. — ICAO statistical model used in ILS procedure design obstacle assessment.	vatm
+navigation		Circling Approach	Tiếp cận vòng	Doc 8168 — Circling MDA and visibility. — Visual manoeuvre after completing an instrument approach to bring the aircraft into position for landing on a runway not suitably located for a straight-in.	vatm
+navigation		Straight-in Approach	Tiếp cận thẳng	Doc 8168 — Preferred. — Final approach track aligned within 5° (or 30° for NPA certain criteria) of runway centre line.	vatm
+navigation	LNAV	LNAV Minima	Cực tiểu LNAV	Doc 8168 / Doc 9613 — MDA/H. — Lateral navigation only minima for RNP APCH (2D).	vatm
+navigation	LNAV/VNAV	LNAV/VNAV Minima	Cực tiểu LNAV/VNAV	Doc 8168 — DA/H; temp limits. — Minima using Baro-VNAV vertical guidance with RNP APCH.	vatm
+navigation	LPV	LPV Minima	Cực tiểu LPV	Doc 8168 / Doc 9613 — APV-I / APV-II. — Localizer Performance with Vertical guidance using SBAS.	vatm
+navigation	Baro-VNAV	Baro-VNAV	Dẫn đường thẳng đứng khí áp	Doc 8168 — Temperature correction. — Vertical navigation based on barometric altitude for final approach.	vatm
+navigation	RF	RF Leg	Đoạn cung RF	Doc 8168 / ARINC 424 — RNP AR common. — Radius-to-Fix path terminator defining a constant radius turn.	vatm
+navigation		Path Terminator	Mã kết thúc đoạn đường bay	ARINC 424 / Doc 8168 — Coding of IFP. — ARINC 424 two-letter codes defining how a path is flown (IF, TF, CF, DF, FA, CA, VA, VM, RF, HM, HA, HF, PI, etc.).	vatm
+navigation		Waypoint Fly-by	Điểm bay qua (fly-by)	Doc 8168 — Default. — Waypoint that requires turn anticipation so as to allow tangential interception of the next segment.	vatm
+navigation		Waypoint Fly-over	Điểm bay đúng trên	Doc 8168 — Used when fly-by not acceptable. — Waypoint at which a turn is initiated after overflying the waypoint.	vatm
+navigation	FAS DB	FAS Data Block	Khối dữ liệu đoạn tiếp cận cuối	Doc 8168 / Annex 10 — CRC protected. — Final Approach Segment data block for SBAS/GBAS approaches.	vatm
+navigation	PDO	Procedure Design Organization	Tổ chức thiết kế phương thức	Doc 9906 — Quality assurance. — Organization approved to design IFPs.	vatm
+navigation	IFPD	Flight Procedure Design	Thiết kế phương thức bay	Doc 9906 — 5-stage process often used. — Process of constructing IFPs in accordance with PANS-OPS and quality processes in Doc 9906.	vatm
+navigation	Doc 9906	Doc 9906	Sổ tay đảm bảo chất lượng thiết kế phương thức	Doc 9906 — Training, validation, maintenance. — Quality Assurance Manual for Flight Procedure Design (multi-volume).	vatm
+navigation		Ground Validation	Thẩm định mặt đất	Doc 9906 — Before flight validation. — Office and simulator review of a new or revised IFP.	vatm
+navigation		Flight Validation	Thẩm định bay	Doc 8071 / Doc 9906 — May be waived if criteria met. — Flight check of an IFP to confirm flyability, data and obstacle environment.	vatm
+navigation		Procedure Altitude/Height	Độ cao phương thức	Doc 8168 — May be above OCA. — A published altitude/height flown operationally after considering obstacles, constraints and ATC.	vatm
+safety	SMS	Safety Management System	Hệ thống quản lý an toàn	Annex 19 / Doc 9859 — 4 components / 12 elements. — A systematic approach to managing safety, including the necessary organizational structures, accountabilities, policies and procedures.	vatm
+safety	SSP	State Safety Programme	Chương trình an toàn quốc gia	Annex 19 — CAAV context. — An integrated set of regulations and activities aimed at improving safety.	vatm
+safety	SRM	Safety Risk Management	Quản lý rủi ro an toàn	Doc 9859 — Bow-tie / risk matrix. — Hazard identification, risk assessment and mitigation.	vatm
+safety	SA	Safety Assurance	Đảm bảo an toàn	Doc 9859 — Audit, SPI, MOR. — Processes that monitor SMS performance and change management.	vatm
+safety	SPI	Safety Performance Indicator	Chỉ số hiệu suất an toàn	Doc 9859 — e.g. loss of separation / 100 000 movements. — A data-based parameter used for monitoring and assessing safety performance.	vatm
+safety	SPT	Safety Performance Target	Mục tiêu hiệu suất an toàn	Doc 9859 — Acceptable level of safety performance. — The planned or intended objective for a SPI over a given period.	vatm
+safety	ALoSP	Acceptable Level of Safety Performance	Mức hiệu suất an toàn chấp nhận được	Annex 19 — Not a single number. — Minimum level of safety performance of civil aviation in a State, as defined in its SSP, or of a service provider as defined in its SMS, expressed in terms of SPI and SPT.	vatm
+safety		Hazard	Mối nguy	Annex 19 — Not the same as risk. — A condition or an object with the potential to cause or contribute to an aircraft incident or accident.	vatm
+safety		Safety Risk	Rủi ro an toàn	Annex 19 — 5×5 matrix common. — The predicted probability and severity of the consequences or outcomes of a hazard.	vatm
+safety		Just Culture	Văn hóa công bằng	Doc 9859 / EU 376/2014 — Enables reporting. — A culture in which front-line operators or others are not punished for actions, omissions or decisions commensurate with their experience and training, but where gross negligence, wilful violations and destructive acts are not tolerated.	vatm
+safety	MOR	Mandatory Occurrence Report	Báo cáo sự cố bắt buộc	Annex 13 / 19; national regs — CAA / ANS provider. — Required report of specified occurrences.	vatm
+safety	VOR	Voluntary Occurrence Report	Báo cáo sự cố tự nguyện	Doc 9859 — Just culture essential. — Non-mandatory safety report.	vatm
+safety	AIRPROX	Airprox	Xích lại gần nguy hiểm	Doc 4444 — Severity A–E assessment. — A situation in which, in the opinion of a pilot or ATS personnel, the distance between aircraft as well as their relative positions and speed have been such that the safety of the aircraft involved may have been compromised.	vatm
+safety	LOS	Loss of Separation	Mất giãn cách	ATS SMS — SPI candidate. — Infringement of prescribed separation minima.	vatm
+safety	STCA	Short Term Conflict Alert	Cảnh báo xung đột ngắn hạn	Eurocontrol SRC — Tactical net. — A ground-based safety net that predicts conflicts within a look-ahead time and alerts the controller.	vatm
+safety	MSAW	Minimum Safe Altitude Warning	Cảnh báo độ cao an toàn tối thiểu	Doc 4444 — CWP alert. — Safety net alerting when an aircraft is predicted to impact terrain or go below safe altitude.	vatm
+safety	APW	Area Proximity Warning	Cảnh báo tiến gần vùng	Eurocontrol — SUA protection. — Alert when aircraft will penetrate a restricted/danger volume.	vatm
+safety	RIMCAS	Runway Collision Avoidance	Cảnh báo xung đột đường CHC	Doc 9830 — A-SMGCS Level 2+. — A-SMGCS function alerting on conflicting runway occupancy.	vatm
+safety	A-SMGCS	A-SMGCS	Hệ thống hướng dẫn và kiểm soát di chuyển mặt đất tiên tiến	Doc 9830 — Levels 1–4. — Advanced Surface Movement Guidance and Control System.	vatm
+safety		Change Management	Quản lý thay đổi	Doc 9859 — New SID, new CWP, roster change. — Formal process to identify hazards introduced by operational/technical/organizational change.	vatm
+safety		Safety Case	Hồ sơ an toàn	ANS SMS practice — Used for new ATM systems. — A structured argument, supported by evidence, that a system is safe for a given application in a given environment.	vatm
+safety		Unit Safety Case	Hồ sơ an toàn đơn vị	CANSO / Eurocontrol — Living document. — Safety argument for an ATS unit.	vatm
+safety	HF	Human Factors	Yếu tố con người	Doc 9683 / Doc 9806 — SHEL / TEM. — Discipline concerned with understanding interactions among humans and other elements of a system.	vatm
+safety	TEM	Threat and Error Management	Quản lý đe dọa và sai sót	ICAO TEM — Used in ATC training. — Concept of managing operational threats and errors to maintain safety margins.	vatm
+safety	TRM	Team Resource Management	Quản lý nguồn lực tổ bay/kíp trực	Eurocontrol TRM — Communication, workload. — ATM adaptation of CRM for ATC teams.	vatm
+safety	CRM	Crew Resource Management	Quản lý nguồn lực tổ lái	Annex 6 / Doc 9683 — Parallel to TRM. — Use of all available resources by flight crew to ensure safe operations.	vatm
+safety	NOSS	Normal Operations Safety Survey	Khảo sát an toàn khai thác bình thường	CANSO / ICAO — Complement to investigations. — Observational survey of threats/errors in live ATC operations (TEM-based).	vatm
+safety		Investigation	Điều tra sự cố/tai nạn	Annex 13 — ATS occurrence investigation. — Process conducted to prevent recurrence, not to apportion blame (Annex 13 philosophy).	vatm
+safety		Accident	Tai nạn	Annex 13 — AAISD / CAAV. — Occurrence associated with the operation of an aircraft in which a person is fatally or seriously injured, or the aircraft sustains substantial damage or is missing, with specified exceptions.	vatm
+safety		Incident	Sự cố	Annex 13 — Serious incident separately defined. — An occurrence, other than an accident, associated with the operation of an aircraft which affects or could affect the safety of operation.	vatm
+safety		Serious Incident	Sự cố nghiêm trọng	Annex 13 — Annex 13 Attachment C examples. — An incident involving circumstances indicating that there was a high probability of an accident.	vatm
+safety	RST	Runway Safety Team	Tổ an toàn đường CHC	Doc 9870 — TWR + airport + operators. — Team at an aerodrome implementing the runway safety programme.	vatm
+safety		Fatigue-related Accident	Tai nạn liên quan mệt mỏi	Doc 9966 — Link to FRMS. — Accident in which fatigue was a contributing factor.	vatm
+frms		Fatigue	Mệt mỏi	Annex 11; Doc 9966 — ATS-specific definition in Doc 9966. — A physiological state of reduced mental or physical performance capability resulting from sleep loss, extended wakefulness, circadian phase, and/or workload (mental and/or physical activity) that can impair a person’s alertness and ability to perform safety-related operational duties.	vatm
+frms	FRMS	Fatigue Risk Management System	Hệ thống quản lý rủi ro mệt mỏi	Doc 9966; Annex 11 2.28 — Complements prescriptive limits. — A data-driven means of continuously monitoring and managing fatigue-related safety risks, based upon scientific principles, knowledge and operational experience that aims to ensure relevant personnel are performing at adequate levels of alertness.	vatm
+frms		Prescriptive Fatigue Limitations	Giới hạn mệt mỏi theo quy định	Annex 11; Doc 9966 — Max duty, min rest, nights. — Duty-time and rest limitations prescribed by the State / provider.	vatm
+frms		Duty Period	Thời gian trực / làm nhiệm vụ	Doc 9966 — Includes handover. — Period which starts when ATS personnel are required by an ATS provider to report for or to commence a duty and ends when that person is free from all duties.	vatm
+frms		Rest Period	Thời gian nghỉ	Doc 9966 — Local vs layover. — A continuous and defined period of time, subsequent to and/or prior to duty, during which ATS personnel are free of all duties.	vatm
+frms		Shift	Ca trực	Ops / Doc 9966 — Day / swing / night. — A scheduled period of duty.	vatm
+frms		Night Duty	Ca đêm	Doc 9966 / EASA CS — Highest fatigue risk. — Duty that infringes the WOCL (typically 02:00–05:59 local).	vatm
+frms	WOCL	Window of Circadian Low	Cửa sổ sinh học thấp	Doc 9966 — Avoid critical tasks unaided. — The period of the circadian body clock cycle when subjective fatigue and sleepiness are greatest and performance is most degraded; typically 02:00–05:59.	vatm
+frms		Circadian Rhythm	Nhịp sinh học	Doc 9966 — Jet lag / shift lag. — Endogenous ~24 h biological rhythm driving sleep propensity, alertness and many physiological functions.	vatm
+frms		Process C	Quá trình C (sinh học)	Åkerstedt / Folkard models — CAS tools. — Circadian process in the two-/three-process model of alertness.	vatm
+frms		Process S	Quá trình S (áp lực ngủ)	Two-process model — Long duty without nap. — Homeostatic sleep pressure that increases with time awake and decreases with sleep.	vatm
+frms		Process W	Quá trình W (quán tính ngủ)	Three-process model — First 20–30 min after wake/nap. — Sleep inertia component in three-process models.	vatm
+frms		Sleep Inertia	Quán tính ngủ	Doc 9966 — Controlled nap policy needed. — Temporary grogginess and performance impairment immediately after awakening.	vatm
+frms		Sleep Debt	Nợ ngủ	Doc 9966 — Builds across night series. — Accumulated deficit relative to an individual’s sleep need.	vatm
+frms		Controlled Rest / Nap	Nghỉ kiểm soát / ngủ ngắn	Doc 9966 / some ANSPs — Not universally authorized for ATC. — Short sleep opportunity on duty under defined conditions (where permitted).	vatm
+frms	BMM	Bio-mathematical Model	Mô hình toán sinh học	Doc 9966 — Predictive FRMS pillar. — Model estimating fatigue/alertness from sleep/wake and duty history (e.g. SAFTE-FAST, CAST, three-process).	vatm
+frms	CAS	Cumulative Actuarial Score / CAS-type score	Điểm mệt mỏi CAS	Scientific FRMS practice — Used in ATC roster design. — Operational fatigue score derived from circadian, sleep pressure and inertia components used in roster risk tools.	vatm
+frms		Fatigue Report	Báo cáo mệt mỏi	Doc 9966 — Confidential preferred. — Safety report specifically identifying fatigue as a factor or concern.	vatm
+frms		Fatigue Survey	Khảo sát mệt mỏi	Doc 9966 — Prior to roster change. — Proactive collection of subjective fatigue/sleepiness ratings (KSS, Samn-Perelli) and sleep diaries.	vatm
+frms	KSS	Karolinska Sleepiness Scale	Thang buồn ngủ Karolinska	Åkerstedt — In-shift ratings. — 9-point subjective sleepiness scale widely used in FRMS.	vatm
+frms	SP	Samn-Perelli Scale	Thang mệt mỏi Samn-Perelli	Samn & Perelli 1982 — Complement KSS. — 7-point fatigue scale used in aviation.	vatm
+frms	PVT	Psychomotor Vigilance Task	Bài kiểm tra cảnh giác tâm vận	FRMS science — Research / targeted studies. — Objective reaction-time test sensitive to fatigue.	vatm
+frms		Alertness	Độ tỉnh táo	Doc 9966 — FRMS objective. — State of being able to detect and respond to operationally relevant stimuli; inverse of sleepiness.	vatm
+frms		Workload	Tải công việc	Doc 9966 / HF — Interacts with fatigue. — Demand placed upon personnel by the operational environment, including task load, complexity and time pressure.	vatm
+frms		Recovery Sleep	Giấc ngủ phục hồi	Doc 9966 — At least one full night, often two after nights. — Sleep obtained after a duty sequence sufficient to restore baseline alertness.	vatm
+frms		Forward Rotation	Xoay ca thuận	FRMS science — Generally better tolerated than backward. — Shift pattern rotating day → evening → night (direction of clock).	vatm
+frms		Backward Rotation	Xoay ca nghịch	FRMS science — Higher fatigue risk. — Night → evening → day rotation.	vatm
+frms		Quick Return	Khoảng nghỉ ngắn giữa hai ca	Doc 9966 / EASA — Limits sleep opportunity. — Short off-duty interval between two duties (e.g. <11 h).	vatm
+frms		Handover / Briefing Time	Thời gian bàn giao	ATS ops — Safety-critical communication. — Time allocated at start/end of duty for position relief briefing; part of duty.	vatm
+frms		Maximum Consecutive Night Duties	Số ca đêm liên tiếp tối đa	Prescriptive scheme — Often 2–3 in ATC. — Limit on number of night shifts in a row.	vatm
+frms		Minimum Rest After Night Duty	Nghỉ tối thiểu sau ca đêm	Prescriptive / FRMS — Often ≥ 12–14 h local. — Extended rest following night duty to allow recovery sleep.	vatm
+frms		Standby	Trực sẵn sàng	Doc 9966 — May count partly as duty. — Period during which a person is required to be available for duty if called.	vatm
+frms		On-call	Trực từ xa	Provider rules — Sleep disruption risk. — Availability outside the workplace.	vatm
+frms		Non-duty Day	Ngày không trực	Roster rules — Local night sleep protected. — Calendar day free of all duty and standby.	vatm
+frms	FSAG	Fatigue Safety Action Group	Tổ hành động an toàn mệt mỏi	Doc 9966 — Roster + SMS + medical. — Cross-functional group that oversees FRMS processes.	vatm
+frms		Predictive FRMS	FRMS dự báo	Doc 9966 — Roster construction. — Use of previous experience, bio-math models and roster rules to estimate fatigue before operations.	vatm
+frms		Proactive FRMS	FRMS chủ động	Doc 9966 — KSS sampling. — Monitoring actual fatigue in current operations (surveys, PVT, reports).	vatm
+frms		Reactive FRMS	FRMS phản ứng	Doc 9966 — Investigation checklist. — Analysis of fatigue contribution after events.	vatm
+frms	Doc 9966	ICAO Doc 9966	Tài liệu hướng dẫn giám sát quản lý mệt mỏi	Doc 9966 2nd ed — ATS chapter included. — Manual for the Oversight of Fatigue Management Approaches.	vatm
+frms		Annex 11 Fatigue Provisions	Quy định mệt mỏi Phụ ước 11	Annex 11 §2.28 — Applicable to VATM context. — Standards requiring States to have prescriptive limitation schemes and/or FRMS for ATCOs.	vatm
+frms		CANSO Fatigue Management Guide	Hướng dẫn quản lý mệt mỏi CANSO	CANSO / ICAO / IFATCA — Practical ANSP tool. — Industry guide for ATS providers implementing fatigue management.	vatm
+frms		IFATCA Fatigue Policy	Chính sách mệt mỏi IFATCA	IFATCA — Social + safety. — Controller association policy positions on duty limits and FRMS.	vatm
+frms		Sector Capacity	Năng lực khu vực kiểm soát	Doc 4444 Ch.3 — ATFM input; workload driver. — Declared number of aircraft an ATCO/sector can handle safely in a given period.	vatm
+frms	PRB	Position Relief Briefing	Briefing bàn giao vị trí	Doc 4444 / HF — Threats, traffic, weather, equipment. — Structured transfer of operational picture at handover.	vatm
+atc	APP	Approach Control	Kiểm soát tiếp cận	Viết tắt VATM · ATC	vatm
+atc	GND	Ground Control	Kiểm soát mặt đất	Viết tắt VATM · ATC	vatm
+navigation	DA	Decision Altitude	Độ cao quyết định	Viết tắt VATM · PANS-OPS	vatm
+navigation	DH	Decision Height	Chiều cao quyết định	Viết tắt VATM · PANS-OPS	vatm
+navigation	MDA	Minimum Descent Altitude	Độ cao hạ thấp tối thiểu	Viết tắt VATM · PANS-OPS	vatm
+navigation	MDH	Minimum Descent Height	Chiều cao hạ thấp tối thiểu	Viết tắt VATM · PANS-OPS	vatm
+navigation	OCH	Obstacle Clearance Height	Chiều cao vượt chướng ngại	Viết tắt VATM · PANS-OPS	vatm
+navigation	OCA	Obstacle Clearance Altitude	Độ cao vượt chướng ngại	Viết tắt VATM · PANS-OPS	vatm
+atc	QNH	QNH pressure setting	Áp suất QNH	Viết tắt VATM · ATC	vatm
+atc	QFE	QFE pressure setting	Áp suất QFE	Viết tắt VATM · ATC	vatm
+atc	ADS-B	Automatic Dependent Surveillance — Broadcast	Giám sát phụ thuộc tự động phát quảng bá	Viết tắt VATM · ATC	vatm
+atc	ADS-C	Automatic Dependent Surveillance — Contract	Giám sát phụ thuộc tự động theo hợp đồng	Viết tắt VATM · ATC	vatm
+atc	CPDLC	Controller–Pilot Data Link Communications	Liên lạc dữ liệu KSV–phi công	Viết tắt VATM · ATC	vatm
+ais	NOTAM	Notice to Airmen	Điện văn NOTAM	Viết tắt VATM · AIS	vatm
+ais	AIRAC	Aeronautical Information Regulation And Control	Chu kỳ điều chỉnh tin tức hàng không	Viết tắt VATM · AIS	vatm
+ais	AMHS	ATS Message Handling System	Hệ thống xử lý điện văn ATS	Viết tắt VATM · AIS	vatm
+ais	AFTN	Aeronautical Fixed Telecommunication Network	Mạng viễn thông cố định hàng không	Viết tắt VATM · AIS	vatm
+ais	OLDI	On-Line Data Interchange	Trao đổi dữ liệu trực tuyến	Viết tắt VATM · AIS	vatm
+met	METAR	Aviation routine weather report	Bản tin thời tiết sân bay định kỳ	Viết tắt VATM · MET	vatm
+met	SPECI	Aviation special weather report	Bản tin thời tiết sân bay đặc biệt	Viết tắt VATM · MET	vatm
+met	TAF	Terminal Aerodrome Forecast	Dự báo sân bay	Viết tắt VATM · MET	vatm
+met	SIGMET	Significant meteorological information	Tin thời tiết nguy hiểm đường bay	Viết tắt VATM · MET	vatm
+met	AIRMET	Airmen's meteorological information	Tin thời tiết thấp	Viết tắt VATM · MET	vatm
+met	ATIS	Automatic Terminal Information Service	Thông tin sân bay tự động	Viết tắt VATM · MET	vatm
+navigation	ILS	Instrument Landing System	Hệ thống hạ cánh bằng thiết bị	Viết tắt VATM · PANS-OPS	vatm
+navigation	VOR	VHF Omnidirectional Range	Đài VOR	Viết tắt VATM · PANS-OPS	vatm
+navigation	DME	Distance Measuring Equipment	Thiết bị đo cự ly	Viết tắt VATM · PANS-OPS	vatm
+navigation	NDB	Non-Directional Beacon	Đài dẫn đường vô hướng	Viết tắt VATM · PANS-OPS	vatm
+navigation	GBAS	Ground-Based Augmentation System	Hệ thống tăng cường mặt đất	Viết tắt VATM · PANS-OPS	vatm
+navigation	SBAS	Satellite-Based Augmentation System	Hệ thống tăng cường vệ tinh	Viết tắt VATM · PANS-OPS	vatm
+atc	INCERFA	Uncertainty phase	Giai đoạn không chắc chắn	Viết tắt VATM · ATC	vatm
+atc	ALERFA	Alert phase	Giai đoạn báo động	Viết tắt VATM · ATC	vatm
+atc	DETRESFA	Distress phase	Giai đoạn nguy cấp	Viết tắt VATM · ATC	vatm
+atc	RCC	Rescue Coordination Centre	Trung tâm phối hợp tìm kiếm cứu nạn	Viết tắt VATM · ATC	vatm
+atc	SAR	Search and Rescue	Tìm kiếm cứu nạn	Viết tắt VATM · ATC	vatm

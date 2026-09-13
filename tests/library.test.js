@@ -1,0 +1,41 @@
+'use strict';
+const assert = require('assert');
+const path = require('path');
+['glossary','topics','lexicon','dict-en-vi','library-data','library','translate','replies','speech-repair'].forEach(f => require(path.join(__dirname,'../web/js',f+'.js')));
+const lib = ATC.library;
+assert(lib.data.entries.length > 12000);
+assert.equal(new Set(lib.data.entries.map(r=>r.id)).size,lib.data.entries.length);
+assert.equal(lib.search('PBN')[0].vi,'dẫn đường theo tính năng');
+assert(lib.search('dan duong','navigation').length > 10);
+assert(lib.search('onboard performance','navigation').some(r=>r.source==='pbn'));
+assert(lib.search('floor','conference').some(r=>r.vi==='quyền phát biểu'));
+assert(lib.data.sources.some(s=>s.id==='vatm'));
+assert(lib.search('ATCS').some(r=>r.source==='vatm' && r.vi==='Dịch vụ kiểm soát không lưu'));
+assert(lib.search('OPMET').some(r=>r.source==='vatm'));
+assert(lib.search('SSP','safety').some(r=>r.source==='vatm'));
+assert(lib.data.sources.some(s=>s.id==='doc4444'));
+assert(lib.search('CLEARED TO LAND','phraseology').some(r=>r.source==='doc4444' && r.vi==='Được phép hạ cánh'));
+assert.equal(lib.search('LINE UP AND WAIT')[0].vi,'Vào đường CHC và chờ');
+assert(lib.search('vao duong chc','phraseology').some(r=>r.en==='LINE UP AND WAIT'));
+assert(lib.search('GO AROUND','phraseology').some(r=>r.vi==='Vòng lại'));
+assert(lib.search('SQUAWK','phraseology').some(r=>r.source==='doc4444'));
+assert(lib.data.sources.some(s=>s.id==='aipvn'));
+assert(lib.data.sources.some(s=>s.id==='icao8585'));
+assert(lib.search('VIETJETAIR','callsign').some(r=>r.source==='icao8585'));
+assert(lib.search('TWY S1','taxiway').some(r=>r.en==='TWY S1 (VVTS)'));
+assert(lib.search('Noi Bai','taxiway').length>0);
+lib.ingest([{id:'edtest1',abbr:'LUAW',en:'Line up and wait runway 25L.',vi:'Vào đường CHC 25 trái và chờ.',note:'test',domain:'editor',source:'editor',kind:'sentence',status:'unreviewed'}]);
+assert(lib.search('Line up and wait runway 25L','editor').some(r=>r.source==='editor'));
+assert.equal(lib.search('nonexistentwordzzzz').length,0);
+const sentences=lib.data.entries.filter(r=>r.kind==='sentence' && r.source==='editorial');
+assert(sentences.length>=35);
+for(const r of sentences){
+  const vi=ATC.translate(r.en,{source:'en'});
+  assert.equal(vi.text,r.vi);assert.equal(vi.method,'offline-library');
+  assert.equal(ATC.translate(r.vi,{source:'vi'}).text,r.en);
+}
+assert(!ATC.translate('An unfamiliar sentence about an unknown topic.',{source:'en'}).entryId);
+ATC.translateAsync(sentences[0].en,{source:'en'}).then(r=>{
+  assert.equal(r.method,'offline-library');
+  console.log('library.test.js: passed, including '+sentences.length+' bilingual sentence pairs');
+});

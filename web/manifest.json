@@ -1,0 +1,54 @@
+{
+  "id": "./index.html",
+  "name": "ATC Symposium Desk",
+  "short_name": "ATC Desk",
+  "description": "Hội trường ICAO offline: nghe, dịch ATM/ATS, câu đáp, thuật ngữ, REDA readback. Cài ra màn hình chính iOS/Android.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#071018",
+  "theme_color": "#071018",
+  "lang": "vi",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "categories": ["productivity", "education"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Hội trường",
+      "short_name": "Hội trường",
+      "url": "./index.html"
+    },
+    {
+      "name": "Thuật ngữ",
+      "short_name": "Thuật ngữ",
+      "url": "./glossary.html"
+    },
+    {
+      "name": "REDA",
+      "short_name": "REDA",
+      "url": "./recordings.html"
+    }
+  ]
+}

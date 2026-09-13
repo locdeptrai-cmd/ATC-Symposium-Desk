@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071018">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ATC Desk">
+  <meta name="author" content="Lộc đẹp trai">
+  <meta name="creator" content="created by Lộc đẹp trai">
+  <title>Thuật ngữ ATM/ATS — ATC Symposium Desk</title>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <img class="icon" src="icons/icon-192.png" alt="">
+      <div class="brand">
+        <h1>Thuật ngữ</h1>
+        <p>ATS · phraseology · callsign · đường lăn 22 sân bay · editor — tra cứu offline</p>
+      </div>
+    </header>
+    <nav class="suite-nav" aria-label="Bộ ứng dụng">
+      <a href="index.html">Hội trường</a>
+      <a class="is-current" href="glossary.html">Thuật ngữ</a>
+      <a href="recordings.html">REDA</a>
+      <a href="cai-dat.html">Cài máy</a>
+    </nav>
+    <section class="panel">
+      <label for="q">Tra từ, cụm từ hoặc câu Anh–Việt (hỗ trợ tiếng Việt không dấu)</label>
+      <input id="q" type="search" placeholder="CLEARED TO LAND, VIETJETAIR, TWY S1, vao duong CHC…" autocomplete="off">
+      <label for="domain">Chuyên đề</label>
+      <select id="domain"><option value="">Tất cả chuyên đề</option></select>
+      <label for="kind">Loại mục</label>
+      <select id="kind"><option value="">Từ, cụm từ và câu</option><option value="term">Từ / cụm từ</option><option value="sentence">Câu mẫu</option></select>
+      <p>Thư viện gồm huấn lệnh ICAO Doc 4444, callsign hãng bay tại Việt Nam, đường lăn 22 cảng ACV (AIP AD 2.8) và mục Editor để nhập mẫu còn thiếu. Không thay AIP/Doc 8585 khi có xung đột.</p>
+      <p><a href="data/library.sqlite" download>Tải DB SQLite</a> · <a href="data/library.json" download>Tải JSON</a></p>
+      <p id="count" class="count"></p>
+      <div style="overflow-x:auto">
+      <table class="gloss">
+        <thead>
+          <tr><th>Viết tắt</th><th>English</th><th>Tiếng Việt</th><th>Ngữ cảnh / nguồn</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      </div>
+      <button id="prev" type="button">Trang trước</button>
+      <button id="next" type="button">Trang sau</button>
+    </section>
+    <section class="panel" id="editorPanel">
+      <h2 class="editor-title">Editor — thêm mẫu huấn lệnh</h2>
+      <p class="hint">Nhập thủ công các cụm còn thiếu. Lưu trên máy này; nếu app đang chạy local thì đồng bộ sang server.</p>
+      <div class="grid-4">
+        <label class="field" for="edAbbr">Viết tắt / mã
+          <input id="edAbbr" type="text" maxlength="24" placeholder="S1, HVN, LUAW…">
+        </label>
+        <label class="field" for="edKind">Loại
+          <select id="edKind"><option value="term">Từ / cụm từ</option><option value="sentence">Câu mẫu</option></select>
+        </label>
+      </div>
+      <label class="field" for="edEn">English (huấn lệnh / callsign)
+        <input id="edEn" type="text" maxlength="240" placeholder="Taxi to holding point A1 via S.">
+      </label>
+      <label class="field" for="edVi">Tiếng Việt
+        <input id="edVi" type="text" maxlength="240" placeholder="Lăn tới điểm chờ A1 qua S.">
+      </label>
+      <label class="field" for="edNote">Ghi chú / ngữ cảnh
+        <textarea id="edNote" rows="2" maxlength="500" placeholder="Sân bay, vị trí, bắt buộc đọc lại…"></textarea>
+      </label>
+      <p id="edMsg" class="hint" role="status"></p>
+      <div class="editor-actions">
+        <button id="edSave" class="primary" type="button">Thêm vào thư viện</button>
+        <button id="edClear" class="ghost" type="button">Xóa form</button>
+      </div>
+      <p id="edCount" class="count"></p>
+      <div style="overflow-x:auto">
+        <table class="gloss" id="edTable">
+          <thead><tr><th>Viết tắt</th><th>English</th><th>Tiếng Việt</th><th></th></tr></thead>
+          <tbody id="edRows"></tbody>
+        </table>
+      </div>
+    </section>
+    <p class="creator-sig">created by Lộc đẹp trai</p>
+  </div>
+  <script src="js/creator-lock.js"></script>
+  <script src="js/glossary.js"></script>
+  <script src="js/library-data.js"></script>
+  <script src="js/library.js"></script>
+  <script src="js/glossary-ui.js"></script>
+  <script src="js/glossary-editor.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>

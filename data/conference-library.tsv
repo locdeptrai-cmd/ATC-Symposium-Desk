@@ -1,0 +1,137 @@
+domain	abbr	en	vi	note	source
+navigation	PBN	performance-based navigation	dẫn đường theo tính năng	Cách gọi khác: dẫn đường dựa trên hiệu năng. Đối chiếu Điều 3 mục 52.	vn19
+navigation	RNP	required navigation performance	tính năng dẫn đường yêu cầu	Cách gọi khác: hiệu năng dẫn đường yêu cầu. Đối chiếu Điều 3 mục 56.	vn19
+navigation	RNAV	area navigation	dẫn đường khu vực	Đối chiếu Điều 3 mục 57.	vn19
+navigation		onboard performance monitoring and alerting	giám sát tính năng và cảnh báo trên tàu bay	Yêu cầu phân biệt đặc tính RNP với RNAV; bản dịch biên soạn.	pbn
+navigation	GNSS	global navigation satellite system	hệ thống vệ tinh dẫn đường toàn cầu		editorial
+navigation	GPS	global positioning system	hệ thống định vị toàn cầu	GPS là một thành phần của GNSS, không đồng nhất với toàn bộ GNSS.	editorial
+navigation	INS	inertial navigation system	hệ thống dẫn đường quán tính		editorial
+navigation	IRS	inertial reference system	hệ thống tham chiếu quán tính		editorial
+navigation	FMS	flight management system	hệ thống quản lý chuyến bay		editorial
+navigation	RAIM	receiver autonomous integrity monitoring	giám sát tính toàn vẹn tự động tại máy thu		editorial
+navigation	ABAS	aircraft-based augmentation system	hệ thống tăng cường trên tàu bay		editorial
+navigation	DME	distance measuring equipment	thiết bị đo cự ly		editorial
+navigation	VOR	VHF omnidirectional radio range	đài vô tuyến đa hướng VHF		editorial
+navigation	NDB	non-directional beacon	đài dẫn đường vô hướng		editorial
+navigation	ILS	instrument landing system	hệ thống hạ cánh bằng thiết bị		editorial
+navigation	LOC	localizer	đài chỉ hướng hạ cánh	LOC có thể mang nghĩa khác ngoài ngữ cảnh ILS.	editorial
+navigation		glide path	đường trượt hạ cánh	Phân biệt đường trượt với đài phát tín hiệu góc hạ cánh.	editorial
+navigation		waypoint	điểm lộ trình		editorial
+navigation		fly-by waypoint	điểm lộ trình cho phép rẽ đón		editorial
+navigation		fly-over waypoint	điểm lộ trình phải bay qua trước khi rẽ		editorial
+navigation		cross-track error	sai lệch ngang so với đường bay		editorial
+navigation		along-track error	sai lệch dọc theo đường bay		editorial
+navigation	TSE	total system error	sai số tổng của hệ thống		editorial
+navigation	FTE	flight technical error	sai số kỹ thuật bay		editorial
+navigation	NSE	navigation system error	sai số hệ thống dẫn đường		editorial
+navigation		integrity	tính toàn vẹn	Trong ngữ cảnh tính năng hệ thống dẫn đường.	editorial
+navigation		continuity	tính liên tục	Trong ngữ cảnh dịch vụ dẫn đường.	editorial
+navigation		availability	tính sẵn sàng		editorial
+navigation		accuracy	độ chính xác		editorial
+navigation		GNSS interference	can nhiễu GNSS		editorial
+navigation		GNSS jamming	gây nhiễu GNSS		editorial
+navigation		GNSS spoofing	giả mạo tín hiệu GNSS		editorial
+navigation		navigation infrastructure	cơ sở hạ tầng dẫn đường		editorial
+navigation		navigation database	cơ sở dữ liệu dẫn đường		editorial
+navigation		flight inspection	bay kiểm tra, hiệu chuẩn		editorial
+navigation		procedure validation	đánh giá xác nhận phương thức		editorial
+navigation		missed approach	 tiếp cận hụt		editorial
+navigation	IAF	initial approach fix	điểm mốc tiếp cận đầu		editorial
+navigation	FAF	final approach fix	điểm mốc tiếp cận chót		editorial
+navigation	MAPt	missed approach point	điểm tiếp cận hụt		editorial
+navigation		obstacle clearance	bảo đảm khoảng cách vượt chướng ngại vật	Clearance ở đây không phải huấn lệnh.	editorial
+atc		air traffic control clearance	huấn lệnh kiểm soát không lưu		editorial
+atc		readback	đọc lại huấn lệnh		editorial
+atc		hearback	nghe kiểm tra nội dung đọc lại		editorial
+atc		transfer of control	chuyển giao kiểm soát	Phân biệt với chuyển giao liên lạc.	editorial
+atc		transfer of communications	chuyển giao liên lạc		editorial
+atc		coordination point	điểm hiệp đồng		editorial
+atc		lateral separation	phân cách ngang		editorial
+atc		longitudinal separation	phân cách dọc		editorial
+atc		vertical separation	phân cách cao		editorial
+atc		wake turbulence separation	phân cách do nhiễu động trong vệt khí tàu bay		editorial
+atc		separation minima	giá trị phân cách tối thiểu	Không hàm ý một trị số áp dụng chung.	editorial
+atc		conflict detection	phát hiện xung đột		editorial
+atc	STCA	short-term conflict alert	cảnh báo xung đột ngắn hạn		editorial
+atc	MSAW	minimum safe altitude warning	cảnh báo độ cao an toàn tối thiểu		editorial
+atc		level bust	bay sai mực bay được chỉ định		editorial
+atc		runway incursion	xâm nhập đường cất hạ cánh	Phân biệt runway excursion: tàu bay ra ngoài đường cất hạ cánh.	editorial
+atc		runway excursion	tàu bay ra ngoài đường cất hạ cánh		editorial
+atc		go-around	bay lại	Không luôn đồng nghĩa với toàn bộ phương thức tiếp cận hụt.	editorial
+atc		vectoring	dẫn dắt bằng hướng bay		editorial
+atc		holding pattern	vòng chờ		editorial
+atc		transition altitude	độ cao chuyển tiếp		editorial
+atc		transition level	mực bay chuyển tiếp		editorial
+atm		demand-capacity balancing	cân đối nhu cầu và năng lực		editorial
+atm		sector configuration	cấu hình phân khu		editorial
+atm		sector opening scheme	phương án mở phân khu		editorial
+atm		airspace design	thiết kế vùng trời		editorial
+atm	FUA	flexible use of airspace	sử dụng linh hoạt vùng trời		editorial
+atm	FRA	free route airspace	vùng trời đường bay tự do		editorial
+atm		civil-military coordination	hiệp đồng dân dụng và quân sự		editorial
+atm	CTOT	calculated take-off time	giờ cất cánh tính toán		editorial
+atm	TOBT	target off-block time	giờ rời vị trí đỗ mục tiêu		editorial
+atm	TSAT	target start-up approval time	giờ chấp thuận khởi động mục tiêu		editorial
+atm		ground delay programme	chương trình trì hoãn tại mặt đất		editorial
+atm		ground stop	tạm dừng cho tàu bay khởi hành tại mặt đất		editorial
+atm		miles-in-trail	giãn cách theo cự ly dọc luồng		editorial
+atm		minutes-in-trail	giãn cách theo thời gian dọc luồng		editorial
+atm		contingency plan	kế hoạch ứng phó bất thường		editorial
+atm		business continuity	duy trì tính liên tục của hoạt động		editorial
+atm		interoperability	khả năng tương tác giữa các hệ thống		editorial
+atm		operational concept	khái niệm khai thác		editorial
+atm		implementation roadmap	lộ trình triển khai		editorial
+atm		post-implementation review	đánh giá sau triển khai		editorial
+conference		Thank you for inviting me to speak today.	Xin cảm ơn quý vị đã mời tôi phát biểu hôm nay.	Mở đầu bài trình bày.	editorial
+conference		It is a pleasure to join this symposium.	Tôi rất vui được tham dự hội thảo này.		editorial
+conference		On behalf of our delegation, I would like to thank the organizers.	Thay mặt đoàn đại biểu, tôi xin cảm ơn ban tổ chức.		editorial
+conference		The purpose of this presentation is to share our experience.	Mục đích của bài trình bày này là chia sẻ kinh nghiệm của chúng tôi.		editorial
+conference		My presentation is divided into three parts.	Bài trình bày của tôi gồm ba phần.		editorial
+conference		Let me begin with some background.	Trước tiên, tôi xin trình bày một số thông tin bối cảnh.		editorial
+conference		Let us now turn to the next slide.	Bây giờ, xin chuyển sang trang trình chiếu tiếp theo.		editorial
+conference		This brings me to my next point.	Từ đây, tôi xin chuyển sang nội dung tiếp theo.		editorial
+conference		As shown in this chart, demand continues to grow.	Như biểu đồ cho thấy, nhu cầu tiếp tục tăng.		editorial
+conference		These figures are preliminary.	Các số liệu này là sơ bộ.		editorial
+conference		The results should be interpreted with caution.	Cần thận trọng khi diễn giải các kết quả này.		editorial
+conference		This is an illustrative example, not an operational instruction.	Đây là ví dụ minh họa, không phải chỉ dẫn khai thác.		editorial
+conference		The main finding is summarized on this slide.	Kết quả chính được tóm tắt trên trang trình chiếu này.		editorial
+conference		We have identified three areas for improvement.	Chúng tôi đã xác định ba lĩnh vực cần cải thiện.		editorial
+conference		Further validation is needed before implementation.	Cần đánh giá xác nhận thêm trước khi triển khai.		editorial
+conference		I would like to highlight two practical challenges.	Tôi muốn nhấn mạnh hai thách thức thực tế.		editorial
+conference		Let me summarize the key messages.	Tôi xin tóm tắt những thông điệp chính.		editorial
+conference		Thank you for your attention. I welcome your questions.	Xin cảm ơn quý vị đã lắng nghe. Tôi sẵn sàng trao đổi các câu hỏi.		editorial
+conference		Could you clarify what you mean by capacity?	Quý vị có thể làm rõ ý nghĩa của năng lực trong nội dung vừa trình bày không?		editorial
+conference		Could you repeat the last point more slowly?	Quý vị có thể nhắc lại ý cuối chậm hơn không?		editorial
+conference		Could you spell out that acronym?	Quý vị có thể nói đầy đủ cụm từ viết tắt đó không?		editorial
+conference		If I understand correctly, the proposal is still under review.	Nếu tôi hiểu đúng, đề xuất vẫn đang được xem xét.		editorial
+conference		That is an important question. Let me explain.	Đó là một câu hỏi quan trọng. Tôi xin giải thích.		editorial
+conference		We do not have sufficient data to draw that conclusion.	Chúng tôi chưa có đủ dữ liệu để đưa ra kết luận đó.		editorial
+conference		I will need to verify that figure and get back to you.	Tôi cần kiểm tra lại số liệu đó và sẽ phản hồi quý vị.		editorial
+conference		We support the proposal in principle.	Về nguyên tắc, chúng tôi ủng hộ đề xuất này.		editorial
+conference		We would like to suggest an alternative approach.	Chúng tôi xin đề xuất một cách tiếp cận khác.		editorial
+conference		May I invite the next speaker to take the floor?	Xin mời diễn giả tiếp theo phát biểu.	Chủ tọa điều hành.	editorial
+conference		Please keep your intervention to two minutes.	Xin giới hạn phần phát biểu trong hai phút.		editorial
+conference		Are there any objections to this proposal?	Có ý kiến phản đối đề xuất này không?		editorial
+conference		Let us record this as an action item.	Xin ghi nhận nội dung này thành một đầu việc cần thực hiện.		editorial
+conference		We will resume after the coffee break.	Chúng ta sẽ tiếp tục sau giờ giải lao.		editorial
+conference		The session is now closed.	Phiên họp đến đây kết thúc.		editorial
+conference		key takeaway	điểm chính cần ghi nhớ		editorial
+conference		lessons learned	bài học kinh nghiệm		editorial
+conference		way forward	hướng triển khai tiếp theo		editorial
+conference		working paper	báo cáo công tác trình hội nghị		editorial
+conference		information paper	tài liệu cung cấp thông tin		editorial
+conference		draft conclusion	dự thảo kết luận		editorial
+conference		agenda item	mục chương trình nghị sự		editorial
+conference		panel discussion	phiên thảo luận chuyên đề		editorial
+conference		question-and-answer session	phiên hỏi đáp		editorial
+conference		floor	quyền phát biểu	Trong cụm take the floor: bắt đầu phát biểu.	editorial
+conference		intervention	ý kiến phát biểu	Trong ngữ cảnh hội nghị.	editorial
+conference		motion	kiến nghị đưa ra để hội nghị xem xét	Trong ngữ cảnh thủ tục hội nghị.	editorial
+aviation_sentence		How will GNSS interference affect the proposed procedures?	Can nhiễu GNSS sẽ ảnh hưởng thế nào đến các phương thức được đề xuất?	Câu hỏi hội thảo, không phải thoại vô tuyến.	editorial
+aviation_sentence		What contingency arrangements are available if the navigation service is lost?	Có phương án ứng phó nào khi mất dịch vụ dẫn đường?		editorial
+aviation_sentence		The safety assessment must address controller workload.	Đánh giá an toàn phải xem xét khối lượng công việc của kiểm soát viên không lưu.	Câu mẫu, không trích một nghĩa vụ pháp lý cụ thể.	editorial
+aviation_sentence		How was the declared capacity validated?	Năng lực công bố đã được đánh giá xác nhận như thế nào?		editorial
+aviation_sentence		The proposed change requires coordination with adjacent units.	Thay đổi được đề xuất cần có sự hiệp đồng với các cơ sở kế cận.		editorial
+aviation_sentence		We need to distinguish spacing from separation.	Chúng ta cần phân biệt giãn cách với phân cách.		editorial
+aviation_sentence		What evidence supports the expected operational benefits?	Có bằng chứng nào hỗ trợ những lợi ích khai thác dự kiến?		editorial
+aviation_sentence		The trial results do not yet demonstrate readiness for operational use.	Kết quả thử nghiệm chưa chứng minh được mức độ sẵn sàng đưa vào khai thác.		editorial

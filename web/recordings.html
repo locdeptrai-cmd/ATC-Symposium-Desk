@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071018">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ATC Desk">
+  <meta name="author" content="Lộc đẹp trai">
+  <meta name="creator" content="created by Lộc đẹp trai">
+  <title>REDA — ATC Symposium Desk</title>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <img class="icon" src="icons/icon-192.png" alt="">
+      <div class="brand">
+        <h1>REDA</h1>
+        <p>Readback error detection — biên bản English cho bình giảng</p>
+      </div>
+    </header>
+    <nav class="suite-nav" aria-label="Bộ ứng dụng">
+      <a href="index.html">Hội trường</a>
+      <a href="glossary.html">Thuật ngữ</a>
+      <a class="is-current" href="recordings.html">REDA</a>
+      <a href="cai-dat.html">Cài máy</a>
+    </nav>
+
+    <section class="panel rec-import" aria-label="Import bản ghi">
+      <div id="recDrop" class="rec-drop" tabindex="0">
+        <strong>Import file ghi âm / video có âm thanh</strong>
+        <p>Kéo thả vào đây, hoặc chọn mp3, wav, m4a, aac, ogg, webm, mp4, mov, mkv, avi. REDA trích lời English, tách ATCO/PILOT và bắt lỗi readback (Doc 4444 / Annex 11). Không thay hearback của ATCO.</p>
+        <button type="button" class="primary" id="btnRecImport">Chọn file</button>
+        <input type="file" id="recFile" hidden multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.webm,.mp4,.mov,.mkv,.m4v,.avi,video/x-msvideo,video/avi">
+      </div>
+      <p id="recStatus" class="status"></p>
+    </section>
+
+    <section id="recNow" class="listen rec-now" hidden>
+      <video id="recVideo" playsinline></video>
+      <div class="rec-now-head">
+        <strong id="recNowName">Chưa phát</strong>
+        <span id="recNowTime" class="meta">0:00 / 0:00</span>
+      </div>
+      <input type="range" id="recSeek" min="0" max="1000" value="0" step="1" aria-label="Vị trí phát">
+    </section>
+
+    <section class="listen rec-listen" aria-label="Nghe và REDA">
+      <div class="listen-head">
+        <span id="recLiveDot" class="dot" aria-hidden="true"></span>
+        <strong>Nghe · ghi lời English · đối chiếu readback</strong>
+      </div>
+      <div class="btns rec-listen-btns">
+        <button type="button" class="en" id="btnRecListen">NGHE (EN)</button>
+        <button type="button" class="ghost" id="btnRecListenStop">Dừng nghe</button>
+        <button type="button" class="ghost" id="btnRecAnalyze">Phân tích lại</button>
+      </div>
+      <div class="listen-opts">
+        <label class="hall-check"><input type="checkbox" id="recHallMode" checked> Sửa thuật ngữ ATC khi ghi lời</label>
+        <label class="hall-check"><input type="checkbox" id="recMicLoop"> Thêm micro (loa phát ra máy)</label>
+        <label class="field accent-field">Tốc độ phát
+          <select id="recTapeRate">
+            <option value="0.75">Chậm 75%</option>
+            <option value="0.85" selected>Chậm 85%</option>
+            <option value="1">Nguyên bản</option>
+          </select>
+        </label>
+      </div>
+      <p class="tape-hint">Bấm Phát hoặc NGHE (EN): máy ghi lời English từ file, rồi REDA so khớp concept (level, squawk, runway, QNH…). Roger/Wilco không được coi là readback số liệu.</p>
+      <div class="reda-grid">
+        <div class="stream stream-en">
+          <div class="stream-head">
+            <strong>Lời thoại English</strong>
+            <button type="button" id="copyRecEn">Sao chép EN</button>
+          </div>
+          <ol id="recTurns" class="reda-turns" aria-label="Lượt nói"></ol>
+          <textarea id="recTranscript" placeholder="Lời English từ bản ghi. Có thể sửa rồi bấm Phân tích lại."></textarea>
+          <div id="recInterim" class="interim" aria-live="polite"></div>
+        </div>
+        <div class="stream reda-issues-pane">
+          <div class="stream-head">
+            <strong>Lỗi readback</strong>
+            <span id="recIssueCount" class="meta">—</span>
+          </div>
+          <ul id="recIssues" class="reda-issues"></ul>
+        </div>
+      </div>
+      <div class="stream stream-en reda-minutes">
+        <div class="stream-head">
+          <strong>Biên bản bình giảng (EN)</strong>
+          <button type="button" id="copyRecMinutes">Sao chép biên bản</button>
+        </div>
+        <textarea id="recMinutes" placeholder="Biên bản English: transcript có vai + lỗi readback + teaching points."></textarea>
+      </div>
+    </section>
+
+    <section class="panel rec-library" aria-label="Danh sách bản ghi">
+      <div class="rec-legend" aria-label="Đèn trạng thái">
+        <span><i class="rec-lamp lamp-pending" aria-hidden="true"></i> Chưa sẵn sàng</span>
+        <span><i class="rec-lamp lamp-ready" aria-hidden="true"></i> Đã sẵn sàng</span>
+        <span><i class="rec-lamp lamp-heard" aria-hidden="true"></i> Đã nghe</span>
+      </div>
+      <ul id="recList" class="rec-list"></ul>
+    </section>
+    <p class="creator-sig">created by Lộc đẹp trai</p>
+  </div>
+  <div id="recConvertModal" class="rec-convert-modal" hidden>
+    <div class="rec-convert-card" role="dialog" aria-modal="true" aria-labelledby="recConvertTitle">
+      <h2 id="recConvertTitle">Đang chuyển sang MP4</h2>
+      <p id="recConvertName" class="meta"></p>
+      <div class="rec-convert-track" aria-hidden="true"><i id="recConvertBar"></i></div>
+      <p id="recConvertPct">0%</p>
+      <p id="recConvertStage" class="hint">Bắt đầu…</p>
+    </div>
+  </div>
+  <script src="js/creator-lock.js"></script>
+  <script src="js/speech-repair.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/recordings.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>

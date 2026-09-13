@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071018">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ATC Desk">
+  <meta name="author" content="Lộc đẹp trai">
+  <meta name="creator" content="created by Lộc đẹp trai">
+  <meta name="description" content="Nghe diễn giả, dịch thuật ngữ ATM/ATS, đề xuất câu đáp English hội nghị ICAO — chạy local, không cần API dịch.">
+  <title>ATC Symposium Desk</title>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <img class="icon" src="icons/icon-192.png" alt="">
+      <div class="brand">
+        <h1>ATC Symposium Desk</h1>
+        <p>Nghe · Dịch chuyên ngành · Câu đáp ICAO</p>
+      </div>
+      <div id="netBadge" class="badge">OFFLINE</div>
+    </header>
+
+    <nav class="suite-nav" aria-label="Bộ ứng dụng">
+      <a class="is-current" href="index.html">Hội trường</a>
+      <a href="glossary.html">Thuật ngữ</a>
+      <a href="recordings.html">REDA</a>
+      <a href="cai-dat.html">Cài máy</a>
+    </nav>
+
+    <section class="setup" aria-label="Vai và phiên">
+      <div class="grid-4">
+        <label class="field">Vai đang ngồi
+          <select id="role"></select>
+        </label>
+        <label class="field">Bối cảnh
+          <select id="context"></select>
+        </label>
+        <label class="field">Chủ đề phiên
+          <select id="topic"></select>
+        </label>
+        <label class="field">Nói nhân danh
+          <select id="affiliation"></select>
+        </label>
+      </div>
+      <p id="roleHint" class="hint"></p>
+    </section>
+
+    <aside id="mtPack" class="pwa-banner" hidden>
+      <div class="pwa-banner-inner">
+        <strong>Gói dịch cả câu (iOS / Android)</strong>
+        <p id="mtPackMsg">Tải model EN+VI một lần khi còn Wi-Fi (~60 MB, trên máy). Hội trường: tắt mạng, không cần bật laptop.</p>
+        <button type="button" class="primary" id="btnMtPack">Tải gói dịch EN+VI</button>
+      </div>
+    </aside>
+
+    <section class="listen" aria-label="Nghe và biên bản">
+      <div class="listen-head">
+        <span id="liveDot" class="dot" aria-hidden="true"></span>
+        <strong>Micro hội trường / bản ghi</strong>
+      </div>
+      <div class="btns">
+        <button type="button" class="en" id="btnEn">NGHE DIỄN GIẢ (EN)</button>
+        <button type="button" class="vi" id="btnVi">NGHE (VI)</button>
+        <button type="button" class="ghost" id="btnStop">Dừng</button>
+        <button type="button" class="primary" id="btnGo">DỊCH + ĐỀ XUẤT</button>
+      </div>
+      <div class="listen-opts">
+        <label class="hall-check"><input type="checkbox" id="hallMode" checked> Hội trường: tạp âm, giọng không chuẩn, nói nhanh</label>
+        <label class="hall-check"><input type="checkbox" id="tapeMode" checked> Bản ghi: rè / lời dính</label>
+        <label class="field accent-field">Giọng English
+          <select id="enAccent">
+            <option value="auto" selected>Tự động (quốc tế)</option>
+            <option value="us">Mỹ</option>
+            <option value="gb">Anh</option>
+            <option value="in">Ấn / Đông Nam Á</option>
+            <option value="au">Úc / New Zealand</option>
+          </select>
+        </label>
+        <label class="field accent-field">Tốc độ phát
+          <select id="tapeRate">
+            <option value="0.75">Chậm 75%</option>
+            <option value="0.85" selected>Chậm 85%</option>
+            <option value="1">Nguyên bản</option>
+          </select>
+        </label>
+      </div>
+      <div class="tape-row">
+        <button type="button" class="ghost" id="btnTape">Mở bản ghi</button>
+        <p class="tape-hint">Phát loa (không tai nghe) để micro nghe lại. Lọc rè + chậm tốc độ giúp tách lời dính.</p>
+        <input type="file" id="tapeFile" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" hidden>
+      </div>
+      <div class="dual-stream">
+        <div class="stream stream-en">
+          <div class="stream-head">
+            <strong id="liveEnLabel">Luồng 1 · Bản ghi English</strong>
+            <button type="button" id="copyEn">Sao chép EN</button>
+          </div>
+          <textarea id="transcript" placeholder="Luồng 1: đúng lời diễn giả nói (English). Có thể gõ / dán biên bản — không trộn tiếng Việt vào đây."></textarea>
+          <div id="interim" class="interim" aria-live="polite"></div>
+        </div>
+        <div id="liveTransBox" class="stream stream-vi live-trans" aria-live="polite">
+          <div class="stream-head live-trans-head">
+            <strong id="liveTransLabel">Luồng 2 · Biên dịch tiếng Việt (cả câu)</strong>
+            <button type="button" id="copyLive">Sao chép VI</button>
+          </div>
+          <div id="liveTrans" class="live-trans-body">Bấm NGHE DIỄN GIẢ (EN). Luồng 2 theo bản ghi English, chậm hơn một nhịp rồi mới dịch cả câu.</div>
+          <div id="liveTransMeta" class="meta"></div>
+        </div>
+      </div>
+      <div class="btns" style="grid-template-columns:1fr 1fr">
+        <button type="button" class="ghost" id="btnClear">Xóa</button>
+        <button type="button" class="ghost" id="btnSpeakShort">ĐỌC BẢN NGẮN</button>
+      </div>
+      <p id="status" class="status"></p>
+      <p class="hint">Thử nhanh (không cần micro):</p>
+      <div id="samples" class="samples"></div>
+    </section>
+
+    <section id="results" class="results" hidden>
+      <div class="results-head">
+        <h2 class="hint" style="margin:0;text-transform:uppercase;letter-spacing:.08em">Bốn lớp đầu ra</h2>
+        <span id="topicChip" class="chip-topic"></span>
+      </div>
+      <p id="caution" class="caution" hidden></p>
+
+      <article class="card" id="layer1">
+        <header>
+          <h2 id="t1h">Lớp 1 · Bản dịch chuyên ngành</h2>
+          <div class="tools"><button type="button" id="copyT1">Sao chép</button></div>
+        </header>
+        <div id="t1" class="vi-primary"></div>
+        <div id="t1meta" class="meta"></div>
+      </article>
+
+      <article class="card" id="layer2">
+        <header>
+          <h2>Lớp 2 · Câu phát biểu đầy đủ</h2>
+          <div class="tools">
+            <button type="button" id="speakT2">Đọc</button>
+            <button type="button" id="copyT2">Sao chép EN</button>
+          </div>
+        </header>
+        <div id="t2en" class="en-block"></div>
+        <div id="t2vi" class="vi-block"></div>
+      </article>
+
+      <article class="card" id="layer3">
+        <header>
+          <h2>Lớp 3 · Can thiệp 60–90 giây</h2>
+          <div class="tools">
+            <button type="button" id="speakT3">Đọc</button>
+            <button type="button" id="copyT3">Sao chép EN</button>
+          </div>
+        </header>
+        <div id="t3en" class="en-block"></div>
+        <div id="t3vi" class="vi-block"></div>
+        <div id="t3meta" class="meta"></div>
+      </article>
+
+      <article class="card" id="layer4">
+        <header>
+          <h2>Lớp 4 · Talking points + glossary</h2>
+        </header>
+        <ul id="t4points" class="points"></ul>
+        <table class="gloss">
+          <tbody id="t4gloss"></tbody>
+        </table>
+        <ol id="t4docs" class="docs"></ol>
+      </article>
+
+      <div class="sticky-actions">
+        <button type="button" class="primary" id="btnSpeakFull">ĐỌC CÂU ĐÁP</button>
+        <button type="button" class="en" id="btnSpeakShort2" onclick="document.getElementById('btnSpeakShort').click()">ĐỌC BẢN NGẮN</button>
+      </div>
+    </section>
+
+    <section class="help">
+      <h2>Cách chạy trong hội trường / khóa ICAO</h2>
+      <ol>
+        <li>Chọn vai: Đại biểu, Báo cáo viên, Chủ tọa, hoặc Phiên dịch.</li>
+        <li>EN khi diễn giả nói English: luồng 1 ghi nguyên văn trước. Luồng 2 bám theo bản ghi đó, chậm hơn một nhịp, rồi dịch cả câu/cụm sang tiếng Việt. VI khi câu hỏi bằng tiếng Việt. Hoặc dán biên bản.</li>
+        <li>App iOS/Android (Capacitor): cùng một mã web, dịch cả câu bằng ML Kit trên máy. Tải gói EN+VI một lần khi còn Wi-Fi; hội trường không cần mạng và không cần laptop.</li>
+        <li>Máy tính: Chrome/Edge dịch trên máy từng câu; không gọi Google Translate.</li>
+        <li>Đọc bản ngắn (60–90 s) trước khi giơ mic. Chủ tọa ra câu điều hành phiên, không phải “cleared to land”.</li>
+        <li>PWA ghim icon (Safari/Chrome) không dịch cả câu trên điện thoại — dùng APK/IPA. Chi tiết: README và trang Cài máy.</li>
+      </ol>
+    </section>
+    <p class="creator-sig">created by Lộc đẹp trai</p>
+  </div>
+
+  <script src="js/creator-lock.js"></script>
+  <script src="js/glossary.js"></script>
+  <script src="js/topics.js"></script>
+  <script src="js/lexicon.js"></script>
+  <script src="js/dict-en-vi.js"></script>
+  <script src="js/library-data.js"></script>
+  <script src="js/library.js"></script>
+  <script src="js/mt-bridge.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="js/replies.js"></script>
+  <script src="js/speech-repair.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>

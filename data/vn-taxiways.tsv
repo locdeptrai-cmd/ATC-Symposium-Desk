@@ -1,0 +1,186 @@
+domain	abbr	en	vi	note	source
+taxiway	VVNB	Noi Bai taxiways: N, N1, N2, N3, N4, N5, P3, P4, P5, P6, P7, P8, P9, S, S1, S3, S10, S4, S5, S6, S7, S8, S9, V, V1, V7, V8, V2, V3, V4, V5, V6, V9	Đường lăn Nội Bài: N, N1, N2, N3, N4, N5, P3, P4, P5, P6, P7, P8, P9, S, S1, S3, S10, S4, S5, S6, S7, S8, S9, V, V1, V7, V8, V2, V3, V4, V5, V6, V9	AIP Việt Nam AD 2.VVNB §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA HAN. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	N	TWY N (VVNB)	đường lăn N — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn chính phía Bắc. Đọc: November. (đường lăn chính phía Bắc), 18 M, Bê tông xi măng, PCR 550/ R/C/W/U	aipvn
+taxiway	N1	TWY N1 (VVNB)	đường lăn N1 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn chính phía Bắc. Đọc: November One.	aipvn
+taxiway	N2	TWY N2 (VVNB)	đường lăn N2 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn chính phía Bắc. Đọc: November Two.	aipvn
+taxiway	N3	TWY N3 (VVNB)	đường lăn N3 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn chính phía Bắc. Đọc: November Three.	aipvn
+taxiway	N4	TWY N4 (VVNB)	đường lăn N4 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn chính phía Bắc. Đọc: November Four. 18 M, Bê tông xi măng, bê tông nhựa, PCR 550/R/C/W/U	aipvn
+taxiway	N5	TWY N5 (VVNB)	đường lăn N5 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn chính phía Bắc. Đọc: November Five.	aipvn
+taxiway	P3	TWY P3 (VVNB)	đường lăn P3 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn nối (giữa đường CHC). Đọc: Papa Three. Do khoảng cách giữa 2 vạch dừng chờ lên đường CHC khoảng 30 m • Khi có tàu bay dừng chờ tại điểm dừng chờ lên đường CHC 11R/29L, không được sử dụng đường CHC 11	aipvn
+taxiway	P4	TWY P4 (VVNB)	đường lăn P4 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn nối (giữa đường CHC). Đọc: Papa Four. P7: Do khoảng cách giữa 2 vạch dừng chờ lên đường CHC khoảng 86 m • Khi có tàu bay Code D (sải cánh đến dưới 52 m) và tương đương trở xuống dừng chờ tại điểm dừ	aipvn
+taxiway	P5	TWY P5 (VVNB)	đường lăn P5 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn nối (giữa đường CHC). Đọc: Papa Five. (Đường lăn nối), 23 M, Bê tông xi măng, PCR 1100/R/A/W/T	aipvn
+taxiway	P6	TWY P6 (VVNB)	đường lăn P6 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn nối (giữa đường CHC). Đọc: Papa Six.	aipvn
+taxiway	P7	TWY P7 (VVNB)	đường lăn P7 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn nối (giữa đường CHC). Đọc: Papa Seven.	aipvn
+taxiway	P8	TWY P8 (VVNB)	đường lăn P8 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn nối (giữa đường CHC). Đọc: Papa Eight. P9: Do khoảng cách giữa 2 vạch dừng chờ lên đường CHC khoảng 71 m • Khi có tàu bay Code D (sải cánh đến dưới 52 m) và tương đương trở xuống dừng chờ tại điểm dừ	aipvn
+taxiway	P9	TWY P9 (VVNB)	đường lăn P9 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn nối (giữa đường CHC). Đọc: Papa Nine. (Đường lăn nối), 23 M, Bê tông xi măng, PCR 1080/R/A/W/T	aipvn
+taxiway	S	TWY S (VVNB)	đường lăn S — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn song song / phía Nam. Đọc: Sierra. and TWY S3/V3 to the intersection of TWY S and S8/V8, 23 M, Cement Concrete, PCR 850/ R/A/W/T • A portion from the intersection TWY S and S8/V8 to the intersect	aipvn
+taxiway	S1	TWY S1 (VVNB)	đường lăn S1 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn song song / phía Nam. Đọc: Sierra One. (Đường lăn nối), 23 M, Bê tông xi măng, PCR 950/R/A/W/T	aipvn
+taxiway	S3	TWY S3 (VVNB)	đường lăn S3 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn song song / phía Nam. Đọc: Sierra Three. S6, S8, S9: Khi có tàu bay trên đường lăn, tàu bay khác phải dừng trước vạch dừng chờ trung gian tại các nút giao và không vận hành trên đường lăn S phía trước/	aipvn
+taxiway	S10	TWY S10 (VVNB)	đường lăn S10 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn song song / phía Nam. Đọc: Sierra One Zero. (Đường lăn nối), 23 M, Bê tông xi măng, PCR 1090/R/A/ W/T	aipvn
+taxiway	S4	TWY S4 (VVNB)	đường lăn S4 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn song song / phía Nam. Đọc: Sierra Four.	aipvn
+taxiway	S5	TWY S5 (VVNB)	đường lăn S5 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn song song / phía Nam. Đọc: Sierra Five.	aipvn
+taxiway	S6	TWY S6 (VVNB)	đường lăn S6 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn song song / phía Nam. Đọc: Sierra Six. (Đường lăn nối), 27 M, Bê tông xi măng, PCR 850/R/A/W/T	aipvn
+taxiway	S7	TWY S7 (VVNB)	đường lăn S7 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn song song / phía Nam. Đọc: Sierra Seven.	aipvn
+taxiway	S8	TWY S8 (VVNB)	đường lăn S8 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn song song / phía Nam. Đọc: Sierra Eight.	aipvn
+taxiway	S9	TWY S9 (VVNB)	đường lăn S9 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn song song / phía Nam. Đọc: Sierra Nine.	aipvn
+taxiway	V	TWY V (VVNB)	đường lăn V — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn sân đỗ / vào sân. Đọc: Victor.	aipvn
+taxiway	V1	TWY V1 (VVNB)	đường lăn V1 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn sân đỗ / vào sân. Đọc: Victor One. (Đường lăn nối), 23 M, Bê tông xi măng, PCR 670/R/A/W/T	aipvn
+taxiway	V7	TWY V7 (VVNB)	đường lăn V7 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn sân đỗ / vào sân. Đọc: Victor Seven.	aipvn
+taxiway	V8	TWY V8 (VVNB)	đường lăn V8 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn sân đỗ / vào sân. Đọc: Victor Eight.	aipvn
+taxiway	V2	TWY V2 (VVNB)	đường lăn V2 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn sân đỗ / vào sân. Đọc: Victor Two.	aipvn
+taxiway	V3	TWY V3 (VVNB)	đường lăn V3 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn sân đỗ / vào sân. Đọc: Victor Three.	aipvn
+taxiway	V4	TWY V4 (VVNB)	đường lăn V4 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn sân đỗ / vào sân. Đọc: Victor Four.	aipvn
+taxiway	V5	TWY V5 (VVNB)	đường lăn V5 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn sân đỗ / vào sân. Đọc: Victor Five. (Đường lăn nối), 23 M, Bê tông xi măng, PCR 730/R/A/W/T	aipvn
+taxiway	V6	TWY V6 (VVNB)	đường lăn V6 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn sân đỗ / vào sân. Đọc: Victor Six.	aipvn
+taxiway	V9	TWY V9 (VVNB)	đường lăn V9 — Nội Bài	AIP AD 2.VVNB §2.8. Nội Bài (VVNB/HAN). đường lăn sân đỗ / vào sân. Đọc: Victor Nine. (Đường lăn nối), 30 M, Bê tông xi măng, PCR 850/R/A/W/T 14 MAY 2026 AIRAC AMDT 02/26	aipvn
+taxiway	VVTS	Tan Son Nhat taxiways: S1, S5, S10, P1, P2, P3, P4, P5, P6, S, S3, S4, S6, S7, S8, S9, V, V1, Z, Z1, Z6, Z7	Đường lăn Tân Sơn Nhất: S1, S5, S10, P1, P2, P3, P4, P5, P6, S, S3, S4, S6, S7, S8, S9, V, V1, Z, Z1, Z6, Z7	AIP Việt Nam AD 2.VVTS §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA SGN. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	S1	TWY S1 (VVTS)	đường lăn S1 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn song song / phía Nam. Đọc: Sierra One. đến TWY S5, 23 M, Bê tông xi măng (lề đường lăn: bê tông nhựa), PCR 1010/R/B/W/U • Đoạn từ TWY S5 đến TWY S10, 23 M, Bê tông xi măng (lề đường lăn: bê tông nhựa	aipvn
+taxiway	S5	TWY S5 (VVTS)	đường lăn S5 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn song song / phía Nam. Đọc: Sierra Five. (Đường lăn nối), 45 M, Bê tông xi măng (lề đường lăn: bê tông nhựa), PCR 790/R/B/X/U	aipvn
+taxiway	S10	TWY S10 (VVTS)	đường lăn S10 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn song song / phía Nam. Đọc: Sierra One Zero. (Đường lăn nối), 23 M, Bê tông xi măng (lề đường lăn: bê tông nhựa), PCR 790/R/B/X/U	aipvn
+taxiway	P1	TWY P1 (VVTS)	đường lăn P1 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn nối (giữa đường CHC). Đọc: Papa One. • Một đoạn dài 75.6 M từ mép đường CHC 25R/07L, 44 M, Bê tông xi măng (lề đường lăn: bê tông nhựa), PCR 1010/R/B/W/U • Đoạn còn lại dài 280.4 M, 23 M, Bê tông x	aipvn
+taxiway	P2	TWY P2 (VVTS)	đường lăn P2 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn nối (giữa đường CHC). Đọc: Papa Two. • Not updated portion, 23 M, Cement concrete, (TWY edge: bituminous concrete), PCR 790/R/B/X/U • Updated portion, 38 M, Cement Concrete, PCR 1010/R/B/W/U	aipvn
+taxiway	P3	TWY P3 (VVTS)	đường lăn P3 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn nối (giữa đường CHC). Đọc: Papa Three. 23 M, Bê tông xi măng (lề đường lăn: bê tông nhựa), PCR 1010/ R/B/W/U	aipvn
+taxiway	P4	TWY P4 (VVTS)	đường lăn P4 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn nối (giữa đường CHC). Đọc: Papa Four. 23 M, Cement concrete (TWY edge: bituminous concrete), PCR 1010/R/B/W/U	aipvn
+taxiway	P5	TWY P5 (VVTS)	đường lăn P5 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn nối (giữa đường CHC). Đọc: Papa Five.	aipvn
+taxiway	P6	TWY P6 (VVTS)	đường lăn P6 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn nối (giữa đường CHC). Đọc: Papa Six. • Một đoạn dài 53 M từ mép đường CHC 25R/07L, 29 M, Bê tông xi măng (lề đường lăn: bê tông nhựa), PCR 1010/R/B/W/U • Đoạn còn lại dài 311.2 M, 23 M, Bê tông xi 	aipvn
+taxiway	S	TWY S (VVTS)	đường lăn S — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn song song / phía Nam. Đọc: Sierra. • A portion fm TWY S1 to TWY S5, 23 M, Cement concrete (TWY edge: bituminous concrete), PCR 1010/R/B/W/U • A portion fm TWY S5 to TWY S10, 23 M, Cement concrete	aipvn
+taxiway	S3	TWY S3 (VVTS)	đường lăn S3 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn song song / phía Nam. Đọc: Sierra Three.	aipvn
+taxiway	S4	TWY S4 (VVTS)	đường lăn S4 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn song song / phía Nam. Đọc: Sierra Four.	aipvn
+taxiway	S6	TWY S6 (VVTS)	đường lăn S6 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn song song / phía Nam. Đọc: Sierra Six. Edge, CL, intermediate holding position.	aipvn
+taxiway	S7	TWY S7 (VVTS)	đường lăn S7 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn song song / phía Nam. Đọc: Sierra Seven. • Phần đã nâng cấp, 25 M, Bê tông xi măng (lề đường lăn: bê tông nhựa), PCR 1010/R/B/W/U • Phần chưa nâng cấp, 23 M, Bê tông xi măng (lề đường lăn: bê tông nhựa	aipvn
+taxiway	S8	TWY S8 (VVTS)	đường lăn S8 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn song song / phía Nam. Đọc: Sierra Eight. Lề, tim, chờ trung gian.	aipvn
+taxiway	S9	TWY S9 (VVTS)	đường lăn S9 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn song song / phía Nam. Đọc: Sierra Nine. • Phần đã nâng cấp, 29 M, Bê tông xi măng (lề đường lăn: bê tông nhựa), PCR 1010/R/B/W/U • Phần chưa nâng cấp, 23 M, Bê tông xi măng (lề đường lăn: bê tông nhựa	aipvn
+taxiway	V	TWY V (VVTS)	đường lăn V — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn sân đỗ / vào sân. Đọc: Victor.	aipvn
+taxiway	V1	TWY V1 (VVTS)	đường lăn V1 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn sân đỗ / vào sân. Đọc: Victor One. 38 M, Bê tông xi măng (lề đường lăn: bê tông nhựa), PCR 1010/ R/B/W/U 17 APR 2025 AIRAC AMDT 03/25	aipvn
+taxiway	Z	TWY Z (VVTS)	đường lăn Z — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn trong sân đỗ. Đọc: Zulu.	aipvn
+taxiway	Z1	TWY Z1 (VVTS)	đường lăn Z1 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn trong sân đỗ. Đọc: Zulu One.	aipvn
+taxiway	Z6	TWY Z6 (VVTS)	đường lăn Z6 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn trong sân đỗ. Đọc: Zulu Six.	aipvn
+taxiway	Z7	TWY Z7 (VVTS)	đường lăn Z7 — Tân Sơn Nhất	AIP AD 2.VVTS §2.8. Tân Sơn Nhất (VVTS/SGN). đường lăn trong sân đỗ. Đọc: Zulu Seven.	aipvn
+taxiway	VVDN	Da Nang taxiways: E, E1, E2, E3, E4, E6, E7, G1, G2, G4, G6, W, W1, W2, W4, W5, W6	Đường lăn Đà Nẵng: E, E1, E2, E3, E4, E6, E7, G1, G2, G4, G6, W, W1, W2, W4, W5, W6	AIP Việt Nam AD 2.VVDN §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA DAD. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	E	TWY E (VVDN)	đường lăn E — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Đông. Đọc: Echo. 23 M, Bê tông xi măng, PCR 670/R/A/X/U	aipvn
+taxiway	E1	TWY E1 (VVDN)	đường lăn E1 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Đông. Đọc: Echo One. 57 M, Cement concrete, PCR 670/R/A/W/U	aipvn
+taxiway	E2	TWY E2 (VVDN)	đường lăn E2 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Đông. Đọc: Echo Two.	aipvn
+taxiway	E3	TWY E3 (VVDN)	đường lăn E3 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Đông. Đọc: Echo Three. 31 M, Bê tông xi măng, PCR 670/R/A/W/U	aipvn
+taxiway	E4	TWY E4 (VVDN)	đường lăn E4 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Đông. Đọc: Echo Four.	aipvn
+taxiway	E6	TWY E6 (VVDN)	đường lăn E6 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Đông. Đọc: Echo Six.	aipvn
+taxiway	E7	TWY E7 (VVDN)	đường lăn E7 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Đông. Đọc: Echo Seven. 31 M, Cement concrete, PCR 670/R/A/W/U	aipvn
+taxiway	G1	TWY G1 (VVDN)	đường lăn G1 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn nối / rapid exit. Đọc: Golf One. (đường lăn nối), 61 M, Bê tông xi măng, PCR 500/R/B/X/U	aipvn
+taxiway	G2	TWY G2 (VVDN)	đường lăn G2 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn nối / rapid exit. Đọc: Golf Two.	aipvn
+taxiway	G4	TWY G4 (VVDN)	đường lăn G4 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn nối / rapid exit. Đọc: Golf Four.	aipvn
+taxiway	G6	TWY G6 (VVDN)	đường lăn G6 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn nối / rapid exit. Đọc: Golf Six. (connecting TWY), 61 M, Cement concrete, PCR 500/R/B/X/U	aipvn
+taxiway	W	TWY W (VVDN)	đường lăn W — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Tây. Đọc: Whiskey. (đường lăn song song), 23 M, Bê tông xi măng, PCR 470/R/ B/X/U	aipvn
+taxiway	W1	TWY W1 (VVDN)	đường lăn W1 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Tây. Đọc: Whiskey One.	aipvn
+taxiway	W2	TWY W2 (VVDN)	đường lăn W2 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Tây. Đọc: Whiskey Two.	aipvn
+taxiway	W4	TWY W4 (VVDN)	đường lăn W4 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Tây. Đọc: Whiskey Four. 23 M, Cement concrete, PCR 470/R/B/X/U	aipvn
+taxiway	W5	TWY W5 (VVDN)	đường lăn W5 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Tây. Đọc: Whiskey Five. (đường lăn cao tốc), 23 M, Bê tông xi măng, PCR 470/R/B/ X/U	aipvn
+taxiway	W6	TWY W6 (VVDN)	đường lăn W6 — Đà Nẵng	AIP AD 2.VVDN §2.8. Đà Nẵng (VVDN/DAD). đường lăn song song / phía Tây. Đọc: Whiskey Six.	aipvn
+taxiway	VVCR	Cam Ranh taxiways: W, G1, G3, G5, G7, W1, W3, W5, W6, W7, Y5, Y6, Y7, W4, Y3, Y4, E1, E3, E5, E7	Đường lăn Cam Ranh: W, G1, G3, G5, G7, W1, W3, W5, W6, W7, Y5, Y6, Y7, W4, Y3, Y4, E1, E3, E5, E7	AIP Việt Nam AD 2.VVCR §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA CXR. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	W	TWY W (VVCR)	đường lăn W — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Tây. Đọc: Whiskey. ), 23 M, Bê tông xi măng (Lề đường lăn: bê tông nhựa), PCR 470/R/B/X/U Đường lăn Y6 (1/2 đoạn đường lăn Y6 tiếp giáp sân đỗ tàu bay), 23 M, Bê tông xi măng (Lề 	aipvn
+taxiway	G1	TWY G1 (VVCR)	đường lăn G1 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn nối / rapid exit. Đọc: Golf One. 23 M, Bê tông xi măng, PCR 470/R/B/X/U Đường lăn G3, 23 M, Bê tông xi măng, PCR 470/R/B/X/U Đường lăn G5, 23 M, Bê tông xi măng, PCR 470/R/B/X/U Đường lăn G7, 2	aipvn
+taxiway	G3	TWY G3 (VVCR)	đường lăn G3 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn nối / rapid exit. Đọc: Golf Three.	aipvn
+taxiway	G5	TWY G5 (VVCR)	đường lăn G5 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn nối / rapid exit. Đọc: Golf Five.	aipvn
+taxiway	G7	TWY G7 (VVCR)	đường lăn G7 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn nối / rapid exit. Đọc: Golf Seven.	aipvn
+taxiway	W1	TWY W1 (VVCR)	đường lăn W1 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Tây. Đọc: Whiskey One. 23 M, Bê tông xi măng, PCR 470/R/B/X/U Đường lăn W3, 23 M, Bê tông xi măng, PCR 470/R/B/X/U Đường lăn W5, 23 M, Bê tông xi măng, PCR 470/R/B/X/U Đường lăn W6, 2	aipvn
+taxiway	W3	TWY W3 (VVCR)	đường lăn W3 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Tây. Đọc: Whiskey Three.	aipvn
+taxiway	W5	TWY W5 (VVCR)	đường lăn W5 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Tây. Đọc: Whiskey Five.	aipvn
+taxiway	W6	TWY W6 (VVCR)	đường lăn W6 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Tây. Đọc: Whiskey Six.	aipvn
+taxiway	W7	TWY W7 (VVCR)	đường lăn W7 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Tây. Đọc: Whiskey Seven.	aipvn
+taxiway	Y5	TWY Y5 (VVCR)	đường lăn Y5 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn nối. Đọc: Yankee Five. (1/2 đoạn đường lăn Y5 tiếp giáp sân đỗ tàu bay), 23 M, Bê tông xi măng, PCR 650/R/A/W/U Đường lăn Y5 (1/2 đoạn đường lăn Y5 tiếp giáp TWY W), 23 M, Bê tông xi 	aipvn
+taxiway	Y6	TWY Y6 (VVCR)	đường lăn Y6 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn nối. Đọc: Yankee Six. (1/2 of TWY Y6, the portion adjacent to apron), 23 M, Cement concrete (TWY edge: bituminous concrete), PCR 650/R/A/W/U TWY Y7, 23 M, Cement concrete, PCR 650/R/	aipvn
+taxiway	Y7	TWY Y7 (VVCR)	đường lăn Y7 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn nối. Đọc: Yankee Seven.	aipvn
+taxiway	W4	TWY W4 (VVCR)	đường lăn W4 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Tây. Đọc: Whiskey Four.	aipvn
+taxiway	Y3	TWY Y3 (VVCR)	đường lăn Y3 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn nối. Đọc: Yankee Three.	aipvn
+taxiway	Y4	TWY Y4 (VVCR)	đường lăn Y4 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn nối. Đọc: Yankee Four.	aipvn
+taxiway	E1	TWY E1 (VVCR)	đường lăn E1 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Đông. Đọc: Echo One.	aipvn
+taxiway	E3	TWY E3 (VVCR)	đường lăn E3 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Đông. Đọc: Echo Three.	aipvn
+taxiway	E5	TWY E5 (VVCR)	đường lăn E5 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Đông. Đọc: Echo Five.	aipvn
+taxiway	E7	TWY E7 (VVCR)	đường lăn E7 — Cam Ranh	AIP AD 2.VVCR §2.8. Cam Ranh (VVCR/CXR). đường lăn song song / phía Đông. Đọc: Echo Seven.	aipvn
+taxiway	VVCT	Can Tho taxiways: S4	Đường lăn Cần Thơ: S4	AIP Việt Nam AD 2.VVCT §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA VCA. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	S4	TWY S4 (VVCT)	đường lăn S4 — Cần Thơ	AIP AD 2.VVCT §2.8. Cần Thơ (VVCT/VCA). đường lăn song song / phía Nam. Đọc: Sierra Four. 23 M, Bê tông nhựa polymer, PCR 640/F/C/X/U TWY S4, 23 M, Polymer concrete, PCR 640/F/C/X/U 3 Vị trí và mức cao của điểm kiểm tra đồng hồ độ cao Altimeter check	aipvn
+taxiway	VVCI	Cat Bi taxiways: N, N1, N4, N7, W3, W4	Đường lăn Cát Bi: N, N1, N4, N7, W3, W4	AIP Việt Nam AD 2.VVCI §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA HPH. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	N	TWY N (VVCI)	đường lăn N — Cát Bi	AIP AD 2.VVCI §2.8. Cát Bi (VVCI/HPH). đường lăn chính phía Bắc. Đọc: November. 23 M, Bê tông xi măng, PCR 740/R/A/W/U Đường lăn nối N1, 105 M, Bê tông xi măng, PCR 720/R/A/W/U Đường lăn N4 (1/2 đường lăn N4 tiếp giáp với đường CHC 07/25), 	aipvn
+taxiway	N1	TWY N1 (VVCI)	đường lăn N1 — Cát Bi	AIP AD 2.VVCI §2.8. Cát Bi (VVCI/HPH). đường lăn chính phía Bắc. Đọc: November One. kết hợp làm sân quay đầu đường CHC 25: Kích thước 178 x 105 M Đường lăn nối N7 kết hợp làm sân quay đầu đường CHC 07: Kích thước 130 x 105 M Connecting TWY N1 c	aipvn
+taxiway	N4	TWY N4 (VVCI)	đường lăn N4 — Cát Bi	AIP AD 2.VVCI §2.8. Cát Bi (VVCI/HPH). đường lăn chính phía Bắc. Đọc: November Four. (1/2 TWY N4 adjacent to RWY 07/25), 27 M, Bituminous concrete, PCR 680/R/B/X/U TWY N4 (1/2 TWY N4 adjacent to parallel TWY N), 27 M, Cement concrete, PCR 680/R/	aipvn
+taxiway	N7	TWY N7 (VVCI)	đường lăn N7 — Cát Bi	AIP AD 2.VVCI §2.8. Cát Bi (VVCI/HPH). đường lăn chính phía Bắc. Đọc: November Seven. 105 M, Bê tông xi măng, PCR 720/R/A/W/U Đường lăn W3, 40 M, Bê tông xi măng, PCR 740/R/A/W/U Đường lăn W4, 40 M, Bê tông xi măng, PCR 680/R/B/X/U TWY N, 23 M, C	aipvn
+taxiway	W3	TWY W3 (VVCI)	đường lăn W3 — Cát Bi	AIP AD 2.VVCI §2.8. Cát Bi (VVCI/HPH). đường lăn song song / phía Tây. Đọc: Whiskey Three. 40 M, Cement concrete, PCR 740/R/A/W/U TWY W4, 40 M, Cement concrete, PCR 680/R/B/X/U 3 Vị trí và mức cao của điểm kiểm tra đồng hồ độ cao Altimeter checkpoint 	aipvn
+taxiway	W4	TWY W4 (VVCI)	đường lăn W4 — Cát Bi	AIP AD 2.VVCI §2.8. Cát Bi (VVCI/HPH). đường lăn song song / phía Tây. Đọc: Whiskey Four.	aipvn
+taxiway	VVPQ	Phu Quoc taxiways: A1, A2, A3, S, S1, S2, S4, S5, S6, S8, S9	Đường lăn Phú Quốc: A1, A2, A3, S, S1, S2, S4, S5, S6, S8, S9	AIP Việt Nam AD 2.VVPQ §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA PQC. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	A1	TWY A1 (VVPQ)	đường lăn A1 — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn nối / vào sân. Đọc: Alfa One. 25 M, Bê tông xi măng, PCR 850/R/B/X/U	aipvn
+taxiway	A2	TWY A2 (VVPQ)	đường lăn A2 — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn nối / vào sân. Đọc: Alfa Two.	aipvn
+taxiway	A3	TWY A3 (VVPQ)	đường lăn A3 — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn nối / vào sân. Đọc: Alfa Three.	aipvn
+taxiway	S	TWY S (VVPQ)	đường lăn S — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn song song / phía Nam. Đọc: Sierra.	aipvn
+taxiway	S1	TWY S1 (VVPQ)	đường lăn S1 — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn song song / phía Nam. Đọc: Sierra One.	aipvn
+taxiway	S2	TWY S2 (VVPQ)	đường lăn S2 — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn song song / phía Nam. Đọc: Sierra Two. • Đoạn có chiều dài khoảng 100 M tính từ tim đường CHC, 25 M, Bê tông nhựa, PCR 680/F/C/X/U • Ðoạn còn lại, 25 M, Bê tông xi măng, PCR 660/R/B/W/U	aipvn
+taxiway	S4	TWY S4 (VVPQ)	đường lăn S4 — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn song song / phía Nam. Đọc: Sierra Four.	aipvn
+taxiway	S5	TWY S5 (VVPQ)	đường lăn S5 — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn song song / phía Nam. Đọc: Sierra Five. Only used for aircraft up to ATR72 and equivalent 1 Các ký hiệu chỉ dẫn cho tàu bay đậu, chỉ dẫn lăn và vị trí đậu của tàu bay Use of aircraft stand ID signs, T	aipvn
+taxiway	S6	TWY S6 (VVPQ)	đường lăn S6 — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn song song / phía Nam. Đọc: Sierra Six. 25 M, Bê tông xi măng, PCR 850/R/B/X/U	aipvn
+taxiway	S8	TWY S8 (VVPQ)	đường lăn S8 — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn song song / phía Nam. Đọc: Sierra Eight.	aipvn
+taxiway	S9	TWY S9 (VVPQ)	đường lăn S9 — Phú Quốc	AIP AD 2.VVPQ §2.8. Phú Quốc (VVPQ/PQC). đường lăn song song / phía Nam. Đọc: Sierra Nine.	aipvn
+taxiway	VVPB	Phu Bai taxiways: W1, E1, W2, W4, E2, SP	Đường lăn Phú Bài: W1, E1, W2, W4, E2, SP	AIP Việt Nam AD 2.VVPB §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA HUI. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	W1	TWY W1 (VVPB)	đường lăn W1 — Phú Bài	AIP AD 2.VVPB §2.8. Phú Bài (VVPB/HUI). đường lăn song song / phía Tây. Đọc: Whiskey One. 23 M, Bê tông nhựa, PCR 500/F/B/W/U	aipvn
+taxiway	E1	TWY E1 (VVPB)	đường lăn E1 — Phú Bài	AIP AD 2.VVPB §2.8. Phú Bài (VVPB/HUI). đường lăn song song / phía Đông. Đọc: Echo One. lề đường lăn	aipvn
+taxiway	W2	TWY W2 (VVPB)	đường lăn W2 — Phú Bài	AIP AD 2.VVPB §2.8. Phú Bài (VVPB/HUI). đường lăn song song / phía Tây. Đọc: Whiskey Two.	aipvn
+taxiway	W4	TWY W4 (VVPB)	đường lăn W4 — Phú Bài	AIP AD 2.VVPB §2.8. Phú Bài (VVPB/HUI). đường lăn song song / phía Tây. Đọc: Whiskey Four.	aipvn
+taxiway	E2	TWY E2 (VVPB)	đường lăn E2 — Phú Bài	AIP AD 2.VVPB §2.8. Phú Bài (VVPB/HUI). đường lăn song song / phía Đông. Đọc: Echo Two. được sử dụng để đỗ tàu bay trong trường hợp khẩn nguy. TWY W2, W3, W4, E2 and portions of SP (portion from TWY W4 to TWY W1 and from TWY E1 to TWY E2): unservic	aipvn
+taxiway	SP	TWY SP (VVPB)	đường lăn SP — Phú Bài	AIP AD 2.VVPB §2.8. Phú Bài (VVPB/HUI). đường lăn song song. Đọc: Sierra Papa.	aipvn
+taxiway	VVVH	Vinh taxiways: W1, W2	Đường lăn Vinh: W1, W2	AIP Việt Nam AD 2.VVVH §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA VII. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	W1	TWY W1 (VVVH)	đường lăn W1 — Vinh	AIP AD 2.VVVH §2.8. Vinh (VVVH/VII). đường lăn song song / phía Tây. Đọc: Whiskey One. 18 M, Bê tông xi măng, PCR 760/R/A/W/T	aipvn
+taxiway	W2	TWY W2 (VVVH)	đường lăn W2 — Vinh	AIP AD 2.VVVH §2.8. Vinh (VVVH/VII). đường lăn song song / phía Tây. Đọc: Whiskey Two.	aipvn
+taxiway	VVDL	Lien Khuong taxiways: E1, E2	Đường lăn Liên Khương: E1, E2	AIP Việt Nam AD 2.VVDL §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA DLI. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	E1	TWY E1 (VVDL)	đường lăn E1 — Liên Khương	AIP AD 2.VVDL §2.8. Liên Khương (VVDL/DLI). đường lăn song song / phía Đông. Đọc: Echo One. 23 M, Bê tông nhựa, PCR 470/F/B/X/U	aipvn
+taxiway	E2	TWY E2 (VVDL)	đường lăn E2 — Liên Khương	AIP AD 2.VVDL §2.8. Liên Khương (VVDL/DLI). đường lăn song song / phía Đông. Đọc: Echo Two.	aipvn
+taxiway	VVBM	Buon Ma Thuot taxiways: P	Đường lăn Buôn Ma Thuột: P	AIP Việt Nam AD 2.VVBM §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA BMV. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway	P	TWY P (VVBM)	đường lăn P — Buôn Ma Thuột	AIP AD 2.VVBM §2.8. Buôn Ma Thuột (VVBM/BMV). đường lăn nối (giữa đường CHC). Đọc: Papa. 18 M, Bê tông nhựa, PCR 410/F/B/W/U Taxiway P: 18 M, Bituminous concrete, PCR 410/F/B/W/U 3 Vị trí và mức cao của điểm kiểm tra đồng hồ độ cao Altimeter checkpo	aipvn
+taxiway	VVPC	Phu Cat taxiways: E1, E2, E3, E4, E5, AC1, AC2	Đường lăn Phù Cát: E1, E2, E3, E4, E5, AC1, AC2	AIP Việt Nam AD 2.VVPC §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA UIH. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway	E1	TWY E1 (VVPC)	đường lăn E1 — Phù Cát	AIP AD 2.VVPC §2.8. Phù Cát (VVPC/UIH). đường lăn song song / phía Đông. Đọc: Echo One. 23 M, Bê tông xi măng, PCR 570/R/A/X/U	aipvn
+taxiway	E2	TWY E2 (VVPC)	đường lăn E2 — Phù Cát	AIP AD 2.VVPC §2.8. Phù Cát (VVPC/UIH). đường lăn song song / phía Đông. Đọc: Echo Two.	aipvn
+taxiway	E3	TWY E3 (VVPC)	đường lăn E3 — Phù Cát	AIP AD 2.VVPC §2.8. Phù Cát (VVPC/UIH). đường lăn song song / phía Đông. Đọc: Echo Three.	aipvn
+taxiway	E4	TWY E4 (VVPC)	đường lăn E4 — Phù Cát	AIP AD 2.VVPC §2.8. Phù Cát (VVPC/UIH). đường lăn song song / phía Đông. Đọc: Echo Four. 23 M, Cement concrete, PCR 570/R/A/X/U	aipvn
+taxiway	E5	TWY E5 (VVPC)	đường lăn E5 — Phù Cát	AIP AD 2.VVPC §2.8. Phù Cát (VVPC/UIH). đường lăn song song / phía Đông. Đọc: Echo Five.	aipvn
+taxiway	AC1	TWY AC1 (VVPC)	đường lăn AC1 — Phù Cát	AIP AD 2.VVPC §2.8. Phù Cát (VVPC/UIH). đường lăn. Đọc: Alfa Charlie One. 18 M, Bê tông xi măng, PCR 570/R/A/X/U	aipvn
+taxiway	AC2	TWY AC2 (VVPC)	đường lăn AC2 — Phù Cát	AIP AD 2.VVPC §2.8. Phù Cát (VVPC/UIH). đường lăn. Đọc: Alfa Charlie Two.	aipvn
+taxiway	VVPK	Pleiku taxiways: N4, N5, N6	Đường lăn Pleiku: N4, N5, N6	AIP Việt Nam AD 2.VVPK §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA PXU. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway	N4	TWY N4 (VVPK)	đường lăn N4 — Pleiku	AIP AD 2.VVPK §2.8. Pleiku (VVPK/PXU). đường lăn chính phía Bắc. Đọc: November Four. 25,4 M, Bê tông xi măng, PCR 630/R/B/W/U	aipvn
+taxiway	N5	TWY N5 (VVPK)	đường lăn N5 — Pleiku	AIP AD 2.VVPK §2.8. Pleiku (VVPK/PXU). đường lăn chính phía Bắc. Đọc: November Five. (from N4 to N6), 18 M, Cement concrete, PCR 630/R/B/W/U	aipvn
+taxiway	N6	TWY N6 (VVPK)	đường lăn N6 — Pleiku	AIP AD 2.VVPK §2.8. Pleiku (VVPK/PXU). đường lăn chính phía Bắc. Đọc: November Six.	aipvn
+taxiway	VVCA	Chu Lai taxiways: E1, E2, E3, E4, E5, E6	Đường lăn Chu Lai: E1, E2, E3, E4, E5, E6	AIP Việt Nam AD 2.VVCA §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA VCL. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway	E1	TWY E1 (VVCA)	đường lăn E1 — Chu Lai	AIP AD 2.VVCA §2.8. Chu Lai (VVCA/VCL). đường lăn song song / phía Đông. Đọc: Echo One. 25 M, Bê tông xi măng, PCR 420/R/B/X/U Đường lăn nối E2, 153 M, Bê tông xi măng, PCR 420/R/B/X/U Đường lăn nối E3, 23 M, Bê tông xi măng, PCR 420/R/B/X/U Đường 	aipvn
+taxiway	E2	TWY E2 (VVCA)	đường lăn E2 — Chu Lai	AIP AD 2.VVCA §2.8. Chu Lai (VVCA/VCL). đường lăn song song / phía Đông. Đọc: Echo Two.	aipvn
+taxiway	E3	TWY E3 (VVCA)	đường lăn E3 — Chu Lai	AIP AD 2.VVCA §2.8. Chu Lai (VVCA/VCL). đường lăn song song / phía Đông. Đọc: Echo Three.	aipvn
+taxiway	E4	TWY E4 (VVCA)	đường lăn E4 — Chu Lai	AIP AD 2.VVCA §2.8. Chu Lai (VVCA/VCL). đường lăn song song / phía Đông. Đọc: Echo Four. 23 M, Cement concrete, PCR 420/R/B/X/U Connecting TWY E5, 23 M, Cement concrete, PCR 420/R/B/X/U Connecting TWY E6, 84 M, Cement concrete, PCR 420/R/B/X/U 3 Vị 	aipvn
+taxiway	E5	TWY E5 (VVCA)	đường lăn E5 — Chu Lai	AIP AD 2.VVCA §2.8. Chu Lai (VVCA/VCL). đường lăn song song / phía Đông. Đọc: Echo Five.	aipvn
+taxiway	E6	TWY E6 (VVCA)	đường lăn E6 — Chu Lai	AIP AD 2.VVCA §2.8. Chu Lai (VVCA/VCL). đường lăn song song / phía Đông. Đọc: Echo Six. 84 M, Bê tông xi măng, PCR 420/R/B/X/U Parallel TWY E1, 25 M, Cement concrete, PCR 420/R/B/X/U Connecting TWY E2, 153 M, Cement concrete, PCR 420/R/B/X/U Connec	aipvn
+taxiway	VVDH	Dong Hoi taxiways: E2	Đường lăn Đồng Hới: E2	AIP Việt Nam AD 2.VVDH §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA VDH. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway	E2	TWY E2 (VVDH)	đường lăn E2 — Đồng Hới	AIP AD 2.VVDH §2.8. Đồng Hới (VVDH/VDH). đường lăn song song / phía Đông. Đọc: Echo Two. 18 M, bê tông xi măng, PCR 580/R/B/X/U TWY E2: 18 M, cement concrete, PCR 580/R/B/X/U 3 Vị trí và mức cao của điểm kiểm tra đồng hồ độ cao Altimeter checkpoint 	aipvn
+taxiway	VVTH	Tuy Hoa taxiways: E1, E2, E3, E4, E5	Đường lăn Tuy Hòa: E1, E2, E3, E4, E5	AIP Việt Nam AD 2.VVTH §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA TBB. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway	E1	TWY E1 (VVTH)	đường lăn E1 — Tuy Hòa	AIP AD 2.VVTH §2.8. Tuy Hòa (VVTH/TBB). đường lăn song song / phía Đông. Đọc: Echo One. 23 M, Bê tông xi măng, PCR 480/R/B/X/U	aipvn
+taxiway	E2	TWY E2 (VVTH)	đường lăn E2 — Tuy Hòa	AIP AD 2.VVTH §2.8. Tuy Hòa (VVTH/TBB). đường lăn song song / phía Đông. Đọc: Echo Two. Available for aircraft A321 and equivalent with not more than 4 times per day, max weight of aircraft less than 73.6 ton. 1 Các ký hiệu chỉ dẫn cho tàu bay đậu,	aipvn
+taxiway	E3	TWY E3 (VVTH)	đường lăn E3 — Tuy Hòa	AIP AD 2.VVTH §2.8. Tuy Hòa (VVTH/TBB). đường lăn song song / phía Đông. Đọc: Echo Three.	aipvn
+taxiway	E4	TWY E4 (VVTH)	đường lăn E4 — Tuy Hòa	AIP AD 2.VVTH §2.8. Tuy Hòa (VVTH/TBB). đường lăn song song / phía Đông. Đọc: Echo Four.	aipvn
+taxiway	E5	TWY E5 (VVTH)	đường lăn E5 — Tuy Hòa	AIP AD 2.VVTH §2.8. Tuy Hòa (VVTH/TBB). đường lăn song song / phía Đông. Đọc: Echo Five.	aipvn
+taxiway	VVTX	Tho Xuan taxiways: SP, A1, A2, A3, S1, S2, S3, S4, S5, S6	Đường lăn Thọ Xuân: SP, A1, A2, A3, S1, S2, S3, S4, S5, S6	AIP Việt Nam AD 2.VVTX §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA THD. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway	SP	TWY SP (VVTX)	đường lăn SP — Thọ Xuân	AIP AD 2.VVTX §2.8. Thọ Xuân (VVTX/THD). đường lăn song song. Đọc: Sierra Papa. 25 M, Bê tông xi măng, PCR 600/R/B/X/U	aipvn
+taxiway	A1	TWY A1 (VVTX)	đường lăn A1 — Thọ Xuân	AIP AD 2.VVTX §2.8. Thọ Xuân (VVTX/THD). đường lăn nối / vào sân. Đọc: Alfa One.	aipvn
+taxiway	A2	TWY A2 (VVTX)	đường lăn A2 — Thọ Xuân	AIP AD 2.VVTX §2.8. Thọ Xuân (VVTX/THD). đường lăn nối / vào sân. Đọc: Alfa Two.	aipvn
+taxiway	A3	TWY A3 (VVTX)	đường lăn A3 — Thọ Xuân	AIP AD 2.VVTX §2.8. Thọ Xuân (VVTX/THD). đường lăn nối / vào sân. Đọc: Alfa Three.	aipvn
+taxiway	S1	TWY S1 (VVTX)	đường lăn S1 — Thọ Xuân	AIP AD 2.VVTX §2.8. Thọ Xuân (VVTX/THD). đường lăn song song / phía Nam. Đọc: Sierra One.	aipvn
+taxiway	S2	TWY S2 (VVTX)	đường lăn S2 — Thọ Xuân	AIP AD 2.VVTX §2.8. Thọ Xuân (VVTX/THD). đường lăn song song / phía Nam. Đọc: Sierra Two. 20 M, Bê tông xi măng, PCR 620/R/B/X/U	aipvn
+taxiway	S3	TWY S3 (VVTX)	đường lăn S3 — Thọ Xuân	AIP AD 2.VVTX §2.8. Thọ Xuân (VVTX/THD). đường lăn song song / phía Nam. Đọc: Sierra Three.	aipvn
+taxiway	S4	TWY S4 (VVTX)	đường lăn S4 — Thọ Xuân	AIP AD 2.VVTX §2.8. Thọ Xuân (VVTX/THD). đường lăn song song / phía Nam. Đọc: Sierra Four.	aipvn
+taxiway	S5	TWY S5 (VVTX)	đường lăn S5 — Thọ Xuân	AIP AD 2.VVTX §2.8. Thọ Xuân (VVTX/THD). đường lăn song song / phía Nam. Đọc: Sierra Five.	aipvn
+taxiway	S6	TWY S6 (VVTX)	đường lăn S6 — Thọ Xuân	AIP AD 2.VVTX §2.8. Thọ Xuân (VVTX/THD). đường lăn song song / phía Nam. Đọc: Sierra Six.	aipvn
+taxiway	VVDB	Dien Bien taxiways: E2	Đường lăn Điện Biên: E2	AIP Việt Nam AD 2.VVDB §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA DIN. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway	E2	TWY E2 (VVDB)	đường lăn E2 — Điện Biên	AIP AD 2.VVDB §2.8. Điện Biên (VVDB/DIN). đường lăn song song / phía Đông. Đọc: Echo Two. 15 M, Bê tông xi măng, PCR 610/R/A/W/T TWY E2, 15 M, Cement concrete, PCR 610/R/A/W/T 3 Vị trí và mức cao của điểm kiểm tra đồng hồ độ cao Altimeter checkpoint 	aipvn
+taxiway	VVCM	Ca Mau taxiways: (không ký hiệu riêng)	Đường lăn Cà Mau: (không ký hiệu riêng)	AIP Việt Nam AD 2.VVCM §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA CAH. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway		TWY (VVCM)	đường lăn (không ký hiệu riêng) — Cà Mau	AIP AD 2.VVCM §2.8. Cà Mau (VVCM/CAH). đường lăn. Đọc: taxiway.	aipvn
+taxiway	VVRG	Rach Gia taxiways: (không ký hiệu riêng)	Đường lăn Rạch Giá: (không ký hiệu riêng)	AIP Việt Nam AD 2.VVRG §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA VKG. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway		TWY (VVRG)	đường lăn (không ký hiệu riêng) — Rạch Giá	AIP AD 2.VVRG §2.8. Rạch Giá (VVRG/VKG). đường lăn. Đọc: taxiway.	aipvn
+taxiway	VVCS	Con Dao taxiways: E2	Đường lăn Côn Đảo: E2	AIP Việt Nam AD 2.VVCS §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA VCS. CHK nội địa. Không thay AIP khi có xung đột.	aipvn
+taxiway	E2	TWY E2 (VVCS)	đường lăn E2 — Côn Đảo	AIP AD 2.VVCS §2.8. Côn Đảo (VVCS/VCS). đường lăn song song / phía Đông. Đọc: Echo Two. 15 M, Bê tông nhựa, PCR 190/F/B/X/U TWY E2, 15 M, Bituminous concrete, PCR 190/F/B/X/U 3 Vị trí và mức cao của điểm kiểm tra đồng hồ độ cao Altimeter checkpoint	aipvn
+taxiway	VVNS	Na San (VVNS/SQH) taxiways	Đường lăn Nà Sản (VVNS/SQH)	AIP Việt Nam — Nà Sản tạm dừng khai thác. Kiểm tra AIP/NOTAM khi mở lại. AIRAC 02/26.	aipvn
+taxiway	VVVD	Van Don taxiways: A1, A2, B, B4, B5	Đường lăn Vân Đồn: A1, A2, B, B4, B5	AIP Việt Nam AD 2.VVVD §2.8, AIRAC 02/26 (hiệu lực 2026-05-14). IATA VDO. CHKQT. Không thay AIP khi có xung đột.	aipvn
+taxiway	A1	TWY A1 (VVVD)	đường lăn A1 — Vân Đồn	AIP AD 2.VVVD §2.8. Vân Đồn (VVVD/VDO). đường lăn nối / vào sân. Đọc: Alfa One. 43.1 M, Bê tông xi măng, PCR 880/R/B/W/U	aipvn
+taxiway	A2	TWY A2 (VVVD)	đường lăn A2 — Vân Đồn	AIP AD 2.VVVD §2.8. Vân Đồn (VVVD/VDO). đường lăn nối / vào sân. Đọc: Alfa Two.	aipvn
+taxiway	B	TWY B (VVVD)	đường lăn B — Vân Đồn	AIP AD 2.VVVD §2.8. Vân Đồn (VVVD/VDO). đường lăn song song / nhánh B. Đọc: Bravo.	aipvn
+taxiway	B4	TWY B4 (VVVD)	đường lăn B4 — Vân Đồn	AIP AD 2.VVVD §2.8. Vân Đồn (VVVD/VDO). đường lăn song song / nhánh B. Đọc: Bravo Four. 35.4 M, Cement concrete, PCR 880/R/B/W/U – Connecting TWY B5, 23 M, Cement concrete, PCR 880/R/B/W/U 3 Vị trí và mức cao của điểm kiểm tra đồng hồ độ cao Altime	aipvn
+taxiway	B5	TWY B5 (VVVD)	đường lăn B5 — Vân Đồn	AIP AD 2.VVVD §2.8. Vân Đồn (VVVD/VDO). đường lăn song song / nhánh B. Đọc: Bravo Five. 23 M, Bê tông xi măng, PCR 880/R/B/W/U – Connecting TWY A1, 43.1 M, Cement concrete, PCR 880/R/B/W/U – Connecting TWY A2, 43.1 M, Cement concrete, PCR 880/R/B/W	aipvn

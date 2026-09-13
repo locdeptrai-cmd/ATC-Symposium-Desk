@@ -1,0 +1,22 @@
+{
+  "appId": "vn.vatm.atcdesk",
+  "appName": "ATC Desk",
+  "webDir": "web",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#071018"
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#071018",
+    "preferredContentMode": "mobile"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "backgroundColor": "#071018"
+    }
+  }
+}

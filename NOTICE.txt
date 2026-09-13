@@ -1,0 +1,16 @@
+ATC Symposium Desk
+created by Lộc đẹp trai
+Bộ ứng dụng hội trường / hội thảo / khóa ICAO: nghe, dịch thuật ngữ ATM/ATS, đề xuất câu đáp English theo vai.
+
+Độc lập với hệ thống ATC D.O Anpha (ERP/lập lịch/FRMS phần mềm). Không đọc database, không gọi API nội bộ.
+
+Không phải ấn phẩm chính thức của ICAO. Tên tài liệu (Doc 9859, 9966, 4444, 9835, 10056, 10057…) chỉ để định hướng thuật ngữ.
+Huấn lệnh không lưu trong thư viện là bản rút gọn song ngữ theo Doc 4444 Chapter 12 / Annex 10 Vol II, không phải toàn văn tài liệu ICAO.
+
+Dùng nội bộ khi tham dự phiên họp. Người cầm mic chịu trách nhiệm nội dung phát biểu.
+
+Từ điển Anh–Việt (nghĩa đầu, từ phổ biến) lấy từ:
+  https://github.com/yenthanh132/avdict-database-sqlite-converter  (anhviet109K.txt)
+  Lọc tần suất: https://github.com/first20hours/google-10000-english  (20k.txt)
+Thuật ngữ ATM/ATS trong glossary.js được ưu tiên khi nghĩa đầu của từ điển phổ thông không đúng ngữ cảnh hội nghị
+(ví dụ controller = kiểm soát viên, không phải bộ điều khiển).

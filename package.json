@@ -1,0 +1,23 @@
+{
+  "name": "atc-symposium-desk",
+  "version": "1.3.0",
+  "private": true,
+  "author": "Lộc đẹp trai",
+  "description": "ATC Symposium Desk — Capacitor app for iOS and Android, on-device sentence MT",
+  "scripts": {
+    "sync": "npx cap sync && node tools/strip-native-certs.js",
+    "android:open": "npx cap open android",
+    "ios:open": "npx cap open ios",
+    "android:sync": "npx cap sync android && node tools/strip-native-certs.js",
+    "ios:sync": "npx cap sync ios && node tools/strip-native-certs.js",
+    "android:apk": "npx cap sync android && node tools/strip-native-certs.js && cd android && gradlew.bat assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor-community/speech-recognition": "^7.0.1",
+    "@capacitor-mlkit/translation": "^8.2.1",
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/cli": "^8.5.1",
+    "@capacitor/core": "^8.5.1",
+    "@capacitor/ios": "^8.5.1"
+  }
+}
