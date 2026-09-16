@@ -8,9 +8,15 @@ import time
 import uuid
 from pathlib import Path
 
+import os
 import media_transcode as tx
 
 MAX_UPLOAD_BYTES = tx.MAX_UPLOAD_BYTES
+# Fine-tuned on ATCO2 + UWB-ATCC (ICAO English radiotelephony). CTranslate2
+# weights for faster-whisper — CPU int8, no GPU / no torch.
+# HF: jacktol/whisper-medium.en-fine-tuned-for-ATC-faster-whisper  (WER 15.08%
+# on ATC vs 94.59% for stock medium.en). Override with ATC_WHISPER_MODEL.
+ATC_WHISPER_DEFAULT = "jacktol/whisper-medium.en-fine-tuned-for-ATC-faster-whisper"
 ATC_PROMPT = (
     "Air traffic control radiotelephony. Cleared to land. Cleared for take-off. "
     "Line up and wait. Hold short of runway. Go around. Squawk. Contact tower. "
@@ -66,6 +72,18 @@ def sweep_jobs(max_age: float = 900) -> None:
                 pass
 
 
+WHISPER_MODEL = os.environ.get("ATC_WHISPER_MODEL", ATC_WHISPER_DEFAULT)
+WHISPER_DEVICE = os.environ.get("ATC_WHISPER_DEVICE", "cpu")
+WHISPER_COMPUTE = os.environ.get("ATC_WHISPER_COMPUTE", "int8")
+
+
+def _model_cache_dir() -> Path:
+    local = os.environ.get("LOCALAPPDATA") or str(Path.home() / "AppData" / "Local")
+    folder = Path(local) / "ATC-Symposium-Desk" / "whisper"
+    folder.mkdir(parents=True, exist_ok=True)
+    return folder
+
+
 def load_model():
     global _MODEL, _MODEL_ERROR
     with _MODEL_LOCK:
@@ -77,7 +95,13 @@ def load_model():
             _MODEL_ERROR = "May nay chua cai faster-whisper. pip install faster-whisper."
             return None
         try:
-            _MODEL = WhisperModel("tiny.en", device="cpu", compute_type="int8")
+            print("  Transcribe EN: dang tai model '%s' (%s/%s)..." % (WHISPER_MODEL, WHISPER_DEVICE, WHISPER_COMPUTE), flush=True)
+            _MODEL = WhisperModel(
+                WHISPER_MODEL,
+                device=WHISPER_DEVICE,
+                compute_type=WHISPER_COMPUTE,
+                download_root=str(_model_cache_dir()),
+            )
             _MODEL_ERROR = ""
             return _MODEL
         except Exception as exc:
@@ -88,7 +112,7 @@ def load_model():
 def warm_model() -> None:
     model = load_model()
     if model is not None:
-        print("  Transcribe EN: whisper tiny.en", flush=True)
+        print("  Transcribe EN: whisper %s (%s/%s)" % (WHISPER_MODEL, WHISPER_DEVICE, WHISPER_COMPUTE), flush=True)
 
 
 def _extract_wav(src: Path, wav: Path, ffmpeg: str) -> tuple[bool, str]:
@@ -106,7 +130,8 @@ def _extract_wav(src: Path, wav: Path, ffmpeg: str) -> tuple[bool, str]:
         "-ar",
         "16000",
         "-af",
-        "highpass=f=180,lowpass=f=3800,dynaudnorm=f=150:g=15",
+        # VHF radiotelephony band (~300–3400 Hz) + level normalize for radio fade.
+        "highpass=f=300,lowpass=f=3400,dynaudnorm=f=150:g=15",
         "-c:a",
         "pcm_s16le",
         str(wav),
@@ -153,9 +178,11 @@ def transcribe_with_turns(src: Path, on_progress=None) -> tuple[str, list[dict],
         segments, info = model.transcribe(
             str(wav),
             language="en",
-            beam_size=1,
+            beam_size=5,
             vad_filter=True,
-            condition_on_previous_text=True,
+            vad_parameters={"min_silence_duration_ms": 400, "speech_pad_ms": 200},
+            # Each radio burst is independent; carrying prior text invents readbacks.
+            condition_on_previous_text=False,
             initial_prompt=ATC_PROMPT,
             temperature=0.0,
             word_timestamps=False,

@@ -889,5 +889,18 @@
     } else {
       setStatus("Sẵn sàng. Nghe diễn giả hoặc dán biên bản.", "");
     }
+    try {
+      var pending = localStorage.getItem("atc-pending-transcript");
+      var run = localStorage.getItem("atc-pending-run");
+      if (pending && run) {
+        localStorage.removeItem("atc-pending-run");
+        $("transcript").value = pending;
+        state.finalBits = [pending];
+        state.listenLang = "en";
+        saveState();
+        setStatus("Đã chép lời English từ bản ghi. Đang dịch + đề xuất…", "live");
+        runSuggest();
+      }
+    } catch (e) {}
   });
 })();

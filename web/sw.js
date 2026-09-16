@@ -1,4 +1,4 @@
-var CACHE = "atc-symposium-desk-v35";
+var CACHE = "atc-symposium-desk-v36";
 var ASSETS = [
   "./",
   "./index.html",

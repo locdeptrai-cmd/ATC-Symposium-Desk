@@ -1187,6 +1187,7 @@
     var copyEn = $("copyRecEn");
     var copyMin = $("copyRecMinutes");
     var analyzeBtn = $("btnRecAnalyze");
+    var toHall = $("btnRecToHall");
     var turns = $("recTurns");
     var issues = $("recIssues");
 
@@ -1322,6 +1323,20 @@
           .catch(function (err) {
             setStatus((err && err.message) || "Không phân tích được.", "warn");
           });
+      });
+    }
+    if (toHall) {
+      toHall.addEventListener("click", function () {
+        var text = ($("recTranscript") && $("recTranscript").value) || "";
+        if (!text.trim()) {
+          setStatus("Chưa có lời English. Bấm NGHE (EN) hoặc đợi ghi xong.", "warn");
+          return;
+        }
+        try {
+          localStorage.setItem("atc-pending-transcript", text);
+          localStorage.setItem("atc-pending-run", "1");
+        } catch (e) {}
+        window.open("index.html?from=recordings", "_self");
       });
     }
     function onSeekClick(e) {
