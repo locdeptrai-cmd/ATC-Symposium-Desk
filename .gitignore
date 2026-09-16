@@ -6,6 +6,7 @@ Thumbs.db
 .vscode/
 .idea/
 tools/cache/
+models/whisper/
 web/certs/
 node_modules/
 android/app/build/

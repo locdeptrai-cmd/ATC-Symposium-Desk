@@ -78,8 +78,13 @@ WHISPER_COMPUTE = os.environ.get("ATC_WHISPER_COMPUTE", "int8")
 
 
 def _model_cache_dir() -> Path:
-    local = os.environ.get("LOCALAPPDATA") or str(Path.home() / "AppData" / "Local")
-    folder = Path(local) / "ATC-Symposium-Desk" / "whisper"
+    env = os.environ.get("ATC_WHISPER_CACHE")
+    if env:
+        folder = Path(env)
+    else:
+        # Keep weights on the project drive. %LOCALAPPDATA% (C:) is often too small
+        # for the ATC medium.en CTranslate2 checkpoint (~3 GB).
+        folder = Path(__file__).resolve().parents[1] / "models" / "whisper"
     folder.mkdir(parents=True, exist_ok=True)
     return folder
 
