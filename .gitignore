@@ -26,3 +26,6 @@ dist/
 *.spec.bak
 .playwright-cli/
 output/playwright/
+lac/
+.venv-gemma-local/
+.venv-llama-build/

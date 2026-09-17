@@ -828,7 +828,7 @@ table.gloss td:last-child { color: var(--muted); }
 }
 .reda-turns li {
   display: grid;
-  grid-template-columns: 64px 54px 1fr;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
   gap: 8px;
   align-items: start;
   padding: 8px 10px;
@@ -839,7 +839,13 @@ table.gloss td:last-child { color: var(--muted); }
   font-size: 0.86rem;
 }
 .reda-turns li:hover { border-color: rgba(62, 199, 184, 0.4); }
-.reda-turns .clock { color: var(--muted); font-family: var(--mono); font-size: 0.75rem; }
+.reda-turns .clock {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+.reda-line { min-width: 0; word-break: break-word; }
 .reda-role {
   font-size: 0.68rem;
   letter-spacing: 0.08em;

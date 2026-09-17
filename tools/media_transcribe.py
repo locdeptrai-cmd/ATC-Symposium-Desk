@@ -261,7 +261,7 @@ def _read_wav_mono(path: Path) -> tuple["object", int]:
     return pcm, sr
 
 
-def ptt_windows(samples, sr: int, min_dur: float = 0.35, merge_gap: float = 0.45, max_span: float = 18.0) -> list[tuple[float, float]]:
+def ptt_windows(samples, sr: int, min_dur: float = 0.4, merge_gap: float = 0.65, max_span: float = 14.0) -> list[tuple[float, float]]:
     import numpy as np
 
     hop = max(1, int(sr * 0.03))
@@ -272,11 +272,15 @@ def ptt_windows(samples, sr: int, min_dur: float = 0.35, merge_gap: float = 0.45
     if not energy:
         return [(0.0, len(samples) / float(sr or 1))]
     frames = np.array(energy, dtype=np.float32)
-    med = float(np.median(frames))
-    thr = max(med * 5.0, 0.018)
+    p20 = float(np.percentile(frames, 20))
+    p90 = float(np.percentile(frames, 90))
+    span = max(0.0, p90 - p20)
+    thr = max(0.015, p20 + 0.35 * span)
+    if p90 < 0.04:
+        return [(0.0, len(samples) / float(sr or 1))]
     raw: list[tuple[float, float]] = []
     start = None
-    hang = 8
+    hang = 10
     quiet = 0
     for i, on in enumerate(frames > thr):
         if on:
@@ -324,6 +328,41 @@ def collapse_loops(text: str) -> str:
     return out
 
 
+_RADIO_FIXES = (
+    (r"\b(?:charlie|charley)\s+jet\b", "Vietjet"),
+    (r"\bsion\s+(?=one|two|three|four|five|six|seven|eight|nine|zero)", "Vietjet "),
+    (r"\bviet\s*jet(?:air)?\b", "Vietjet"),
+    (r"\bvietnam(?:\s+airlines?)?\b", "Viet Nam"),
+    (r"\bviet\s*nam(?:\s+airlines?)?\b", "Viet Nam"),
+    (r"\b(?:qi|qq)\s+nine(?:\s+zero)?\s+nine\b", "Viet Nam nine zero nine"),
+    (r"\bsona\s+tower\b", "Saigon Tower"),
+    (r"\bsai\s*gon(?:\s+tower)?\b", "Saigon Tower"),
+    (r"\btan\s+son\s+nhat\b", "Tan Son Nhat"),
+    (r"\bnoy?\s*bai\b", "Noi Bai"),
+    (r"\blater\s+to\s+land\b", "cleared to land"),
+    (r"\bcontinue\s+approach\s+over\s+to\s+ukraine\b", "continue approach"),
+    (r"\bover\s+to\s+ukraine\b", ""),
+    (r"\btwo\s+fellay\b", "two five"),
+    (r"\bfellay\b", "five"),
+    (r"\brunway\s+two\s+final\b", "runway two five"),
+    (r"\bniner\b", "nine"),
+    (r"\btree\b", "three"),
+    (r"\bfife\b", "five"),
+    (r"\bwun\b", "one"),
+    (r"\bdegree\b", "degrees"),
+)
+
+
+def repair_radio_text(text: str) -> str:
+    import re
+
+    out = collapse_loops(text or "")
+    for pattern, repl in _RADIO_FIXES:
+        out = re.sub(pattern, repl, out, flags=re.I)
+    out = re.sub(r"\s+", " ", out).strip(" ,.-")
+    return collapse_loops(out)
+
+
 def _write_wav_slice(src_samples, sr: int, t0: float, t1: float, dest: Path) -> None:
     import wave
 
@@ -333,7 +372,11 @@ def _write_wav_slice(src_samples, sr: int, t0: float, t1: float, dest: Path) -> 
     b = min(len(src_samples), int(t1 * sr))
     if b <= a:
         b = min(len(src_samples), a + int(0.4 * sr))
-    pcm = np.clip(src_samples[a:b] * 32767.0, -32767, 32767).astype(np.int16)
+    chunk = np.asarray(src_samples[a:b], dtype=np.float32)
+    peak = float(np.max(np.abs(chunk))) if len(chunk) else 0.0
+    if 1e-4 < peak < 0.38:
+        chunk = chunk * (0.72 / peak)
+    pcm = np.clip(chunk * 32767.0, -32767, 32767).astype(np.int16)
     with wave.open(str(dest), "wb") as handle:
         handle.setnchannels(1)
         handle.setsampwidth(2)
@@ -341,33 +384,35 @@ def _write_wav_slice(src_samples, sr: int, t0: float, t1: float, dest: Path) -> 
         handle.writeframes(pcm.tobytes())
 
 
-def _decode_window(model, wav: Path) -> list[dict]:
+def _decode_window(model, wav: Path, duration_s: float) -> list[dict]:
+    token_cap = max(24, min(96, int(max(0.4, duration_s) * 10) + 16))
     segments, _info = model.transcribe(
         str(wav),
         language="en",
         beam_size=5,
-        vad_filter=True,
-        vad_parameters={"min_silence_duration_ms": 180, "speech_pad_ms": 120},
+        vad_filter=False,
+        without_timestamps=True,
         condition_on_previous_text=False,
         initial_prompt=ATC_PROMPT,
         hotwords=ATC_HOTWORDS,
         temperature=0.0,
-        repetition_penalty=1.12,
-        no_repeat_ngram_size=4,
-        compression_ratio_threshold=2.0,
-        no_speech_threshold=0.5,
-        hallucination_silence_threshold=0.5,
+        repetition_penalty=1.08,
+        no_repeat_ngram_size=3,
+        compression_ratio_threshold=2.2,
+        log_prob_threshold=-0.85,
+        no_speech_threshold=0.6,
+        max_new_tokens=token_cap,
         word_timestamps=False,
     )
     turns = []
     for seg in segments:
-        chunk = collapse_loops((seg.text or "").strip())
-        if not chunk:
+        chunk = repair_radio_text((seg.text or "").strip())
+        if not chunk or len(chunk) < 3:
             continue
         turns.append(
             {
                 "t_start": float(getattr(seg, "start", 0) or 0),
-                "t_end": float(getattr(seg, "end", 0) or 0),
+                "t_end": float(getattr(seg, "end", 0) or duration_s),
                 "text": chunk,
             }
         )
@@ -404,28 +449,30 @@ def transcribe_with_turns(src: Path, on_progress=None) -> tuple[str, list[dict],
         turns: list[dict] = []
         for idx, (t0, t1) in enumerate(windows):
             slice_wav = folder / ("ptt-%03d.wav" % idx)
-            _write_wav_slice(samples, sr, max(0.0, t0 - 0.08), t1 + 0.08, slice_wav)
+            pad0 = max(0.0, t0 - 0.18)
+            pad1 = t1 + 0.18
+            _write_wav_slice(samples, sr, pad0, pad1, slice_wav)
             try:
-                segs = _decode_window(model, slice_wav)
+                segs = _decode_window(model, slice_wav, max(0.4, pad1 - pad0))
             finally:
                 try:
                     slice_wav.unlink(missing_ok=True)
                 except OSError:
                     pass
             for seg in segs:
-                chunk = seg["text"]
+                chunk = repair_radio_text(seg["text"])
                 if not chunk:
                     continue
-                abs_start = t0 + float(seg.get("t_start") or 0)
-                abs_end = t0 + float(seg.get("t_end") or 0)
+                abs_start = pad0 + float(seg.get("t_start") or 0)
+                abs_end = pad0 + float(seg.get("t_end") or (t1 - t0))
                 parts.append(chunk)
                 turns.append({"t_start": abs_start, "t_end": abs_end, "text": chunk})
-            joined = collapse_loops(" ".join(parts))
+            joined = repair_radio_text(" ".join(parts))
             pct = 18.0
             if duration > 0:
                 pct = min(92.0, 18.0 + 74.0 * (t1 / duration))
             note(pct, "Đang ghi lời English…", joined)
-        text = collapse_loops(" ".join(parts))
+        text = repair_radio_text(" ".join(parts))
         if not text:
             return "", [], "Whisper khong nghe ra loi English trong file nay."
         note(94, "Đang đối chiếu readback REDA…", text)

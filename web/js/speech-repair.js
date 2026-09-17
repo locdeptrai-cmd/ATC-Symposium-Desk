@@ -58,7 +58,14 @@
     { re: /\bnoy?\s*bai(?:\s+tower)?\b/gi, to: "Noi Bai", always: true },
     { re: /\bnoibai\b/gi, to: "Noi Bai", always: true },
     { re: /\blater\s+to\s+land\b/gi, to: "cleared to land", always: true },
-    { re: /\bcontinue\s+approach\s+over\s+to\s+ukraine\b/gi, to: "continue approach", always: true }
+    { re: /\bcontinue\s+approach\s+over\s+to\s+ukraine\b/gi, to: "continue approach", always: true },
+    { re: /\bsion\s+(?=one|two|three|four|five)/gi, to: "Vietjet ", always: true },
+    { re: /\b(?:qi|qq)\s+nine(?:\s+zero)?\s+nine\b/gi, to: "Viet Nam nine zero nine", always: true },
+    { re: /\btwo\s+fellay\b/gi, to: "two five", always: true },
+    { re: /\bfellay\b/gi, to: "five", always: true },
+    { re: /\brunway\s+two\s+final\b/gi, to: "runway two five", always: true },
+    { re: /\bniner\b/gi, to: "nine", always: true },
+    { re: /\bfife\b/gi, to: "five", always: true }
   ];
 
   function spaceNorm(s) {

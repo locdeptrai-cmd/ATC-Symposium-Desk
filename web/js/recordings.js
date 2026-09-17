@@ -330,12 +330,13 @@
     row.analysis = analysis;
     row.turns = analysis.utterances || row.turns || [];
     row.minutesEn = analysis.minutes_en || "";
+    row.scriptEn = analysis.script_en || "";
     if (analysis.transcript && !row.transcriptEn) row.transcriptEn = analysis.transcript;
     if (player.id === row.id || !player.id) {
       renderTurns(row);
       renderIssues(row);
       setMinutes(row.minutesEn || "");
-      if (analysis.transcript) setTranscriptBox(row.transcriptEn || analysis.transcript, "");
+      setTranscriptBox(row.scriptEn || row.transcriptEn || analysis.transcript || "", "");
     }
   }
 
@@ -356,17 +357,18 @@
       .map(function (u) {
         var role = String(u.speaker_role || "UNKNOWN").toUpperCase();
         var roleClass = role === "ATCO" ? "is-atco" : role === "PILOT" ? "is-pilot" : "is-unknown";
+        var stamp = u.t_clock || clock(u.t_start);
         return (
           "<li data-t=\"" +
           escapeHtml(String(u.t_start || 0)) +
-          "\"><span class=\"clock\">" +
-          clock(u.t_start) +
-          "</span><span class=\"reda-role " +
+          "\"><span class=\"reda-role " +
           roleClass +
           "\">" +
           escapeHtml(role) +
-          "</span><span>" +
+          "</span><span class=\"reda-line\">" +
           escapeHtml(u.asr_text || u.text || "") +
+          "</span><span class=\"clock\">" +
+          escapeHtml(stamp) +
           "</span></li>"
         );
       })
@@ -422,7 +424,9 @@
     renderTurns(row);
     renderIssues(row);
     setMinutes((row && row.minutesEn) || "");
-    if (row && row.transcriptEn) setTranscriptBox(row.transcriptEn, "");
+    if (row && (row.scriptEn || row.transcriptEn)) {
+      setTranscriptBox(row.scriptEn || row.transcriptEn, "");
+    }
   }
 
   function seekTo(sec) {
@@ -1471,7 +1475,7 @@
         if (!text.trim()) return;
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(function () {
-            setStatus("Đã sao chép lời English.", "ok");
+            setStatus("Đã sao chép kịch bản thoại.", "ok");
           });
         }
       });

@@ -16,11 +16,97 @@ PILOT_SPLIT = re.compile(
     r"(?=\b(?:climbing|descending|roger|wilco|holding short|going around)\b)",
     re.IGNORECASE,
 )
+FILE_RANGE = re.compile(r"(\d{4})-(\d{4})$")
+SCRIPT_LINE = re.compile(
+    r"^\s*(ATCO|PILOT|UNKNOWN)\s*:\s*(.*?)\s*(?:\[([0-9:.]+)\])?\s*$",
+    re.IGNORECASE,
+)
 
 
 def _fmt_clock(sec: float) -> str:
     s = max(0, int(sec))
     return f"{s // 60:02d}:{s % 60:02d}"
+
+
+def file_clock_origin(filename: str) -> int | None:
+    """HHMM-HHMM in the stem (20260225_118-7_2220-2250 → 22:20:00)."""
+    stem = re.sub(r"\.[^.]+$", "", str(filename or "").replace("\\", "/").split("/")[-1])
+    match = FILE_RANGE.search(stem)
+    if not match:
+        return None
+    hhmm = match.group(1)
+    hour, minute = int(hhmm[:2]), int(hhmm[2:])
+    if hour > 23 or minute > 59:
+        return None
+    return hour * 3600 + minute * 60
+
+
+def _fmt_file_clock(t_start: float, origin: int | None) -> str:
+    if origin is None:
+        return _fmt_clock(t_start)
+    total = int(origin + max(0, t_start)) % 86400
+    hh, rem = divmod(total, 3600)
+    mm, ss = divmod(rem, 60)
+    return f"{hh:02d}:{mm:02d}:{ss:02d}"
+
+
+def _script_line(role: str, text: str, t_start: float, origin: int | None) -> str:
+    body = (text or "").strip()
+    stamp = _fmt_file_clock(t_start, origin)
+    return f"{role}: {body}  [{stamp}]"
+
+
+def build_script(utterances: list[dict], origin: int | None) -> str:
+    lines = []
+    for u in utterances:
+        role = str(u.get("speaker_role") or "UNKNOWN").upper()
+        text = str(u.get("asr_text") or u.get("text") or "").strip()
+        if not text:
+            continue
+        lines.append(_script_line(role, text, float(u.get("t_start") or 0), origin))
+    return "\n".join(lines)
+
+
+def _clock_to_seconds(stamp: str, origin: int | None) -> float:
+    bits = [int(p) for p in re.findall(r"\d+", stamp or "")]
+    if len(bits) == 3:
+        abs_s = bits[0] * 3600 + bits[1] * 60 + bits[2]
+        if origin is None:
+            return float(abs_s)
+        return float((abs_s - origin) % 86400)
+    if len(bits) == 2:
+        return float(bits[0] * 60 + bits[1])
+    return 0.0
+
+
+def parse_script(text: str, filename: str = "") -> list[dict]:
+    origin = file_clock_origin(filename)
+    out: list[dict] = []
+    for line in (text or "").splitlines():
+        match = SCRIPT_LINE.match(line)
+        if not match:
+            continue
+        role = match.group(1).upper()
+        body = (match.group(2) or "").strip()
+        if not body:
+            continue
+        t0 = _clock_to_seconds(match.group(3) or "", origin) if match.group(3) else float(len(out) * 3)
+        out.append({"text": body, "t_start": t0, "t_end": t0 + 2.0, "speaker_role": role})
+    return out
+
+
+def fill_unknown_roles(utterances: list[dict]) -> None:
+    prev = None
+    for u in utterances:
+        role = str(u.get("speaker_role") or "UNKNOWN").upper()
+        if role == "UNKNOWN" and prev == "ATCO":
+            u["speaker_role"] = SpeakerRole.PILOT.value
+            role = "PILOT"
+        elif role == "UNKNOWN" and prev == "PILOT":
+            u["speaker_role"] = SpeakerRole.ATCO.value
+            role = "ATCO"
+        if role in {"ATCO", "PILOT"}:
+            prev = role
 
 
 def _as_turn(item: dict, index: int) -> dict:
@@ -146,6 +232,7 @@ def _build_minutes(
     utterances: list[dict],
     issues: list[dict],
     summary: dict,
+    origin: int | None,
 ) -> str:
     lines = [
         "REDA — READBACK DEBRIEF MINUTES (EN)",
@@ -158,15 +245,12 @@ def _build_minutes(
             f"Clean pairs: {summary['ok_pairs']}."
         ),
         "",
-        "1. ENGLISH TRANSCRIPT",
+        "1. SCRIPT (role + file clock)",
     ]
     if not utterances:
         lines.append("  (no English speech recognised)")
     for u in utterances:
-        lines.append(
-            f"  [{_fmt_clock(u['t_start'])}–{_fmt_clock(u['t_end'])}] "
-            f"{u['speaker_role']}: {u['asr_text']}"
-        )
+        lines.append("  " + _script_line(u["speaker_role"], u["asr_text"], u["t_start"], origin))
     lines += ["", "2. READBACK ERRORS"]
     if not issues:
         lines.append("  No concept-level readback error detected.")
@@ -203,9 +287,11 @@ def _build_minutes(
 
 
 def analyze(turns: list[dict] | None = None, filename: str = "", text: str = "") -> dict:
+    origin = file_clock_origin(filename)
     raw = [_as_turn(t, i) for i, t in enumerate(turns or []) if str(t.get("text") or t.get("asr_text") or "").strip()]
     if not raw and text:
-        raw = turns_from_text(text)
+        scripted = parse_script(text, filename)
+        raw = scripted if len(scripted) >= 2 else turns_from_text(text)
     else:
         raw = split_mixed_turns(raw)
 
@@ -243,6 +329,10 @@ def analyze(turns: list[dict] | None = None, filename: str = "", text: str = "")
             concepts.append(c)
 
     refine_roles(utterances, concepts)
+    fill_unknown_roles(utterances)
+    for u in utterances:
+        u["t_clock"] = _fmt_file_clock(float(u["t_start"]), origin)
+        u["t_media"] = _fmt_clock(float(u["t_start"]))
 
     issues: list[dict] = []
     ok_pairs = 0
@@ -294,12 +384,15 @@ def analyze(turns: list[dict] | None = None, filename: str = "", text: str = "")
         for c in concepts
         if c.intent.value != "OTHER" or c.must_readback
     ]
-    minutes = _build_minutes(filename, utterances, issues, summary)
+    minutes = _build_minutes(filename, utterances, issues, summary, origin)
     transcript = " ".join(u["asr_text"] for u in utterances).strip()
+    script = build_script(utterances, origin)
     return {
         "ok": True,
         "filename": filename,
         "transcript": transcript,
+        "script_en": script,
+        "clock_origin": origin,
         "utterances": utterances,
         "concepts": concept_rows,
         "issues": issues,

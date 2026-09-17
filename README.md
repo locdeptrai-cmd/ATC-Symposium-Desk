@@ -150,13 +150,6 @@ PWA cần mở app một lần qua localhost/HTTPS và chờ service worker lưu
 
 ```sh
 python tools/build_library.py
-python tests/library_db_test.py
-python tests/serve_paths_test.py
-node tests/library.test.js
-```
-
-```
-node tests/engine.test.js
 ```
 
 ## Thư mục
@@ -179,5 +172,4 @@ ATC-Symposium-Desk/
   tools/serve.py
   README.md
   web/                     ← UI dùng chung (Hội trường / Thuật ngữ / REDA)
-  tests/
 ```

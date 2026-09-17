@@ -36,6 +36,7 @@ ATCO_CUES = (
     "climb and maintain",
     "descend and maintain",
     "cleared to land",
+    "continue approach",
     "cleared land",
     "cleared for take-off",
     "cleared for takeoff",
@@ -61,6 +62,8 @@ PILOT_CUES = (
     "descending",
     "roger",
     "wilco",
+    "affirm",
+    "negative",
     "holding short",
     "going around",
 )
