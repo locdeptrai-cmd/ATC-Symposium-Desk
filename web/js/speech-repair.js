@@ -45,7 +45,20 @@
     { re: /\bcontact\s+tower\b/gi, to: "contact tower", always: true },
     { re: /\bcontact\s+approach\b/gi, to: "contact approach", always: true },
     { re: /\bwill\s+co\b/gi, to: "wilco", always: true },
-    { re: /\bq\.?\s*n\.?\s*h\.?\b/gi, to: "QNH", always: true }
+    { re: /\bq\.?\s*n\.?\s*h\.?\b/gi, to: "QNH", always: true },
+    { re: /\b(?:charlie|charley)\s+jet\b/gi, to: "Vietjet", always: true },
+    { re: /\bvee+\s*jet\b/gi, to: "Vietjet", always: true },
+    { re: /\bviet\s*jet(?:\s+air)?\b/gi, to: "Vietjet", always: true },
+    { re: /\bvietjetair\b/gi, to: "Vietjet", always: true },
+    { re: /\bviet\s*nam(?:\s+airlines?)?\b/gi, to: "Viet Nam", always: true },
+    { re: /\bvietnam(?:\s+airlines?)?\b/gi, to: "Viet Nam", always: true },
+    { re: /\bsai\s*gon(?:\s+tower)?\b/gi, to: "Saigon Tower", always: true },
+    { re: /\bsona\s+tower\b/gi, to: "Saigon Tower", always: true },
+    { re: /\btan\s+son\s+nhat\b/gi, to: "Tan Son Nhat", always: true },
+    { re: /\bnoy?\s*bai(?:\s+tower)?\b/gi, to: "Noi Bai", always: true },
+    { re: /\bnoibai\b/gi, to: "Noi Bai", always: true },
+    { re: /\blater\s+to\s+land\b/gi, to: "cleared to land", always: true },
+    { re: /\bcontinue\s+approach\s+over\s+to\s+ukraine\b/gi, to: "continue approach", always: true }
   ];
 
   function spaceNorm(s) {

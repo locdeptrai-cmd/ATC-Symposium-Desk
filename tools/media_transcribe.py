@@ -19,15 +19,59 @@ ATC_WHISPER_TURBO_DIR = Path(__file__).resolve().parents[1] / "models" / "whispe
 ATC_WHISPER_MEDIUM = "jacktol/whisper-medium.en-fine-tuned-for-ATC-faster-whisper"
 ATC_WHISPER_DEFAULT = ATC_WHISPER_MEDIUM
 ATC_PROMPT = (
-    "Air traffic control radiotelephony. Cleared to land. Cleared for take-off. "
+    "Air traffic control radiotelephony. Vietjet. Viet Nam. Bamboo. Pacific. Vasco. "
+    "Saigon Tower. Noi Bai Tower. Tan Son Nhat. Cleared to land. Cleared for take-off. "
     "Line up and wait. Hold short of runway. Go around. Squawk. Contact tower. "
     "Contact approach. Climb. Descend. Maintain. Flight level. QNH. Roger. Wilco. Affirm. Negative."
 )
-ATC_HOTWORDS = (
-    "cleared to land line up and wait hold short go around squawk contact tower "
-    "contact approach climb descend maintain flight level QNH runway taxi take-off "
-    "roger wilco affirm negative"
+# VHF radio: de-click + denoise + gate (squelch) + light normalize. Mono.
+RADIO_AF = (
+    "highpass=f=250,lowpass=f=3400,adeclick,"
+    "afftdn=nr=10:nf=-25,agate=threshold=0.01:ratio=8:attack=5:release=120:detection=rms,"
+    "dynaudnorm=f=200:g=8"
 )
+RADIO_AF_FALLBACK = "highpass=f=250,lowpass=f=3400,dynaudnorm=f=200:g=8"
+
+
+def _vn_spoken_hotwords() -> str:
+    path = Path(__file__).resolve().parents[1] / "data" / "vn-airline-spoken.tsv"
+    bits = [
+        "Vietjet",
+        "Viet Nam",
+        "Vietnam",
+        "Bamboo",
+        "Pacific",
+        "Vasco",
+        "Saigon Tower",
+        "Noi Bai",
+        "Tan Son Nhat",
+        "Danang",
+        "cleared to land",
+        "line up and wait",
+        "hold short",
+        "go around",
+        "squawk",
+        "contact tower",
+        "runway",
+        "QNH",
+    ]
+    if not path.is_file():
+        return " ".join(bits)
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return " ".join(bits)
+    for line in lines[1:]:
+        cols = line.split("\t")
+        if len(cols) < 6:
+            continue
+        spoken = (cols[4] or "").strip()
+        if spoken and spoken not in bits:
+            bits.append(spoken)
+    return " ".join(bits)
+
+
+ATC_HOTWORDS = _vn_spoken_hotwords()
 
 _JOBS: dict[str, dict] = {}
 _JOBS_LOCK = threading.Lock()
@@ -161,7 +205,7 @@ def warm_model() -> None:
         print("  Transcribe EN: whisper %s (%s/%s)" % (WHISPER_MODEL, WHISPER_DEVICE, WHISPER_COMPUTE), flush=True)
 
 
-def _extract_wav(src: Path, wav: Path, ffmpeg: str) -> tuple[bool, str]:
+def _run_ffmpeg_wav(ffmpeg: str, src: Path, wav: Path, af: str, timeout: int) -> tuple[bool, str]:
     cmd = [
         ffmpeg,
         "-hide_banner",
@@ -176,25 +220,159 @@ def _extract_wav(src: Path, wav: Path, ffmpeg: str) -> tuple[bool, str]:
         "-ar",
         "16000",
         "-af",
-        # VHF radiotelephony band (~300–3400 Hz) + level normalize for radio fade.
-        "highpass=f=300,lowpass=f=3400,dynaudnorm=f=150:g=15",
+        af,
         "-c:a",
         "pcm_s16le",
         str(wav),
     ]
     try:
-        proc = subprocess.run(
-            cmd,
-            capture_output=True,
-            timeout=max(90, int(src.stat().st_size / (256 * 1024))),
-            **tx._popen_flags(),
-        )
+        proc = subprocess.run(cmd, capture_output=True, timeout=timeout, **tx._popen_flags())
     except (OSError, subprocess.TimeoutExpired) as exc:
         return False, "Khong tach duoc am thanh: %s" % exc
     if proc.returncode != 0 or not wav.is_file() or wav.stat().st_size < 64:
         err = (proc.stderr or b"").decode("utf-8", "replace").strip()
-        return False, "File khong co kenh tieng." + ((" " + err[:180]) if err else "")
+        return False, err[:180]
     return True, ""
+
+
+def _extract_wav(src: Path, wav: Path, ffmpeg: str) -> tuple[bool, str]:
+    # Mono from the radio mix (TightVNC stereo is a duplicated channel).
+    timeout = max(90, int(src.stat().st_size / (256 * 1024)))
+    ok, err = _run_ffmpeg_wav(ffmpeg, src, wav, RADIO_AF, timeout)
+    if ok:
+        return True, ""
+    ok, err2 = _run_ffmpeg_wav(ffmpeg, src, wav, RADIO_AF_FALLBACK, timeout)
+    if ok:
+        return True, ""
+    return False, "File khong co kenh tieng." + ((" " + (err or err2)) if (err or err2) else "")
+
+
+def _read_wav_mono(path: Path) -> tuple["object", int]:
+    import wave
+
+    import numpy as np
+
+    with wave.open(str(path), "rb") as handle:
+        sr = handle.getframerate()
+        nch = handle.getnchannels()
+        frames = handle.readframes(handle.getnframes())
+    pcm = np.frombuffer(frames, dtype=np.int16).astype(np.float32) / 32768.0
+    if nch > 1:
+        pcm = pcm.reshape(-1, nch).mean(axis=1)
+    return pcm, sr
+
+
+def ptt_windows(samples, sr: int, min_dur: float = 0.35, merge_gap: float = 0.45, max_span: float = 18.0) -> list[tuple[float, float]]:
+    import numpy as np
+
+    hop = max(1, int(sr * 0.03))
+    energy = []
+    for i in range(0, max(0, len(samples) - hop), hop):
+        chunk = samples[i : i + hop]
+        energy.append(float(np.sqrt(np.mean(chunk * chunk) + 1e-12)))
+    if not energy:
+        return [(0.0, len(samples) / float(sr or 1))]
+    frames = np.array(energy, dtype=np.float32)
+    med = float(np.median(frames))
+    thr = max(med * 5.0, 0.018)
+    raw: list[tuple[float, float]] = []
+    start = None
+    hang = 8
+    quiet = 0
+    for i, on in enumerate(frames > thr):
+        if on:
+            if start is None:
+                start = i
+            quiet = 0
+        elif start is not None:
+            quiet += 1
+            if quiet >= hang:
+                a = start * hop / sr
+                b = max(a + min_dur, (i - quiet + 1) * hop / sr)
+                if b - a >= min_dur:
+                    raw.append((a, b))
+                start = None
+                quiet = 0
+    if start is not None:
+        a = start * hop / sr
+        b = len(samples) / float(sr)
+        if b - a >= min_dur:
+            raw.append((a, b))
+    if not raw:
+        return [(0.0, len(samples) / float(sr or 1))]
+    grouped: list[tuple[float, float]] = []
+    cur0, cur1 = raw[0]
+    for a, b in raw[1:]:
+        if a - cur1 <= merge_gap and (b - cur0) <= max_span:
+            cur1 = b
+        else:
+            grouped.append((cur0, cur1))
+            cur0, cur1 = a, b
+    grouped.append((cur0, cur1))
+    return grouped
+
+
+def collapse_loops(text: str) -> str:
+    import re
+
+    out = " ".join((text or "").split())
+    if not out:
+        return ""
+    prev = None
+    while prev != out:
+        prev = out
+        out = re.sub(r"\b((?:\S+\s+){0,5}\S+)(?:\s+\1){2,}\b", r"\1", out, flags=re.I)
+    return out
+
+
+def _write_wav_slice(src_samples, sr: int, t0: float, t1: float, dest: Path) -> None:
+    import wave
+
+    import numpy as np
+
+    a = max(0, int(t0 * sr))
+    b = min(len(src_samples), int(t1 * sr))
+    if b <= a:
+        b = min(len(src_samples), a + int(0.4 * sr))
+    pcm = np.clip(src_samples[a:b] * 32767.0, -32767, 32767).astype(np.int16)
+    with wave.open(str(dest), "wb") as handle:
+        handle.setnchannels(1)
+        handle.setsampwidth(2)
+        handle.setframerate(sr)
+        handle.writeframes(pcm.tobytes())
+
+
+def _decode_window(model, wav: Path) -> list[dict]:
+    segments, _info = model.transcribe(
+        str(wav),
+        language="en",
+        beam_size=5,
+        vad_filter=True,
+        vad_parameters={"min_silence_duration_ms": 180, "speech_pad_ms": 120},
+        condition_on_previous_text=False,
+        initial_prompt=ATC_PROMPT,
+        hotwords=ATC_HOTWORDS,
+        temperature=0.0,
+        repetition_penalty=1.12,
+        no_repeat_ngram_size=4,
+        compression_ratio_threshold=2.0,
+        no_speech_threshold=0.5,
+        hallucination_silence_threshold=0.5,
+        word_timestamps=False,
+    )
+    turns = []
+    for seg in segments:
+        chunk = collapse_loops((seg.text or "").strip())
+        if not chunk:
+            continue
+        turns.append(
+            {
+                "t_start": float(getattr(seg, "start", 0) or 0),
+                "t_end": float(getattr(seg, "end", 0) or 0),
+                "text": chunk,
+            }
+        )
+    return turns
 
 
 def transcribe_with_turns(src: Path, on_progress=None) -> tuple[str, list[dict], str]:
@@ -218,47 +396,37 @@ def transcribe_with_turns(src: Path, on_progress=None) -> tuple[str, list[dict],
         model = load_model()
         if model is None:
             return "", [], _MODEL_ERROR or "Khong co Whisper."
+        note(16, "Đang cắt theo PTT…")
+        samples, sr = _read_wav_mono(wav)
+        duration = len(samples) / float(sr or 1)
+        windows = ptt_windows(samples, sr)
         note(18, "Đang ghi lời English từ file…")
         parts: list[str] = []
         turns: list[dict] = []
-        segments, info = model.transcribe(
-            str(wav),
-            language="en",
-            beam_size=5,
-            vad_filter=True,
-            vad_parameters={"min_silence_duration_ms": 350, "speech_pad_ms": 250},
-            # Each radio burst is independent; carrying prior text invents readbacks.
-            condition_on_previous_text=False,
-            initial_prompt=ATC_PROMPT,
-            hotwords=ATC_HOTWORDS,
-            temperature=0.0,
-            repetition_penalty=1.05,
-            no_repeat_ngram_size=3,
-            compression_ratio_threshold=2.4,
-            no_speech_threshold=0.55,
-            hallucination_silence_threshold=1.0,
-            word_timestamps=False,
-        )
-        duration = float(getattr(info, "duration", 0) or 0)
-        for seg in segments:
-            chunk = (seg.text or "").strip()
-            if not chunk:
-                continue
-            parts.append(chunk)
-            turns.append(
-                {
-                    "t_start": float(getattr(seg, "start", 0) or 0),
-                    "t_end": float(getattr(seg, "end", 0) or 0),
-                    "text": chunk,
-                }
-            )
-            joined = " ".join(parts)
-            end = float(getattr(seg, "end", 0) or 0)
+        for idx, (t0, t1) in enumerate(windows):
+            slice_wav = folder / ("ptt-%03d.wav" % idx)
+            _write_wav_slice(samples, sr, max(0.0, t0 - 0.08), t1 + 0.08, slice_wav)
+            try:
+                segs = _decode_window(model, slice_wav)
+            finally:
+                try:
+                    slice_wav.unlink(missing_ok=True)
+                except OSError:
+                    pass
+            for seg in segs:
+                chunk = seg["text"]
+                if not chunk:
+                    continue
+                abs_start = t0 + float(seg.get("t_start") or 0)
+                abs_end = t0 + float(seg.get("t_end") or 0)
+                parts.append(chunk)
+                turns.append({"t_start": abs_start, "t_end": abs_end, "text": chunk})
+            joined = collapse_loops(" ".join(parts))
             pct = 18.0
-            if duration > 0 and end > 0:
-                pct = min(92.0, 18.0 + 74.0 * (end / duration))
+            if duration > 0:
+                pct = min(92.0, 18.0 + 74.0 * (t1 / duration))
             note(pct, "Đang ghi lời English…", joined)
-        text = " ".join(parts).replace("  ", " ").strip()
+        text = collapse_loops(" ".join(parts))
         if not text:
             return "", [], "Whisper khong nghe ra loi English trong file nay."
         note(94, "Đang đối chiếu readback REDA…", text)

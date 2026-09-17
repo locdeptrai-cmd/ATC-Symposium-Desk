@@ -32,23 +32,43 @@
       <a href="cai-dat.html">Cài máy</a>
     </nav>
 
-    <section class="panel rec-import" aria-label="Import bản ghi">
-      <div id="recDrop" class="rec-drop" tabindex="0">
-        <strong>Import file ghi âm / video có âm thanh</strong>
-        <p>Kéo thả vào đây, hoặc chọn mp3, wav, m4a, aac, ogg, webm, mp4, mov, mkv, avi. REDA trích lời English, tách ATCO/PILOT và bắt lỗi readback (Doc 4444 / Annex 11). Không thay hearback của ATCO.</p>
+    <section class="panel rec-stage" aria-label="Phát hình và file">
+      <div class="rec-toolbar">
         <button type="button" class="primary" id="btnRecImport">Chọn file</button>
         <input type="file" id="recFile" hidden multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.webm,.mp4,.mov,.mkv,.m4v,.avi,video/x-msvideo,video/avi">
+        <p id="recStatus" class="status rec-toolbar-status"></p>
       </div>
-      <p id="recStatus" class="status"></p>
-    </section>
-
-    <section id="recNow" class="listen rec-now" hidden>
-      <video id="recVideo" playsinline></video>
-      <div class="rec-now-head">
-        <strong id="recNowName">Chưa phát</strong>
-        <span id="recNowTime" class="meta">0:00 / 0:00</span>
+      <div id="recDrop" class="rec-stage-body" tabindex="0">
+        <div class="rec-video-wrap">
+          <video id="recVideo" playsinline></video>
+          <button type="button" id="btnRecSpeaker" class="rec-speaker" aria-pressed="true" title="Bật loa" aria-label="Bật loa">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M4 9v6h3.2L12 19.8V4.2L7.2 9H4zm11.5 3c0-1.8-1-3.3-2.5-4.1v8.2c1.5-.8 2.5-2.3 2.5-4.1zm2.5 0c0 2.9-1.7 5.4-4.1 6.6l.9 1.8C17.9 18.7 20 15.1 20 12s-2.1-6.7-5.2-8.4l-.9 1.8C16.8 6.6 18.5 9.1 18.5 12z"/>
+            </svg>
+            <i class="rec-speaker-slash" hidden></i>
+          </button>
+          <p id="recVideoEmpty" class="rec-video-empty">Chưa có hình. Bấm Chọn file hoặc kéo thả vào đây.</p>
+        </div>
+        <div class="rec-file-bar" id="recFileBar" hidden>
+          <div class="rec-now-head">
+            <strong id="recNowName">Chưa có file</strong>
+            <span id="recNowTime" class="meta">0:00 / 0:00</span>
+          </div>
+          <div class="rec-transport rec-transport-main">
+            <button type="button" id="btnRecPlay">Phát</button>
+            <button type="button" id="btnRecPause">Dừng</button>
+            <button type="button" id="btnRecStop">Tắt</button>
+            <label class="rec-vol">Âm lượng
+              <input type="range" id="recVol" min="0" max="100" value="100" aria-label="Âm lượng">
+            </label>
+            <button type="button" class="ghost" id="btnRecDelete">Xóa file</button>
+          </div>
+        </div>
+        <div class="rec-wave-wrap" id="recWaveWrap" hidden>
+          <canvas id="recWave" height="80" aria-label="Dải âm phổ"></canvas>
+          <p class="rec-wave-hint">Kéo trên phổ để chọn đoạn nghe. Bấm để tới lui.</p>
+        </div>
       </div>
-      <input type="range" id="recSeek" min="0" max="1000" value="0" step="1" aria-label="Vị trí phát">
     </section>
 
     <section class="listen rec-listen" aria-label="Nghe và REDA">
@@ -64,7 +84,6 @@
       </div>
       <div class="listen-opts">
         <label class="hall-check"><input type="checkbox" id="recHallMode" checked> Sửa thuật ngữ ATC khi ghi lời</label>
-        <label class="hall-check"><input type="checkbox" id="recMicLoop"> Thêm micro (loa phát ra máy)</label>
         <label class="field accent-field">Tốc độ phát
           <select id="recTapeRate">
             <option value="0.75">Chậm 75%</option>
@@ -73,7 +92,7 @@
           </select>
         </label>
       </div>
-      <p class="tape-hint">Bấm Phát hoặc NGHE (EN): máy ghi lời English từ file, rồi REDA so khớp concept (level, squawk, runway, QNH…). Roger/Wilco không được coi là readback số liệu.</p>
+      <p class="tape-hint">Bấm Phát hoặc NGHE (EN): ghi lời English từ file (mono radio, lọc méo, cắt PTT). Không dùng micro. Roger/Wilco không được coi là readback số liệu.</p>
       <div class="reda-grid">
         <div class="stream stream-en">
           <div class="stream-head">

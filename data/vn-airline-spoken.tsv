@@ -1,0 +1,20 @@
+kind	icao	iata	telephony	spoken_en	spoken_vi	aliases	source
+airline	HVN	VN	VIET NAM	Viet Nam	Việt Nam	vietnam,viet nam airlines,vietnam airlines,viet nam one,hv n	ICAO Doc 8585 / FAA JO 7340; radio VN đọc "Việt Nam" / "Viet Nam" + số hiệu, không đánh vần HVN
+airline	VJC	VJ	VIETJETAIR	Vietjet	Việt Jet	viet jet,vietjet air,viet jet air,charlie jet,vee jet,v j c	ICAO telephony VIETJETAIR; radio VN (LiveATC/SGN/HAN) thường đọc "Vietjet" hai âm, giọng Anh-Việt
+airline	BAV	QH	BAMBOO	Bamboo	Bamboo	bamboo airways,bam boo,qh	ICAO Doc 8585 BAMBOO
+airline	PIC	BL	PACIFIC AIRLINES	Pacific	Pacific	pacific airlines,jetstar pacific,bl	ICAO PACIFIC AIRLINES; radio VN đọc "Pacific"
+airline	VAG	VU	VIETRAVEL AIR	Vietravel	Vietravel	viet travel,vietravel air,vu	ICAO VIETRAVEL AIR
+airline	VFC	0V	VASCO AIR	Vasco	Vasco	vasco air,vasco	ICAO VASCO AIR
+airline	SPQ	9G	SUN LUX	Sun Lux	Sun Phú Quốc	sun phu quoc,sun lux,phu quoc air	ICAO SUN LUX
+airline	VSM		VIETSTAR	Vietstar	Vietstar	viet star	ICAO VIETSTAR
+airline	SAV		SUN AIR	Sun Air	Sun Air	sun air	ICAO SUN AIR
+airline	HAI	HA	HAI AU	Hai Au	Hải Âu	hai au aviation	ICAO HAI AU
+airline	TVJ	VZ	THAIVIET JET	Thai Vietjet	Thai Vietjet	thai viet jet,thaiviet jet	ICAO THAIVIET JET
+station			SAIGON TOWER	Saigon Tower	Đài Tân Sơn Nhất	sai gon tower,saigon,tan son nhat,tan son nhat tower,sona tower	TWR VVTS / 118.7; radio đọc Saigon Tower (giọng VN: "Sài Gòn tao-ơ")
+station			NOI BAI TOWER	Noi Bai Tower	Đài Nội Bài	noi bai,noy bai,noibai tower,ha noi tower	TWR VVNB
+station			DANANG TOWER	Danang Tower	Đài Đà Nẵng	da nang tower,danang	TWR VVDN
+station			CAM RANH TOWER	Cam Ranh Tower	Đài Cam Ranh	cam ranh,nha trang tower	TWR VVCR
+station			PHU QUOC TOWER	Phu Quoc Tower	Đài Phú Quốc	phu quoc tower,phuquoc	TWR VVPQ
+station			CAT BI TOWER	Cat Bi Tower	Đài Cát Bi	cat bi,hai phong tower	TWR VVCI
+station			SAIGON APPROACH	Saigon Approach	Tiếp cận Tân Sơn Nhất	sai gon approach,saigon arrival,saigon director	APP VVTS
+station			NOI BAI APPROACH	Noi Bai Approach	Tiếp cận Nội Bài	noi bai approach,hanoi approach	APP VVNB
