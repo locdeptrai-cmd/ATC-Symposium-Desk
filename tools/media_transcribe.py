@@ -12,15 +12,21 @@ import os
 import media_transcode as tx
 
 MAX_UPLOAD_BYTES = tx.MAX_UPLOAD_BYTES
-# Fine-tuned on ATCO2 + UWB-ATCC (ICAO English radiotelephony). CTranslate2
-# weights for faster-whisper — CPU int8, no GPU / no torch.
-# HF: jacktol/whisper-medium.en-fine-tuned-for-ATC-faster-whisper  (WER 15.08%
-# on ATC vs 94.59% for stock medium.en). Override with ATC_WHISPER_MODEL.
-ATC_WHISPER_DEFAULT = "jacktol/whisper-medium.en-fine-tuned-for-ATC-faster-whisper"
+# CPU CTranslate2 / faster-whisper, English ATC radio only. No GPU / no torch
+# at inference. Prefer the local turbo CT2 (ATCO2 + ATCoSIM, published WER
+# 7.83%) then jacktol medium.en ATC (WER 15.08%). Override with ATC_WHISPER_MODEL.
+ATC_WHISPER_TURBO_DIR = Path(__file__).resolve().parents[1] / "models" / "whisper" / "atc-turbo-ct2"
+ATC_WHISPER_MEDIUM = "jacktol/whisper-medium.en-fine-tuned-for-ATC-faster-whisper"
+ATC_WHISPER_DEFAULT = ATC_WHISPER_MEDIUM
 ATC_PROMPT = (
     "Air traffic control radiotelephony. Cleared to land. Cleared for take-off. "
     "Line up and wait. Hold short of runway. Go around. Squawk. Contact tower. "
     "Contact approach. Climb. Descend. Maintain. Flight level. QNH. Roger. Wilco. Affirm. Negative."
+)
+ATC_HOTWORDS = (
+    "cleared to land line up and wait hold short go around squawk contact tower "
+    "contact approach climb descend maintain flight level QNH runway taxi take-off "
+    "roger wilco affirm negative"
 )
 
 _JOBS: dict[str, dict] = {}
@@ -72,7 +78,6 @@ def sweep_jobs(max_age: float = 900) -> None:
                 pass
 
 
-WHISPER_MODEL = os.environ.get("ATC_WHISPER_MODEL", ATC_WHISPER_DEFAULT)
 WHISPER_DEVICE = os.environ.get("ATC_WHISPER_DEVICE", "cpu")
 WHISPER_COMPUTE = os.environ.get("ATC_WHISPER_COMPUTE", "int8")
 
@@ -89,8 +94,30 @@ def _model_cache_dir() -> Path:
     return folder
 
 
+def _local_ct2_ready(folder: Path) -> bool:
+    weights = folder / "model.bin"
+    return (
+        weights.is_file()
+        and weights.stat().st_size > 400_000_000
+        and (folder / "config.json").is_file()
+        and (folder / "vocabulary.json").is_file()
+    )
+
+
+def _resolve_model_id() -> str:
+    env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
+    if env:
+        return env
+    if _local_ct2_ready(ATC_WHISPER_TURBO_DIR):
+        return str(ATC_WHISPER_TURBO_DIR)
+    return ATC_WHISPER_MEDIUM
+
+
+WHISPER_MODEL = _resolve_model_id()
+
+
 def load_model():
-    global _MODEL, _MODEL_ERROR
+    global _MODEL, _MODEL_ERROR, WHISPER_MODEL
     with _MODEL_LOCK:
         if _MODEL is not None:
             return _MODEL
@@ -99,19 +126,33 @@ def load_model():
         except ImportError:
             _MODEL_ERROR = "May nay chua cai faster-whisper. pip install faster-whisper."
             return None
-        try:
-            print("  Transcribe EN: dang tai model '%s' (%s/%s)..." % (WHISPER_MODEL, WHISPER_DEVICE, WHISPER_COMPUTE), flush=True)
-            _MODEL = WhisperModel(
-                WHISPER_MODEL,
-                device=WHISPER_DEVICE,
-                compute_type=WHISPER_COMPUTE,
-                download_root=str(_model_cache_dir()),
-            )
-            _MODEL_ERROR = ""
-            return _MODEL
-        except Exception as exc:
-            _MODEL_ERROR = "Khong tai duoc mo hinh Whisper: %s" % exc
-            return None
+        candidates = []
+        env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
+        if env:
+            candidates.append(env)
+        else:
+            if _local_ct2_ready(ATC_WHISPER_TURBO_DIR):
+                candidates.append(str(ATC_WHISPER_TURBO_DIR))
+            candidates.append(ATC_WHISPER_MEDIUM)
+        last_exc: Exception | None = None
+        for name in candidates:
+            try:
+                print("  Transcribe EN: dang tai model '%s' (%s/%s)..." % (name, WHISPER_DEVICE, WHISPER_COMPUTE), flush=True)
+                _MODEL = WhisperModel(
+                    name,
+                    device=WHISPER_DEVICE,
+                    compute_type=WHISPER_COMPUTE,
+                    download_root=str(_model_cache_dir()),
+                )
+                WHISPER_MODEL = name
+                _MODEL_ERROR = ""
+                return _MODEL
+            except Exception as exc:
+                last_exc = exc
+                print("  Transcribe EN: bo qua '%s': %s" % (name, exc), flush=True)
+                _MODEL = None
+        _MODEL_ERROR = "Khong tai duoc mo hinh Whisper: %s" % last_exc
+        return None
 
 
 def warm_model() -> None:
@@ -185,11 +226,17 @@ def transcribe_with_turns(src: Path, on_progress=None) -> tuple[str, list[dict],
             language="en",
             beam_size=5,
             vad_filter=True,
-            vad_parameters={"min_silence_duration_ms": 400, "speech_pad_ms": 200},
+            vad_parameters={"min_silence_duration_ms": 350, "speech_pad_ms": 250},
             # Each radio burst is independent; carrying prior text invents readbacks.
             condition_on_previous_text=False,
             initial_prompt=ATC_PROMPT,
+            hotwords=ATC_HOTWORDS,
             temperature=0.0,
+            repetition_penalty=1.05,
+            no_repeat_ngram_size=3,
+            compression_ratio_threshold=2.4,
+            no_speech_threshold=0.55,
+            hallucination_silence_threshold=1.0,
             word_timestamps=False,
         )
         duration = float(getattr(info, "duration", 0) or 0)
