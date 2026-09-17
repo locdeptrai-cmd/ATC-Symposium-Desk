@@ -19,42 +19,37 @@ ATC_WHISPER_TURBO_DIR = Path(__file__).resolve().parents[1] / "models" / "whispe
 ATC_WHISPER_MEDIUM = "jacktol/whisper-medium.en-fine-tuned-for-ATC-faster-whisper"
 ATC_WHISPER_DEFAULT = ATC_WHISPER_MEDIUM
 ATC_PROMPT = (
-    "Air traffic control radiotelephony. Vietjet. Viet Nam. Bamboo. Pacific. Vasco. "
-    "Saigon Tower. Noi Bai Tower. Tan Son Nhat. Cleared to land. Cleared for take-off. "
-    "Line up and wait. Hold short of runway. Go around. Squawk. Contact tower. "
-    "Contact approach. Climb. Descend. Maintain. Flight level. QNH. Roger. Wilco. Affirm. Negative."
+    "Vietjet Viet Nam Saigon Tower Noi Bai. "
+    "Cleared to land runway two five right. Continue approach. Squawk. QNH."
 )
-# VHF radio: de-click + denoise + gate (squelch) + light normalize. Mono.
+# VHF band + de-click + light denoise. No gate/dynaudnorm: those chop PTT onsets
+# and pump hiss between syllables.
 RADIO_AF = (
-    "highpass=f=250,lowpass=f=3400,adeclick,"
-    "afftdn=nr=10:nf=-25,agate=threshold=0.01:ratio=8:attack=5:release=120:detection=rms,"
-    "dynaudnorm=f=200:g=8"
+    "highpass=f=200:poles=2,lowpass=f=3600:poles=2,adeclick,"
+    "afftdn=nr=6:nf=-20,acompressor=threshold=-24dB:ratio=3:attack=15:release=120,"
+    "alimiter=limit=0.89"
 )
-RADIO_AF_FALLBACK = "highpass=f=250,lowpass=f=3400,dynaudnorm=f=200:g=8"
+RADIO_AF_FALLBACK = "highpass=f=200,lowpass=f=3600,alimiter=limit=0.89"
+_VN_ICAO = {"HVN", "VJC", "BAV", "PIC", "VAG", "VFC", "SPQ", "VSM", "SAV", "HAI", "TVJ"}
 
 
 def _vn_spoken_hotwords() -> str:
-    path = Path(__file__).resolve().parents[1] / "data" / "vn-airline-spoken.tsv"
     bits = [
         "Vietjet",
         "Viet Nam",
-        "Vietnam",
         "Bamboo",
         "Pacific",
         "Vasco",
         "Saigon Tower",
         "Noi Bai",
         "Tan Son Nhat",
-        "Danang",
         "cleared to land",
-        "line up and wait",
-        "hold short",
-        "go around",
+        "continue approach",
+        "runway two five",
         "squawk",
-        "contact tower",
-        "runway",
         "QNH",
     ]
+    path = Path(__file__).resolve().parents[1] / "data" / "vn-airline-spoken.tsv"
     if not path.is_file():
         return " ".join(bits)
     try:
@@ -63,10 +58,14 @@ def _vn_spoken_hotwords() -> str:
         return " ".join(bits)
     for line in lines[1:]:
         cols = line.split("\t")
-        if len(cols) < 6:
+        if len(cols) < 5:
             continue
-        spoken = (cols[4] or "").strip()
-        if spoken and spoken not in bits:
+        kind, icao, spoken = cols[0].strip(), cols[1].strip(), (cols[4] or "").strip()
+        if not spoken:
+            continue
+        if kind == "airline" and icao and icao not in _VN_ICAO:
+            continue
+        if spoken not in bits:
             bits.append(spoken)
     return " ".join(bits)
 

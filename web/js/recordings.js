@@ -54,7 +54,16 @@
   var player = {
     id: "",
     url: "",
-    playing: false
+    playing: false,
+    muted: false,
+    volume: 1
+  };
+  var wave = {
+    peaks: [],
+    duration: 0,
+    sel0: -1,
+    sel1: -1,
+    dragging: false
   };
   var listen = {
     on: false,
@@ -810,28 +819,172 @@
       .join("");
   }
 
+  function applySpeakerUi() {
+    var btn = $("btnRecSpeaker");
+    var slash = btn && btn.querySelector(".rec-speaker-slash");
+    var on = !player.muted;
+    if (btn) {
+      btn.classList.toggle("is-off", !on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.setAttribute("title", on ? "Tắt loa" : "Bật loa");
+      btn.setAttribute("aria-label", on ? "Tắt loa" : "Bật loa");
+    }
+    if (slash) slash.hidden = on;
+  }
+
+  function applyVolume() {
+    var video = $("recVideo");
+    if (video) {
+      video.muted = !!player.muted;
+      video.volume = Math.max(0, Math.min(1, player.volume));
+    }
+    applySpeakerUi();
+  }
+
+  function toggleSpeaker() {
+    player.muted = !player.muted;
+    applyVolume();
+  }
+
+  function drawWave() {
+    var canvas = $("recWave");
+    if (!canvas) return;
+    var ctx = canvas.getContext("2d");
+    var w = canvas.clientWidth || 640;
+    var h = canvas.height || 80;
+    if (canvas.width !== w) canvas.width = w;
+    ctx.fillStyle = "#041018";
+    ctx.fillRect(0, 0, w, h);
+    var peaks = wave.peaks || [];
+    var n = peaks.length;
+    if (!n) {
+      ctx.fillStyle = "#1c3344";
+      ctx.fillRect(0, h / 2 - 1, w, 2);
+      return;
+    }
+    var video = $("recVideo");
+    var dur = wave.duration || (video && video.duration) || 0;
+    var cur = video && player.url ? video.currentTime || 0 : 0;
+    var s0 = Math.min(wave.sel0, wave.sel1);
+    var s1 = Math.max(wave.sel0, wave.sel1);
+    if (s1 > s0 && dur > 0) {
+      ctx.fillStyle = "rgba(62, 199, 184, 0.18)";
+      ctx.fillRect((s0 / dur) * w, 0, ((s1 - s0) / dur) * w, h);
+    }
+    var mid = h / 2;
+    var gap = w / n;
+    ctx.fillStyle = "#3ec7b8";
+    var i;
+    for (i = 0; i < n; i++) {
+      var amp = Math.max(1, peaks[i] * (mid - 2));
+      ctx.fillRect(i * gap, mid - amp, Math.max(1, gap - 0.4), amp * 2);
+    }
+    if (dur > 0) {
+      var x = (cur / dur) * w;
+      ctx.strokeStyle = "#ffd27a";
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    }
+  }
+
+  function loadWaveform(row) {
+    wave.peaks = [];
+    wave.duration = row && row.duration ? row.duration : 0;
+    wave.sel0 = -1;
+    wave.sel1 = -1;
+    drawWave();
+    if (!row || !row.blob || !window.AudioContext && !window.webkitAudioContext) return;
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    row.blob
+      .arrayBuffer()
+      .then(function (buf) {
+        return ctx.decodeAudioData(buf);
+      })
+      .then(function (audio) {
+        if (!player.id || player.id !== row.id) return;
+        var ch0 = audio.getChannelData(0);
+        var ch1 = audio.numberOfChannels > 1 ? audio.getChannelData(1) : null;
+        var bins = Math.min(900, Math.max(180, Math.floor((canvasWidth() || 640) * 1.2)));
+        var step = Math.max(1, Math.floor(ch0.length / bins));
+        var peaks = [];
+        var i;
+        for (i = 0; i < bins; i++) {
+          var a = i * step;
+          var b = Math.min(ch0.length, a + step);
+          var peak = 0;
+          var j;
+          for (j = a; j < b; j += 8) {
+            var s = Math.abs(ch0[j]);
+            if (ch1) s = Math.max(s, Math.abs(ch1[j]));
+            if (s > peak) peak = s;
+          }
+          peaks.push(peak);
+        }
+        wave.peaks = peaks;
+        wave.duration = audio.duration || row.duration || 0;
+        drawWave();
+        try {
+          ctx.close();
+        } catch (e) {}
+      })
+      .catch(function () {
+        drawWave();
+      });
+  }
+
+  function canvasWidth() {
+    var canvas = $("recWave");
+    return canvas ? canvas.clientWidth : 0;
+  }
+
+  function timeFromWaveX(clientX) {
+    var canvas = $("recWave");
+    if (!canvas) return 0;
+    var rect = canvas.getBoundingClientRect();
+    var x = Math.max(0, Math.min(1, (clientX - rect.left) / Math.max(1, rect.width)));
+    var dur = wave.duration || 0;
+    var video = $("recVideo");
+    if ((!dur || !isFinite(dur)) && video && isFinite(video.duration)) dur = video.duration;
+    return x * dur;
+  }
+
   function refreshNow() {
-    var box = $("recNow");
     var video = $("recVideo");
     var name = $("recNowName");
     var time = $("recNowTime");
-    var seek = $("recSeek");
+    var bar = $("recFileBar");
+    var waveWrap = $("recWaveWrap");
+    var wrap = document.querySelector(".rec-video-wrap");
     var row = findRow(player.id);
-    if (!box || !video) return;
+    if (!video) return;
     if (!row || !player.url) {
-      box.hidden = true;
+      if (bar) bar.hidden = true;
+      if (waveWrap) waveWrap.hidden = true;
+      if (wrap) wrap.classList.remove("has-media");
+      video.classList.remove("is-video");
+      if (name) name.textContent = "Chưa có file";
+      if (time) time.textContent = "0:00 / 0:00";
+      drawWave();
       return;
     }
-    box.hidden = false;
+    if (bar) bar.hidden = false;
+    if (waveWrap) waveWrap.hidden = false;
+    if (wrap) wrap.classList.add("has-media");
     if (name) name.textContent = row.name;
     var cur = video.currentTime || 0;
-    var dur = isFinite(video.duration) && video.duration > 0 ? video.duration : row.duration || 0;
+    var dur = isFinite(video.duration) && video.duration > 0 ? video.duration : row.duration || wave.duration || 0;
     if (time) time.textContent = formatTime(cur) + " / " + formatTime(dur);
-    if (seek && dur > 0 && !seek._dragging) {
-      seek.value = String(Math.round((cur / dur) * 1000));
-    }
     var showVideo = row.kind === "video" || video.videoWidth > 0;
     video.classList.toggle("is-video", showVideo);
+    if (wave.sel1 > wave.sel0 && dur > 0 && cur >= wave.sel1 - 0.04) {
+      try {
+        video.currentTime = wave.sel0;
+      } catch (e) {}
+    }
+    applyVolume();
+    drawWave();
   }
 
   function detachPlayer() {
@@ -856,6 +1009,10 @@
     player.id = "";
     player.url = "";
     player.playing = false;
+    wave.peaks = [];
+    wave.duration = 0;
+    wave.sel0 = -1;
+    wave.sel1 = -1;
     stopRecListen(true);
     refreshNow();
   }
@@ -918,8 +1075,13 @@
       if (row.kind !== "video" && video.videoWidth > 0) {
         row.kind = "video";
       }
+      if (isFinite(video.duration) && video.duration > 0) {
+        wave.duration = video.duration;
+      }
       refreshNow();
     };
+    applyVolume();
+    loadWaveform(row);
     showRowAnalysis(row);
     refreshNow();
     render();
@@ -1023,6 +1185,9 @@
             row.error = info.error || "";
             row.status = info.ok ? "ready" : "pending";
             render();
+            if (info.ok && (!player.id || player.id === row.id)) {
+              bindVideo(row);
+            }
             return putRow(row);
           })
           .catch(function (err) {
@@ -1128,52 +1293,7 @@
     if (row) startFileTranscript(row);
     listen.on = true;
     updateListenButtons();
-    var wantMic = $("recMicLoop") && $("recMicLoop").checked;
-    if (!wantMic) {
-      setStatus("Đang ghi lời English trực tiếp từ file (không cần micro).", "live");
-      return;
-    }
-    var speech = speechApi();
-    if (!speech || !speech.available()) {
-      setStatus("Đã ghi từ file. Micro không dùng được trên trình duyệt này.", "warn");
-      return;
-    }
-    var box = $("recTranscript");
-    var current = box && box.value ? box.value.trim() : "";
-    listen.bits = current ? [current] : [];
-    var hall = $("recHallMode") ? $("recHallMode").checked : true;
-    var ok = speech.start({
-      lang: "en",
-      hall: hall,
-      tape: true,
-      commitMs: 760,
-      onResult: function (res) {
-        if (res.finalText) {
-          listen.bits.push(res.finalText);
-          if (box) box.value = listen.bits.join(" ").replace(/\s+/g, " ").trim();
-        } else if (box) {
-          box.value = (listen.bits.join(" ") + " " + (res.interim || "")).replace(/\s+/g, " ").trim();
-        }
-        if ($("recInterim")) $("recInterim").textContent = res.interim || "";
-      },
-      onError: function (code) {
-        var map = {
-          "no-engine": "Không có nhận giọng micro. Vẫn ghi lời từ file.",
-          "no-permission": "Chưa cấp quyền micro. Vẫn ghi lời từ file.",
-          "no-speech": "Micro không bắt được lời. Đang ghi từ file.",
-          tape: "Không phát được bản ghi."
-        };
-        setStatus(map[code] || "Micro lỗi — đang ghi lời từ file.", "warn");
-      },
-      onStop: function () {
-        listen.on = false;
-        updateListenButtons();
-        if ($("recInterim")) $("recInterim").textContent = "";
-      }
-    });
-    if (ok) {
-      setStatus("Đang ghi lời từ file, micro phụ đang nghe loa.", "live");
-    }
+    setStatus("Đang ghi lời English trực tiếp từ file (không cần micro).", "live");
   }
 
   function bindUi() {
@@ -1181,7 +1301,6 @@
     var input = $("recFile");
     var btn = $("btnRecImport");
     var list = $("recList");
-    var seek = $("recSeek");
     var listenBtn = $("btnRecListen");
     var listenStop = $("btnRecListenStop");
     var copyEn = $("copyRecEn");
@@ -1228,10 +1347,14 @@
     if (list) {
       list.addEventListener("click", function (e) {
         var btnEl = e.target.closest("button[data-act]");
-        if (!btnEl) return;
-        var item = btnEl.closest("[data-id]");
+        var item = e.target.closest("[data-id]");
         if (!item) return;
         var id = item.getAttribute("data-id");
+        if (!btnEl) {
+          var row = findRow(id);
+          if (row && (row.status === "ready" || row.status === "heard")) bindVideo(row);
+          return;
+        }
         var act = btnEl.getAttribute("data-act");
         if (act === "play") playRow(id);
         else if (act === "pause") pauseRow(id);
@@ -1249,22 +1372,91 @@
         }
       });
     }
-    if (seek) {
-      seek.addEventListener("pointerdown", function () {
-        seek._dragging = true;
-      });
-      seek.addEventListener("pointerup", function () {
-        seek._dragging = false;
-      });
-      seek.addEventListener("input", function () {
-        var video = $("recVideo");
-        if (!video || !player.url) return;
-        var dur = video.duration;
-        if (!isFinite(dur) || dur <= 0) return;
-        video.currentTime = (Number(seek.value) / 1000) * dur;
-        refreshNow();
+    var speaker = $("btnRecSpeaker");
+    if (speaker) {
+      speaker.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleSpeaker();
       });
     }
+    if ($("btnRecPlay")) {
+      $("btnRecPlay").addEventListener("click", function () {
+        var id = playableRowId();
+        if (id) playRow(id);
+      });
+    }
+    if ($("btnRecPause")) {
+      $("btnRecPause").addEventListener("click", function () {
+        if (player.id) pauseRow(player.id);
+      });
+    }
+    if ($("btnRecStop")) {
+      $("btnRecStop").addEventListener("click", function () {
+        if (player.id) stopRow(player.id);
+      });
+    }
+    if ($("recVol")) {
+      $("recVol").addEventListener("input", function () {
+        player.volume = Math.max(0, Math.min(1, Number(this.value) / 100));
+        if (player.volume > 0 && player.muted) player.muted = false;
+        applyVolume();
+      });
+    }
+    if ($("btnRecDelete")) {
+      $("btnRecDelete").addEventListener("click", function () {
+        var id = player.id;
+        if (!id) return;
+        if (!window.confirm("Xóa bản ghi này khỏi máy?")) return;
+        detachPlayer();
+        rows = rows.filter(function (r) {
+          return r.id !== id;
+        });
+        render();
+        deleteRow(id).then(function () {
+          setStatus("Đã xóa bản ghi.", "ok");
+        });
+      });
+    }
+    var canvas = $("recWave");
+    if (canvas) {
+      canvas.addEventListener("pointerdown", function (e) {
+        if (!player.url) return;
+        canvas.setPointerCapture(e.pointerId);
+        wave.dragging = true;
+        var t = timeFromWaveX(e.clientX);
+        wave.sel0 = t;
+        wave.sel1 = t;
+        var video = $("recVideo");
+        if (video) {
+          try {
+            video.currentTime = t;
+          } catch (err) {}
+        }
+        drawWave();
+      });
+      canvas.addEventListener("pointermove", function (e) {
+        if (!wave.dragging) return;
+        wave.sel1 = timeFromWaveX(e.clientX);
+        drawWave();
+      });
+      function endWaveDrag(e) {
+        if (!wave.dragging) return;
+        wave.dragging = false;
+        wave.sel1 = timeFromWaveX(e.clientX);
+        if (Math.abs(wave.sel1 - wave.sel0) < 0.25) {
+          wave.sel0 = -1;
+          wave.sel1 = -1;
+        }
+        drawWave();
+      }
+      canvas.addEventListener("pointerup", endWaveDrag);
+      canvas.addEventListener("pointercancel", endWaveDrag);
+    }
+    window.addEventListener("resize", function () {
+      drawWave();
+    });
+    applySpeakerUi();
     if (listenBtn) {
       listenBtn.addEventListener("click", startRecListen);
     }
