@@ -92,7 +92,7 @@ airline	CYZ	CF	CHINA POST	China Post	China Postal Airlines	China Postal Airlines
 airline	FDX	FX	FEDEX	Fedex	FedEx Express	FedEx Express,FX,FDX,FEDEX	airline2026; rà soát 2026-09-18. Cargo; Regular cargo / overflight/airport activity; tin cậy High. Ví dụ: FEDEX ONE TWO THREE. https://www.icao.int/operational-safety/Designators-and-indicators	Hoa Kỳ	High
 airline	UPS	5X	UPS	Ups	UPS Airlines	UPS Airlines,5X,UPS	airline2026; rà soát 2026-09-18. Cargo; Regular cargo / overflight/airport activity; tin cậy High. Ví dụ: UPS ONE TWO THREE. https://www.icao.int/operational-safety/Designators-and-indicators	Hoa Kỳ	High
 airline	CLX	CV	CARGOLUX	Cargolux	Cargolux	Cargolux,CV,CLX	airline2026; rà soát 2026-09-18. Cargo; Regular cargo / overflight possible; tin cậy High. Ví dụ: CARGOLUX ONE TWO THREE. https://www.icao.int/operational-safety/Designators-and-indicators	Luxembourg	High
-station			SAIGON TOWER	Saigon Tower	Đài Tân Sơn Nhất	sai gon tower,saigon,tan son nhat,tan son nhat tower,sona tower	"TWR VVTS / 118.7; radio đọc Saigon Tower (giọng VN: ""Sài Gòn tao-ơ"")"		
+station			TSN TOWER	TSN Tower	Đài Tân Sơn Nhất	sai gon tower,saigon,saigon tower,tan son nhat,tan son nhat tower,sona tower,tsn tower	"TWR VVTS / 118.7; radio đọc TSN Tower"		
 station			NOI BAI TOWER	Noi Bai Tower	Đài Nội Bài	noi bai,noy bai,noibai tower,ha noi tower	TWR VVNB		
 station			DANANG TOWER	Danang Tower	Đài Đà Nẵng	da nang tower,danang	TWR VVDN		
 station			CAM RANH TOWER	Cam Ranh Tower	Đài Cam Ranh	cam ranh,nha trang tower	TWR VVCR		

@@ -22,7 +22,7 @@ MAX_UPLOAD_BYTES = tx.MAX_UPLOAD_BYTES
 # at inference. Local turbo CT2 (ATCO2 + ATCoSIM, published WER 7.83%).
 # Override with ATC_WHISPER_MODEL.
 ATC_WHISPER_TURBO_DIR = app_paths.whisper_turbo_dir()
-ATC_PROMPT = "Viet Nam Vietjet Saigon Tower. Cleared to land. Squawk. QNH."
+ATC_PROMPT = "Viet Nam Vietjet TSN Tower. Cleared to land. Squawk. QNH."
 LIVE_OVERLAP_SEC = 1.5
 # VHF band + de-click + light denoise. No gate/dynaudnorm: those chop PTT onsets
 # and pump hiss between syllables.
@@ -334,8 +334,9 @@ _RADIO_FIXES = (
     (r"\bchina\s+south(?:ern)?\b", "China Southern"),
     (r"\brejet\b", "Vietjet"),
     (r"\b(?:qi|qq|qqe)\s+nine(?:\s+zero){0,2}\s+nine\b", "Viet Nam nine zero nine"),
-    (r"\bsona\s+tower\b", "Saigon Tower"),
-    (r"\bsai\s*gon(?:\s+tower)?\b", "Saigon Tower"),
+    (r"\bsona\s+tower\b", "TSN Tower"),
+    (r"\bsai\s*gon\s+tower\b", "TSN Tower"),
+    (r"\bsaigon\s+tower\b", "TSN Tower"),
     (r"\btan\s+son\s+nhat\b", "Tan Son Nhat"),
     (r"\bnoy?\s*bai\b", "Noi Bai"),
     (r"\blater\s+to\s+land\b", "cleared to land"),

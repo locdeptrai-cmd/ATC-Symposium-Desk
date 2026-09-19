@@ -1,4 +1,4 @@
-"""Compact ATC radio English for the REDA script: HVN1225, RWY 25R, ILS."""
+"""Compact ATC radio English for the REDA script: HVN1225, RWY 25R, ILSw."""
 from __future__ import annotations
 
 import re
@@ -13,6 +13,14 @@ _ILS_LETTER = (
     r"foxtrot|golf|hotel|india|juliett|kilo|lima|mike|november|oscar|"
     r"papa|quebec|romeo|sierra|tango|uniform|victor"
 )
+_ILS_LETTER_CODE = {
+    "whiskey": "w",
+    "whisky": "w",
+    "yankee": "y",
+    "xray": "x",
+    "x-ray": "x",
+    "zulu": "z",
+}
 _RUNWAY = re.compile(
     rf"\b(?:runway|rwy)\s+((?:{_DIGIT}\s+){{0,1}}{_DIGIT})(?:\s+({_SIDE}))?\b",
     re.IGNORECASE,
@@ -79,9 +87,22 @@ _PHRASE_FIXES = (
     (r"\bcontinue\s+of\s+course\s+runway\s+two\s+seven\s+right\b", "continue approach RWY 25R"),
     (r"\bcontinue\s+approach\s+runway\s+two\s+seven\s+right\b", "continue approach RWY 25R"),
     (r"\bcontinue\s+of\s+course\b", "continue approach"),
-    (rf"\bils(?:\s+(?:{_ILS_LETTER}))?\b", "ILS"),
-    (r"\bor\s+ILS\b", "ILS"),
+    (r"\bsaigon\s+tower\b", "TSN Tower"),
+    (r"\btsn\s+tower\b", "TSN Tower"),
 )
+
+
+def compact_ils(text: str) -> str:
+    def repl(match: re.Match) -> str:
+        letter = (match.group(1) or "").lower()
+        code = _ILS_LETTER_CODE.get(letter) or _ILS_LETTER_CODE.get(letter.replace("-", ""))
+        if code:
+            return f"ILS{code}"
+        return "ILS"
+
+    out = re.sub(rf"\bils(?:\s+({_ILS_LETTER}))?\b", repl, text, flags=re.I)
+    out = re.sub(r"\bor\s+(ILS[a-z]?)\b", r"\1", out, flags=re.I)
+    return out
 
 
 def polish_script_en(text: str) -> str:
@@ -91,9 +112,9 @@ def polish_script_en(text: str) -> str:
     out = re.sub(r"^(?:ATCO|PILOT|UNKNOWN)\s*:\s*", "", out, flags=re.I)
     for pattern, repl in _PHRASE_FIXES:
         out = re.sub(pattern, repl, out, flags=re.I)
+    out = compact_ils(out)
     out = compact_runways(out)
     out = compact_callsigns(out)
     out = re.sub(r"\s+", " ", out).strip(" ,.-")
-    # ILS RWY 25R (drop leftover "runway" if compact missed)
-    out = re.sub(r"\bILS\s+RWY\b", "ILS RWY", out, flags=re.I)
+    out = re.sub(r"\b(ILS[a-z]?)\s+RWY\b", r"\1 RWY", out, flags=re.I)
     return out

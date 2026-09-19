@@ -120,7 +120,7 @@ TEMPLATES = [
         template_id="TPL_ILS_RWY",
         intent="CLEARED_APPROACH",
         role="BOTH",
-        regex=r"ils (?:runway |rwy )?(?P<rwy>[0-9]{2}[lrc]?)",
+        regex=r"ils[a-z]? (?:runway |rwy )?(?P<rwy>[0-9]{2}[lrc]?)",
         param_map={"rwy": "runway"},
         must_readback=True,
     ),

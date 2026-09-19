@@ -79,7 +79,7 @@ def test_split_is_stable_per_session():
 def test_hotwords_unit_saigon_not_library_dump():
     text = hotwords_for(filename="TWR_SGN_118-7.wav", unit="sgn")
     assert "Vietjet" in text
-    assert "Saigon Tower" in text or "saigon" in text.lower()
+    assert "TSN Tower" in text or "tsn" in text.lower() or "saigon" in text.lower()
     assert len(text.split()) < 80
 
 
@@ -98,11 +98,11 @@ def test_radio_fixes_each_rule():
         ("qi nine nine", "HVN"),
         ("Viet nam one two two five", "HVN1225"),
         ("runway two five right", "RWY 25R"),
-        ("ils whiskey runway two five right", "ILS RWY 25R"),
+        ("ils whiskey runway two five right", "ILSw RWY 25R"),
         ("continue of course runway two seven right", "continue approach RWY 25R"),
         ("rejet one two two five", "VJC1225"),
-        ("sona tower", "Saigon Tower"),
-        ("sai gon tower", "Saigon Tower"),
+        ("sona tower", "TSN Tower"),
+        ("sai gon tower", "TSN Tower"),
         ("tan son nhat", "Tan Son Nhat"),
         ("noy bai", "Noi Bai"),
         ("later to land", "cleared to land"),
@@ -167,8 +167,9 @@ if __name__ == "__main__":
         "runway two seven right"
     )
     polished = repair_radio_text(sample)
+    assert "TSN Tower" in polished, polished
     assert "VJC1225" in polished, polished
-    assert "ILS RWY 25R" in polished, polished
+    assert "ILSw RWY 25R" in polished, polished
     assert "VJC1235" in polished, polished
     assert "continue approach RWY 25R" in polished, polished
     print("asr_dataset tests ok")
