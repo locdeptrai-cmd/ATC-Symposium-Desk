@@ -145,6 +145,12 @@ Tab REDA là công cụ hỗ trợ huấn luyện / bình giảng, **không** th
 - Tìm trên phiên hiện tại và kho `data/reda-sessions.sqlite` (callsign, FL, MISMATCH…).
 - Bấm dòng thoại / huấn lệnh để tua waveform.
 
+## Fine-tune (cách ghi VHF)
+
+Tab **Fine-tune**: nạp file ghi âm sóng + Excel nội dung đúng (ATCO/PILOT). Máy đối chiếu Whisper với gold, ghi corpus `data/asr-gold/` và học cụm sửa (dùng ngay trên REDA, không cần GPU).
+
+Excel mẫu: `http://127.0.0.1:8765/api/finetune/template.xlsx` — cột `t_start`, `t_end`, `speaker`, `text`, tùy chọn `asr`.
+
 ## Offline sau khi đã cài app native
 
 | Việc | Mạng |

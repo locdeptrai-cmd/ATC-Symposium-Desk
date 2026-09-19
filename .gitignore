@@ -9,6 +9,7 @@ tools/cache/
 tools/bin/
 data/asr-gold/dataset_v1/
 data/asr-gold/source/
+data/asr-gold/learned_repairs.json
 data/reda-sessions.sqlite
 data/reda-sessions.sqlite-shm
 data/reda-sessions.sqlite-wal

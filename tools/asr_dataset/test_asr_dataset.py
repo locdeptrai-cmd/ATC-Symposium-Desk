@@ -172,4 +172,16 @@ if __name__ == "__main__":
     assert "ILSw RWY 25R" in polished, polished
     assert "VJC1235" in polished, polished
     assert "continue approach RWY 25R" in polished, polished
+    from asr_dataset.ingest_finetune import learn_from_pair, parse_excel, write_template
+
+    tmp = Path(tempfile.mkdtemp())
+    xlsx = write_template(tmp / "t.xlsx")
+    rows = parse_excel(xlsx)
+    assert len(rows) >= 3, rows
+    assert rows[0]["speaker"] == "ATCO"
+    assert "TSN Tower" in rows[0]["text"]
+    assert "Saigon Tower" in (rows[0].get("asr") or "")
+    bucket = {}
+    learn_from_pair(rows[0]["asr"], rows[0]["text"], bucket)
+    assert bucket, bucket
     print("asr_dataset tests ok")

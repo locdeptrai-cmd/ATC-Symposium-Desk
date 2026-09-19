@@ -109,6 +109,8 @@ hiddenimports = list(
             "asr_dataset.audio_io",
             "asr_dataset.export_gold",
             "asr_dataset.append_gold",
+            "asr_dataset.ingest_finetune",
+            "asr_dataset.export_gold",
         ]
     )
 )

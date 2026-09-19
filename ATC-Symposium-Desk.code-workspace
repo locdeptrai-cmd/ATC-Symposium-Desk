@@ -11,7 +11,8 @@
 	"settings": {},
 	"extensions": {
 		"recommendations": [
-			"openai.chatgpt"
+			"openai.chatgpt",
+			"yanx.local-ai-copilot-tools"
 		]
 	}
 }

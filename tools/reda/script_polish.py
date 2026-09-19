@@ -105,11 +105,45 @@ def compact_ils(text: str) -> str:
     return out
 
 
+_LEARNED: list[tuple[str, str]] = []
+_LEARNED_MTIME = 0.0
+
+
+def reload_learned() -> None:
+    global _LEARNED, _LEARNED_MTIME
+    try:
+        from asr_dataset.ingest_finetune import learned_path, load_learned
+    except Exception:
+        _LEARNED = []
+        return
+    path = learned_path()
+    try:
+        mtime = path.stat().st_mtime if path.is_file() else 0.0
+    except OSError:
+        _LEARNED = []
+        return
+    if mtime == _LEARNED_MTIME and _LEARNED:
+        return
+    _LEARNED_MTIME = mtime
+    _LEARNED = [(r["src"], r["dst"]) for r in load_learned() if r.get("src")]
+
+
+def apply_learned(text: str) -> str:
+    reload_learned()
+    out = text
+    for src, dst in _LEARNED:
+        if not src:
+            continue
+        out = re.sub(rf"\b{re.escape(src)}\b", dst, out, flags=re.I)
+    return out
+
+
 def polish_script_en(text: str) -> str:
     out = " ".join((text or "").split())
     if not out:
         return ""
     out = re.sub(r"^(?:ATCO|PILOT|UNKNOWN)\s*:\s*", "", out, flags=re.I)
+    out = apply_learned(out)
     for pattern, repl in _PHRASE_FIXES:
         out = re.sub(pattern, repl, out, flags=re.I)
     out = compact_ils(out)

@@ -78,6 +78,7 @@
     busy: false
   };
   var searchQuery = "";
+  var transcriptEdited = false;
 
   var $ = function (id) {
     return document.getElementById(id);
@@ -511,13 +512,13 @@
   }
 
   function showRowAnalysis(row) {
+    transcriptEdited = false;
     renderOps(row);
     renderTurns(row);
     renderIssues(row);
     setMinutes((row && row.minutesEn) || "");
-    if (row && (row.scriptEn || row.transcriptEn)) {
-      setTranscriptBox(row.scriptEn || row.transcriptEn, "");
-    }
+    setTranscriptBox((row && (row.scriptEn || row.transcriptEn)) || "", "");
+    showPlaybackTranscript(row);
   }
 
   function seekTo(sec) {
@@ -537,7 +538,7 @@
     var body = {
       filename: row.name || "",
       text: row.transcriptEn || ($("recTranscript") && $("recTranscript").value) || "",
-      turns: row.turns || []
+      turns: transcriptEdited ? [] : row.turns || []
     };
     return fetch("/api/reda/analyze", {
       method: "POST",
@@ -610,7 +611,7 @@
           if (!job || (job.ok === false && !job.id)) {
             throw new Error((job && job.error) || "Mất tiến trình ghi lời.");
           }
-          if (job.text && onPartial) onPartial(job.text, job.stage);
+          if (onPartial) onPartial(job.text || "", job.stage, job.turns || []);
           if (job.error) throw new Error(job.error);
           if (job.done) {
             resolve({
@@ -622,7 +623,7 @@
           }
           tries += 1;
           if (tries > 1800) throw new Error("Ghi lời quá lâu.");
-          setTimeout(tick, 400);
+          setTimeout(tick, 250);
           return null;
         })
         .catch(reject);
@@ -633,41 +634,64 @@
   function startFileTranscript(row) {
     if (!row || !row.blob) return;
     if (row.transcriptEn) {
-      setTranscriptBox(row.transcriptEn, "");
+      showPlaybackTranscript(row);
       return;
     }
     if (transcribeBusy[row.id]) return;
     transcribeBusy[row.id] = true;
     setStatus("Đang ghi lời English từ file…", "live");
-    transcribeOnServer(row.blob, row.name, function (partial, stage) {
-      if (player.id === row.id || !player.id) {
-        setTranscriptBox(partial, stage || "đang ghi…");
-      }
+    transcribeOnServer(row.blob, row.name, function (partial, stage, turns) {
+      if (!findRow(row.id)) return;
+      row.partialTurns = turns;
+      showPlaybackTranscript(row);
     })
       .then(function (payload) {
+        if (!findRow(row.id)) return;
         var text = typeof payload === "string" ? payload : (payload && payload.text) || "";
         var cleaned = polishEn(text);
         row.transcriptEn = cleaned;
         row.turns = (payload && payload.turns) || row.turns || [];
-        if (player.id === row.id || !player.id) setTranscriptBox(cleaned, "");
-        var next = payload && payload.analysis
-          ? Promise.resolve(applyAnalysis(row, payload.analysis))
-          : cleaned
-            ? analyzeRow(row)
-            : Promise.resolve();
-        return next.then(function () {
-          return putRow(row);
-        }).then(function () {
+        delete row.partialTurns;
+        showPlaybackTranscript(row);
+        return putRow(row).then(function () {
           render();
-          setStatus(statusAfterAnalysis(row, cleaned), cleaned ? "ok" : "warn");
+          if (player.id === row.id) setStatus("Đã ghi lời. Bấm Phân tích lại để phân vai và đối chiếu readback.", "ok");
         });
       })
       .catch(function (err) {
-        setStatus((err && err.message) || "Không ghi được lời từ file.", "warn");
+        if (player.id === row.id) setStatus((err && err.message) || "Không ghi được lời từ file.", "warn");
       })
       .then(function () {
         delete transcribeBusy[row.id];
+        showPlaybackTranscript(row);
       });
+  }
+
+  function showPlaybackTranscript(row) {
+    if (!row || player.id !== row.id || row.analysis || row.live || transcriptEdited) return;
+    var video = $("recVideo");
+    var now = video ? video.currentTime : 0;
+    var turns = row.partialTurns || row.turns || [];
+    var busy = !!transcribeBusy[row.id];
+    var visible = turns;
+    if (!busy && video && !video.paused && isFinite(now)) {
+      visible = turns.filter(function (t) {
+        return Number(t.t_start || 0) <= now + 1.2;
+      });
+    }
+    var text = visible.map(function (t) { return "[" + clock(t.t_start) + "] " + t.text; }).join("\n");
+    // Legacy transcripts without timestamps remain readable.
+    if (!turns.length && row.transcriptEn) text = row.transcriptEn;
+    var box = $("recTranscript");
+    if (box && document.activeElement !== box && box.value !== text) {
+      box.value = text;
+      box.scrollTop = box.scrollHeight;
+    }
+    if ($("recInterim")) {
+      $("recInterim").textContent = busy
+        ? "Đang ghi từng đoạn ~2s (CPU, beam 1) — chữ hiện khi xong đoạn, không chờ hết file."
+        : "";
+    }
   }
 
   function prepareRow(row) {
@@ -879,7 +903,6 @@
     list.innerHTML = rows
       .map(function (row) {
         var on = player.id === row.id;
-        var canPlay = row.status === "ready" || row.status === "heard";
         var note = row.error && row.status === "pending" ? " · " + escapeHtml(row.error) : "";
         return (
           "<li class=\"rec-item" +
@@ -895,9 +918,9 @@
           escapeHtml(statusLabel(row.status)) +
           "\"></span>" +
           "<div class=\"rec-meta\">" +
-          "<strong>" +
+          "<button type=\"button\" class=\"ghost\" data-act=\"select\">" +
           escapeHtml(row.name) +
-          "</strong>" +
+          "</button>" +
           "<span class=\"meta\">" +
           escapeHtml(kindLabel(row.kind, row.type)) +
           " · " +
@@ -910,16 +933,6 @@
           issueBadge(row) +
           "</span></div>" +
           "<div class=\"rec-transport\">" +
-          "<button type=\"button\" data-act=\"play\"" +
-          (canPlay ? "" : " disabled") +
-          (on && player.playing ? " class=\"is-active en\"" : "") +
-          ">Phát</button>" +
-          "<button type=\"button\" data-act=\"pause\"" +
-          (canPlay ? "" : " disabled") +
-          ">Tạm dừng</button>" +
-          "<button type=\"button\" data-act=\"stop\"" +
-          (canPlay ? "" : " disabled") +
-          ">Stop</button>" +
           "<button type=\"button\" class=\"ghost\" data-act=\"delete\">Xóa</button>" +
           "</div></li>"
         );
@@ -1162,6 +1175,7 @@
     video.load();
     video.ontimeupdate = function () {
       refreshNow();
+      showPlaybackTranscript(row);
       var dur = video.duration;
       if (isFinite(dur) && dur > 8 && video.currentTime / dur >= 0.92) {
         markHeard(row.id);
@@ -1212,11 +1226,14 @@
     }
     var play = video.play();
     player.playing = true;
+    listen.on = true;
+    updateListenButtons();
     render();
     refreshNow();
     if (play && play.catch) {
       play.catch(function () {
         player.playing = false;
+        stopRecListen(true);
         setStatus("Trình duyệt chặn phát. Bấm Phát lại.", "warn");
         render();
       });
@@ -1230,6 +1247,7 @@
     if (!video || player.id !== id) return;
     video.pause();
     player.playing = false;
+    stopRecListen(true);
     render();
     setStatus("Đã tạm dừng.", "");
   }
@@ -1242,6 +1260,7 @@
       video.currentTime = 0;
     } catch (e) {}
     player.playing = false;
+    stopRecListen(true);
     render();
     refreshNow();
     setStatus("Đã dừng.", "");
@@ -1360,7 +1379,7 @@
   }
 
   function updateListenButtons() {
-    var btn = $("btnRecListen");
+    var btn = $("btnRecPlay");
     var dot = $("recLiveDot");
     if (btn) btn.classList.toggle("is-active", !!listen.on);
     if (dot) dot.classList.toggle("is-on", !!listen.on);
@@ -1425,7 +1444,8 @@
           row.transcriptEn = ((row.transcriptEn || "") + "\n" + text).trim();
         }
         player.id = row.id;
-        return analyzeRow(row);
+        setTranscriptBox(row.transcriptEn, "");
+        return putRow(row);
       })
       .then(function () {
         setStatus("LIVE: đã ghi đoạn radio.", "live");
@@ -1521,6 +1541,7 @@
   }
 
   function bindUi() {
+    $("recTranscript").addEventListener("input", function () { transcriptEdited = true; });
     var drop = $("recDrop");
     var input = $("recFile");
     var btn = $("btnRecImport");
@@ -1581,7 +1602,11 @@
           return;
         }
         var act = btnEl.getAttribute("data-act");
-        if (act === "play") playRow(id);
+        if (act === "select") {
+          var selected = findRow(id);
+          if (selected && (selected.status === "ready" || selected.status === "heard")) bindVideo(selected);
+        }
+        else if (act === "play") playRow(id);
         else if (act === "pause") pauseRow(id);
         else if (act === "stop") stopRow(id);
         else if (act === "delete") {

@@ -930,6 +930,50 @@ table.gloss td:last-child { color: var(--muted); }
 .rec-badges .is-red { color: var(--live); }
 .rec-badges .is-amber { color: var(--amber); }
 
+.ft-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+@media (min-width: 720px) {
+  .ft-grid { grid-template-columns: 1fr 1fr; }
+}
+.ft-drop {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: #07141f;
+  cursor: pointer;
+}
+.ft-drop:hover { border-color: var(--accent); }
+.ft-bar {
+  height: 8px;
+  border-radius: 99px;
+  background: #0a1a24;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.ft-bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--accent), #7ee0d4);
+}
+.ft-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+.ft-table th, .ft-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.ft-table th { color: var(--muted); font-weight: 600; }
+.table-wrap { overflow: auto; max-height: 360px; }
 .creator-sig {
   margin: 22px 0 0;
   text-align: center;

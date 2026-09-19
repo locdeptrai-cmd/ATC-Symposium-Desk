@@ -36,6 +36,7 @@ import media_transcode  # noqa: E402
 import media_transcribe  # noqa: E402
 from reda.engine import analyze as reda_analyze  # noqa: E402
 from reda import store as reda_store  # noqa: E402
+from asr_dataset import ingest_finetune  # noqa: E402
 
 APP_FOLDER = "ATC-Symposium-Desk"
 HTTP_PORT = 8765
@@ -527,6 +528,15 @@ class DeskHandler(SimpleHTTPRequestHandler):
         if path == "/api/reda/search":
             self._reda_search()
             return
+        if path == "/api/finetune/status":
+            self._finetune_status()
+            return
+        if path == "/api/finetune/job":
+            self._finetune_job()
+            return
+        if path == "/api/finetune/template.xlsx":
+            self._finetune_template()
+            return
         if path in (
             "/ATC-Desk.apk",
             "/ATC-Desk-Mobile.apk",
@@ -573,6 +583,9 @@ class DeskHandler(SimpleHTTPRequestHandler):
             return
         if self._route_path() == "/api/library/user":
             self._library_user_save()
+            return
+        if self._route_path() == "/api/finetune/ingest":
+            self._finetune_ingest()
             return
         self.send_error(404, "Not Found")
 
@@ -701,6 +714,71 @@ class DeskHandler(SimpleHTTPRequestHandler):
                     src.unlink(missing_ok=True)
                 except OSError:
                     pass
+
+    def _finetune_status(self) -> None:
+        self._send_json(ingest_finetune.corpus_stats())
+
+    def _finetune_job(self) -> None:
+        job = ingest_finetune.job_snapshot(self._query_id())
+        if not job:
+            self._send_json({"ok": False, "error": "Khong tim thay tien trinh fine-tune."}, 404)
+            return
+        job["ok"] = True
+        self._send_json(job)
+
+    def _finetune_template(self) -> None:
+        dest = Path(tempfile.gettempdir()) / "ATC-Desk-finetune-template.xlsx"
+        ingest_finetune.write_template(dest)
+        data = dest.read_bytes()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        self.send_header("Content-Length", str(len(data)))
+        self.send_header("Content-Disposition", 'attachment; filename="ATC-Desk-VHF-finetune.xlsx"')
+        self.end_headers()
+        if self.command != "HEAD":
+            self.wfile.write(data)
+
+    def _finetune_ingest(self) -> None:
+        import cgi
+
+        try:
+            form = cgi.FieldStorage(
+                fp=self.rfile,
+                headers=self.headers,
+                environ={
+                    "REQUEST_METHOD": "POST",
+                    "CONTENT_TYPE": self.headers.get("Content-Type", ""),
+                    "CONTENT_LENGTH": self.headers.get("Content-Length") or "0",
+                },
+            )
+        except Exception as exc:
+            self._send_json({"ok": False, "error": "Khong doc duoc form: %s" % exc}, 400)
+            return
+        excel_item = form["excel"] if "excel" in form else None
+        audio_item = form["audio"] if "audio" in form else None
+        if excel_item is None or not getattr(excel_item, "file", None):
+            self._send_json({"ok": False, "error": "Thieu file Excel hoi thoai."}, 400)
+            return
+        excel_name = Path(getattr(excel_item, "filename", None) or "gold.xlsx").name
+        audio_name = ""
+        fd, excel_tmp = tempfile.mkstemp(suffix=Path(excel_name).suffix or ".xlsx")
+        os.close(fd)
+        excel_path = Path(excel_tmp)
+        audio_path = None
+        try:
+            with excel_path.open("wb") as fh:
+                shutil.copyfileobj(excel_item.file, fh)
+            if audio_item is not None and getattr(audio_item, "file", None) and getattr(audio_item, "filename", None):
+                audio_name = Path(str(audio_item.filename)).name
+                fd, audio_tmp = tempfile.mkstemp(suffix=Path(audio_name).suffix or ".wav")
+                os.close(fd)
+                audio_path = Path(audio_tmp)
+                with audio_path.open("wb") as fh:
+                    shutil.copyfileobj(audio_item.file, fh)
+            job_id = ingest_finetune.start_ingest(audio_path, excel_path, audio_name, excel_name)
+            self._send_json({"ok": True, "id": job_id})
+        except Exception as exc:
+            self._send_json({"ok": False, "error": str(exc)}, 500)
 
     def _library_user_get(self) -> None:
         self._send_json({"ok": True, "entries": load_user_library()})

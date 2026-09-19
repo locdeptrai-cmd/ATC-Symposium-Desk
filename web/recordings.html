@@ -29,6 +29,7 @@
       <a href="index.html">Hội trường</a>
       <a href="glossary.html">Thuật ngữ</a>
       <a class="is-current" href="recordings.html">REDA</a>
+      <a href="finetune.html">Fine-tune</a>
       <a href="cai-dat.html">Cài máy</a>
     </nav>
 
@@ -55,9 +56,9 @@
             <span id="recNowTime" class="meta">0:00 / 0:00</span>
           </div>
           <div class="rec-transport rec-transport-main">
-            <button type="button" id="btnRecPlay">Phát</button>
-            <button type="button" id="btnRecPause">Dừng</button>
-            <button type="button" id="btnRecStop">Tắt</button>
+            <button type="button" id="btnRecPlay">Phát · nghe và ghi lời</button>
+            <button type="button" id="btnRecPause">Tạm dừng</button>
+            <button type="button" id="btnRecStop">Dừng</button>
             <label class="rec-vol">Âm lượng
               <input type="range" id="recVol" min="0" max="100" value="100" aria-label="Âm lượng">
             </label>
@@ -68,18 +69,26 @@
           <canvas id="recWave" height="80" aria-label="Dải âm phổ"></canvas>
           <p class="rec-wave-hint">Kéo trên phổ để chọn đoạn nghe. Bấm để tới lui.</p>
         </div>
+    <section class="rec-library" aria-label="Danh sách bản ghi">
+      <h2>File đã import</h2>
+      <p class="hint">Chọn tên file rồi bấm Phát để nghe và ghi hội thoại.</p>
+      <div class="rec-legend" aria-label="Đèn trạng thái">
+        <span><i class="rec-lamp lamp-pending" aria-hidden="true"></i> Chưa sẵn sàng</span>
+        <span><i class="rec-lamp lamp-ready" aria-hidden="true"></i> Đã sẵn sàng</span>
+        <span><i class="rec-lamp lamp-heard" aria-hidden="true"></i> Đã nghe</span>
+      </div>
+      <ul id="recList" class="rec-list"></ul>
+    </section>
       </div>
     </section>
 
     <section class="listen rec-listen" aria-label="Nghe và REDA">
       <div class="listen-head">
         <span id="recLiveDot" class="dot" aria-hidden="true"></span>
-        <strong>Nghe · ghi lời English · đối chiếu readback</strong>
+        <strong>Hội thoại English · ghi theo nhịp phát</strong>
       </div>
       <div class="btns rec-listen-btns">
-        <button type="button" class="en" id="btnRecListen">NGHE FILE (EN)</button>
         <button type="button" class="en" id="btnRecLive">LIVE radio</button>
-        <button type="button" class="ghost" id="btnRecListenStop">Dừng</button>
         <button type="button" class="ghost" id="btnRecAnalyze">Phân tích lại</button>
         <button type="button" class="primary" id="btnRecToHall">Mở Hội trường + dịch</button>
       </div>
@@ -93,7 +102,7 @@
           </select>
         </label>
       </div>
-      <p class="tape-hint">FILE: mono radio, lọc méo, cắt PTT. LIVE radio: line-in / micro (tắt echo cancel) → Whisper ATC từng đoạn. Roger/Wilco không thay readback số liệu. Sửa lời trên ô kịch bản rồi Phân tích lại = hiệu đính người (HUMAN), không phải AI verified.</p>
+      <p class="tape-hint">FILE: bấm Phát để tự động nghe và ghi từng đoạn. Phân vai và đối chiếu readback chỉ chạy khi bấm Phân tích lại. LIVE radio: line-in / micro (tắt echo cancel) → Whisper ATC từng đoạn. Roger/Wilco không thay readback số liệu. Sửa lời trên ô kịch bản rồi Phân tích lại = hiệu đính người (HUMAN), không phải AI verified.</p>
       <label class="field rec-search-field">Tìm callsign / FL / runway / MISMATCH
         <input id="recSearch" type="search" placeholder="HVN372, FL120, RWY25R, MISMATCH…" autocomplete="off">
       </label>
@@ -114,7 +123,7 @@
             <button type="button" id="copyRecEn">Sao chép kịch bản</button>
           </div>
           <ol id="recTurns" class="reda-turns" aria-label="Lượt nói"></ol>
-          <textarea id="recTranscript" placeholder="ATCO: …  [22:21:08]&#10;PILOT: …  [22:21:12]"></textarea>
+          <textarea id="recTranscript" placeholder="[0:04] Nội dung English xuất hiện khi nghe…"></textarea>
           <div id="recInterim" class="interim" aria-live="polite"></div>
         </div>
         <div class="stream reda-issues-pane">
@@ -134,14 +143,6 @@
       </div>
     </section>
 
-    <section class="panel rec-library" aria-label="Danh sách bản ghi">
-      <div class="rec-legend" aria-label="Đèn trạng thái">
-        <span><i class="rec-lamp lamp-pending" aria-hidden="true"></i> Chưa sẵn sàng</span>
-        <span><i class="rec-lamp lamp-ready" aria-hidden="true"></i> Đã sẵn sàng</span>
-        <span><i class="rec-lamp lamp-heard" aria-hidden="true"></i> Đã nghe</span>
-      </div>
-      <ul id="recList" class="rec-list"></ul>
-    </section>
     <p class="creator-sig">created by Lộc đẹp trai</p>
   </div>
   <div id="recConvertModal" class="rec-convert-modal" hidden>

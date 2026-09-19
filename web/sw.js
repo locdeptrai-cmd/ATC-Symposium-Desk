@@ -1,9 +1,10 @@
-var CACHE = "atc-symposium-desk-v36";
+var CACHE = "atc-symposium-desk-v38";
 var ASSETS = [
   "./",
   "./index.html",
   "./glossary.html",
   "./recordings.html",
+  "./finetune.html",
   "./briefs.html",
   "./cai-dat.html",
   "./css/app.css",
@@ -25,6 +26,7 @@ var ASSETS = [
   "./js/glossary-ui.js",
   "./js/glossary-editor.js",
   "./js/recordings.js",
+  "./js/finetune.js",
   "./js/pwa.js",
   "./manifest.json",
   "./icons/icon.jpg",
