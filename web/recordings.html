@@ -22,7 +22,7 @@
       <img class="icon" src="icons/icon-192.png" alt="">
       <div class="brand">
         <h1>REDA</h1>
-        <p>Readback error detection — biên bản English cho bình giảng</p>
+        <p>Ghi lời ATC · clearance ↔ readback · tìm / phát lại — không thay hearback của ATCO</p>
       </div>
     </header>
     <nav class="suite-nav" aria-label="Bộ ứng dụng">
@@ -77,8 +77,9 @@
         <strong>Nghe · ghi lời English · đối chiếu readback</strong>
       </div>
       <div class="btns rec-listen-btns">
-        <button type="button" class="en" id="btnRecListen">NGHE (EN)</button>
-        <button type="button" class="ghost" id="btnRecListenStop">Dừng nghe</button>
+        <button type="button" class="en" id="btnRecListen">NGHE FILE (EN)</button>
+        <button type="button" class="en" id="btnRecLive">LIVE radio</button>
+        <button type="button" class="ghost" id="btnRecListenStop">Dừng</button>
         <button type="button" class="ghost" id="btnRecAnalyze">Phân tích lại</button>
         <button type="button" class="primary" id="btnRecToHall">Mở Hội trường + dịch</button>
       </div>
@@ -92,7 +93,20 @@
           </select>
         </label>
       </div>
-      <p class="tape-hint">Bấm Phát hoặc NGHE (EN): ghi lời English từ file (mono radio, lọc méo, cắt PTT). Không dùng micro. Roger/Wilco không được coi là readback số liệu.</p>
+      <p class="tape-hint">FILE: mono radio, lọc méo, cắt PTT. LIVE radio: line-in / micro (tắt echo cancel) → Whisper ATC từng đoạn. Roger/Wilco không thay readback số liệu. Sửa lời trên ô kịch bản rồi Phân tích lại = hiệu đính người (HUMAN), không phải AI verified.</p>
+      <label class="field rec-search-field">Tìm callsign / FL / runway / MISMATCH
+        <input id="recSearch" type="search" placeholder="HVN372, FL120, RWY25R, MISMATCH…" autocomplete="off">
+      </label>
+      <div class="reda-board">
+        <div class="stream">
+          <div class="stream-head"><strong>Tàu bay</strong></div>
+          <ul id="recAircraft" class="reda-aircraft"></ul>
+        </div>
+        <div class="stream">
+          <div class="stream-head"><strong>Huấn lệnh</strong><span id="recClrCount" class="meta">—</span></div>
+          <ul id="recClearances" class="reda-clearances"></ul>
+        </div>
+      </div>
       <div class="reda-grid">
         <div class="stream stream-en">
           <div class="stream-head">
@@ -105,7 +119,7 @@
         </div>
         <div class="stream reda-issues-pane">
           <div class="stream-head">
-            <strong>Lỗi readback</strong>
+            <strong>Cảnh báo readback</strong>
             <span id="recIssueCount" class="meta">—</span>
           </div>
           <ul id="recIssues" class="reda-issues"></ul>

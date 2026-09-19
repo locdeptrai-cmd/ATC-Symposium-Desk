@@ -4,12 +4,18 @@ import re
 import uuid
 from typing import Any
 
+from .callsign import resolve_callsign, telephony_lexicon
 from .compare import compare
 from .concept import AtcConcept, IssueType, SpeakerRole
 from .lexicon import RULES, TEACHING, TEMPLATES
 from .normalize import normalize_text
+from .normalize_fn import words_to_digits
 from .pairing import pair_concepts
 from .parse import infer_role, parse_utterance
+
+from asr_dataset import PROCESSING_VERSION as _ASR_PROC
+
+PROCESSING_VERSION = _ASR_PROC
 
 WINDOW_SEC = 25.0
 PILOT_SPLIT = re.compile(
@@ -187,6 +193,69 @@ def refine_roles(utterances: list[dict], concepts: list[AtcConcept]) -> None:
         prev = atcos[0] if atcos else None
 
 
+def _number_layers(text: str) -> dict:
+    raw = (text or "").strip()
+    digits = words_to_digits(raw)
+    return {"spoken": raw, "digits": digits}
+
+
+def _command_out(c: AtcConcept) -> dict:
+    p = c.params
+    action = c.intent.value
+    ctype, value, unit = "OTHER", None, None
+    if p.level:
+        ctype, value, unit = "FLIGHT_LEVEL" if (p.level_unit or "").upper() in {"FL", "FLIGHT LEVEL", None} or str(p.level).upper().startswith("FL") else "ALTITUDE", p.level, p.level_unit or "FL"
+        if str(p.level).upper().startswith("FL") or (p.level_unit or "").upper() == "FL":
+            ctype = "FLIGHT_LEVEL"
+    elif p.heading is not None:
+        ctype, value, unit = "HEADING", int(p.heading), "DEG"
+        if "left" in (c.raw_text or "").lower():
+            action = "TURN_LEFT"
+        elif "right" in (c.raw_text or "").lower():
+            action = "TURN_RIGHT"
+    elif p.speed is not None:
+        ctype, value, unit = "SPEED", p.speed, p.speed_unit or "KT"
+    elif p.squawk:
+        ctype, value, unit = "SSR", p.squawk, None
+    elif p.freq:
+        ctype, value, unit = "FREQUENCY", p.freq, "MHZ"
+    elif p.qnh is not None:
+        ctype, value, unit = "QNH", p.qnh, p.qnh_unit or "HPA"
+    elif p.runway:
+        ctype, value, unit = "RUNWAY", p.runway, None
+    elif p.waypoint:
+        ctype, value, unit = "WAYPOINT", p.waypoint, None
+    else:
+        ctype = c.intent.value
+    return {
+        "type": ctype,
+        "action": action,
+        "value": value,
+        "unit": unit,
+        "intent": c.intent.value,
+        "confidence": round(float(c.confidence or 0.8), 2),
+        "label": _concept_label(c),
+    }
+
+
+def _status_from_issues(issues: list, has_pilot: bool, uncertain: bool) -> str:
+    if uncertain:
+        return "UNCERTAIN"
+    if not has_pilot:
+        return "MISSING"
+    real = [i for i in issues if i.type != IssueType.OK]
+    if not real:
+        return "MATCHED"
+    kinds = {i.type for i in real}
+    if IssueType.MISMATCH in kinds:
+        return "MISMATCH"
+    if kinds <= {IssueType.OMISSION, IssueType.NON_STANDARD}:
+        return "PARTIAL"
+    if IssueType.MISSING_READBACK in kinds:
+        return "MISSING"
+    return "MISMATCH"
+
+
 def _concept_label(c: AtcConcept) -> str:
     p = c.params
     if p.level:
@@ -297,10 +366,13 @@ def analyze(turns: list[dict] | None = None, filename: str = "", text: str = "")
 
     utterances: list[dict] = []
     concepts: list[AtcConcept] = []
+    lex = telephony_lexicon()
     for item in raw:
         uid = str(uuid.uuid4())
-        norm = normalize_text(item["text"])
+        raw_text = item["text"]
+        norm = normalize_text(raw_text)
         role = infer_role(norm, item.get("speaker_role"))
+        cs = resolve_callsign(raw_text)
         parsed = parse_utterance(
             text=norm,
             templates=TEMPLATES,
@@ -308,17 +380,37 @@ def analyze(turns: list[dict] | None = None, filename: str = "", text: str = "")
             t_start=item["t_start"],
             t_end=item["t_end"],
             speaker_raw=role.value,
+            callsign_lexicon=lex,
         )
         if parsed:
             role = parsed[0].speaker
+            for c in parsed:
+                if cs.get("normalized") and not c.callsign_norm:
+                    c.callsign_norm = cs["normalized"]
+                    c.callsign = cs.get("spoken") or c.callsign
+                if cs.get("uncertain"):
+                    c.confidence = min(c.confidence or 0.5, 0.5)
+        compact = " ".join(
+            x
+            for x in [
+                (cs.get("normalized") if not cs.get("uncertain") else None),
+                *(p.intent.value for p in parsed if p.intent.value != "OTHER"),
+            ]
+            if x
+        )
         utterances.append(
             {
                 "id": uid,
                 "t_start": item["t_start"],
                 "t_end": item["t_end"],
                 "speaker_role": role.value,
-                "asr_text": item["text"],
+                "asr_text": raw_text,
                 "asr_text_norm": norm,
+                "normalized": compact or norm,
+                "callsign": cs,
+                "number_layers": _number_layers(raw_text),
+                "source": "AI",
+                "verified": False,
             }
         )
         for c in parsed:
@@ -335,8 +427,10 @@ def analyze(turns: list[dict] | None = None, filename: str = "", text: str = "")
         u["t_media"] = _fmt_clock(float(u["t_start"]))
 
     issues: list[dict] = []
+    clearances: list[dict] = []
     ok_pairs = 0
     pairs = 0
+    by_utt = {u["id"]: u for u in utterances}
     for cand in pair_concepts(concepts, window_sec=WINDOW_SEC):
         if cand.status == "UNPAIRED":
             continue
@@ -345,18 +439,60 @@ def analyze(turns: list[dict] | None = None, filename: str = "", text: str = "")
         real = [iss for iss in found if iss.type != IssueType.OK]
         if not real:
             ok_pairs += 1
-            continue
         for iss in real:
             issues.append(_issue_out(iss, cand.atco, cand.pilot))
+        utt = by_utt.get(cand.atco.utterance_id) or {}
+        cs_info = utt.get("callsign") or {}
+        status = _status_from_issues(found, cand.pilot is not None, bool(cs_info.get("uncertain")))
+        diffs = [
+            {"field": i.field, "expected": i.expected, "readback": i.got, "type": i.type.value}
+            for i in real
+        ]
+        mark = {"MATCHED": "✓", "MISMATCH": "!", "PARTIAL": "~", "MISSING": "…", "UNCERTAIN": "?"}.get(status, "·")
+        clearances.append(
+            {
+                "id": "CLR-" + cand.atco.id[:8],
+                "utterance_id": cand.atco.utterance_id,
+                "readback_utterance_id": cand.pilot.utterance_id if cand.pilot else None,
+                "callsign": cand.atco.callsign_norm or cs_info.get("normalized"),
+                "callsign_spoken": cs_info.get("spoken") or cand.atco.callsign,
+                "status": status,
+                "mark": mark,
+                "confidence": round(float(cand.atco.confidence or 0.8), 2),
+                "commands": [_command_out(cand.atco)],
+                "t_start": cand.atco.t_start,
+                "differences": diffs,
+                "source": "AI",
+                "verified": False,
+            }
+        )
 
     red = sum(1 for i in issues if i["severity"] == "RED")
     amber = sum(1 for i in issues if i["severity"] == "AMBER")
+    aircraft = []
+    seen_cs: set[str] = set()
+    for u in utterances:
+        cs = (u.get("callsign") or {}).get("normalized")
+        if cs and cs not in seen_cs:
+            seen_cs.add(cs)
+            aircraft.append(
+                {
+                    "callsign": cs,
+                    "uncertain": bool((u.get("callsign") or {}).get("uncertain")),
+                    "spoken": (u.get("callsign") or {}).get("spoken"),
+                }
+            )
     summary = {
         "pairs": pairs,
         "ok_pairs": ok_pairs,
         "red": red,
         "amber": amber,
         "issue_count": len(issues),
+        "matched": sum(1 for c in clearances if c["status"] == "MATCHED"),
+        "mismatch": sum(1 for c in clearances if c["status"] == "MISMATCH"),
+        "missing": sum(1 for c in clearances if c["status"] == "MISSING"),
+        "partial": sum(1 for c in clearances if c["status"] == "PARTIAL"),
+        "uncertain": sum(1 for c in clearances if c["status"] == "UNCERTAIN"),
     }
     concept_rows = [
         {
@@ -395,9 +531,14 @@ def analyze(turns: list[dict] | None = None, filename: str = "", text: str = "")
         "clock_origin": origin,
         "utterances": utterances,
         "concepts": concept_rows,
+        "commands": [_command_out(c) for c in concepts if c.intent.value != "OTHER"],
+        "clearances": clearances,
+        "aircraft": aircraft,
         "issues": issues,
         "summary": summary,
         "minutes_en": minutes,
+        "processing_version": PROCESSING_VERSION,
+        "source": "AI",
     }
 
 

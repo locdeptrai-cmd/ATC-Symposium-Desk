@@ -6,6 +6,13 @@ Thumbs.db
 .vscode/
 .idea/
 tools/cache/
+tools/bin/
+data/asr-gold/dataset_v1/
+data/asr-gold/source/
+data/reda-sessions.sqlite
+data/reda-sessions.sqlite-shm
+data/reda-sessions.sqlite-wal
+.tmp-pack/
 models/whisper/
 models/hf/
 web/certs/

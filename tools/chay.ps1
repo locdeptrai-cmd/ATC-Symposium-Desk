@@ -61,6 +61,39 @@ function Install-Python {
     Update-SessionPath
 }
 
+function Install-PythonPackage($Python, [string]$Module, [string]$PipName) {
+    $importArgs = @($Python.Args) + @("-c", "import $Module")
+    & $Python.Exe @importArgs 2>$null | Out-Null
+    if ($LASTEXITCODE -eq 0) { return }
+    Write-Step "Dang cai $PipName (STT ATC / HTTPS)..."
+    $pipArgs = @($Python.Args) + @("-m", "pip", "install", "--user", "--upgrade", $PipName)
+    & $Python.Exe @pipArgs
+    if ($LASTEXITCODE -ne 0) {
+        throw "pip install $PipName that bai."
+    }
+}
+
+function Assert-Runtime {
+    $db = Join-Path $Root "web\data\library.sqlite"
+    if (-not (Test-Path -LiteralPath $db)) {
+        throw "Thieu DB thu vien: $db"
+    }
+    $model = Join-Path $Root "models\whisper\atc-turbo-ct2\model.bin"
+    if (-not (Test-Path -LiteralPath $model)) {
+        throw "Thieu model Whisper ATC: $model"
+    }
+    $size = (Get-Item -LiteralPath $model).Length
+    if ($size -lt 400MB) {
+        throw "Model Whisper ATC chua du byte ($size). Can models\whisper\atc-turbo-ct2."
+    }
+    $ffmpeg = Get-Command ffmpeg -ErrorAction SilentlyContinue
+    if (-not $ffmpeg) {
+        Write-Host "  Canh bao: chua thay ffmpeg trong PATH. Ghi loi file (REDA) can ffmpeg."
+    }
+    Write-Host "  DB thu vien:  $db"
+    Write-Host "  Model STT:    $model"
+}
+
 function Install-CryptographyIfMissing($Python) {
     $importArgs = @($Python.Args) + @("-c", "import cryptography")
     & $Python.Exe @importArgs 2>$null | Out-Null
@@ -112,14 +145,17 @@ function Install-PhoneApkIfReady {
     $saved = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
-        $apk = Join-Path $Root "phat-hanh\ATC-Desk.apk"
+        $apk = Join-Path $Root "phat-hanh\ATC-Desk-Mobile.apk"
+        if (-not (Test-Path -LiteralPath $apk)) {
+            $apk = Join-Path $Root "phat-hanh\ATC-Desk.apk"
+        }
         if (-not (Test-Path -LiteralPath $apk)) { return }
         $adb = Get-Adb
         if (-not $adb) { return }
         $devices = & $adb devices 2>&1 | ForEach-Object { "$_" }
         $ready = @($devices | Where-Object { $_ -match "\tdevice$" })
         if ($ready.Count -eq 0) { return }
-        Write-Step "Dien thoai Android da ket USB. Dang cai ATC-Desk.apk..."
+        Write-Step "Dien thoai Android da ket USB. Dang cai ATC-Desk-Mobile.apk..."
         & $adb install -r --no-incremental $apk 2>&1 | Out-Null
         if ($LASTEXITCODE -eq 0) {
             & $adb shell am start -n vn.vatm.atcdesk/.MainActivity 2>&1 | Out-Null
@@ -145,12 +181,14 @@ if (-not $python) {
     $python = Get-Python
 }
 if (-not $python) {
-    throw "Da cai Python nhung cua so nay chua nhin thay. Dong cua so, bam lai CAI_DAT_VA_CHAY.cmd."
+    throw "Da cai Python nhung cua so nay chua nhin thay. Dong cua so, bam lai CHAY.cmd."
 }
 
 & (Join-Path $PSScriptRoot "check-signature.ps1")
 
 Install-CryptographyIfMissing $python
+Install-PythonPackage $python "faster_whisper" "faster-whisper"
+Assert-Runtime
 Install-PhoneApkIfReady
 
 function Stop-OldDesk {
@@ -189,4 +227,4 @@ $code = $LASTEXITCODE
 if ($null -eq $code -or $code -eq 0 -or $code -eq -1 -or $code -eq 0xC000013A) {
     return
 }
-throw "Khong khoi dong duoc server (ma $code). Neu cong 8765 dang dung, dong cua so MO_APP cu roi bam lai."
+throw "Khong khoi dong duoc server (ma $code). Neu cong 8765 dang dung, dong cua so CHAY cu roi bam lai."

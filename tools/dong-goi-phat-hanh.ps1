@@ -1,5 +1,6 @@
-# Build both release artifacts into phat-hanh\: one-file EXE (web+DB) and Android APK.
+# Build release artifacts into phat-hanh\: fat Windows EXE and Android/iOS-shared mobile APK.
 # iOS native still needs a Mac + Xcode; this script syncs the Capacitor iOS project.
+# iPhone without Mac uses the PWA served by CHAY.cmd / ATC-Desk.exe (same web).
 $ErrorActionPreference = "Stop"
 
 $Root = Split-Path -Parent $PSScriptRoot

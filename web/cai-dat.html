@@ -37,7 +37,7 @@
       <header><h2>Android native — tải APK từ máy này</h2></header>
       <p>App native dịch <b>cả câu</b> trên máy (ML Kit). Tải file, mở trên điện thoại, cho phép cài nguồn này, rồi lần đầu bấm <b>Tải gói dịch EN+VI</b> (~60 MB).</p>
       <p>
-        <a class="primary-link" id="apkLink" href="/ATC-Desk.apk">Tải ATC-Desk.apk</a>
+        <a class="primary-link" id="apkLink" href="/ATC-Desk-Mobile.apk">Tải ATC-Desk-Mobile.apk</a>
         <span id="apkMeta" class="hint"></span>
       </p>
     </section>
@@ -46,7 +46,7 @@
       <h2>App iOS / Android (cùng một mã)</h2>
       <p class="hint">PWA trên điện thoại <b>không dịch cả câu</b> (Chrome Translator chỉ có trên máy tính). App native (Capacitor) dùng ML Kit trên máy — một codebase cho cả iPhone và Android. Tải APK (Android) hoặc mở project iOS trên Mac, rồi tải gói EN+VI một lần khi còn Wi-Fi; hội trường tắt mạng.</p>
       <ol>
-        <li>Android: nếu máy tính đang chạy <code>ATC-Desk.exe</code>, bấm <b>Tải ATC-Desk.apk</b> ở trên (cùng Wi-Fi). Hoặc copy <code>phat-hanh/ATC-Desk.apk</code> sang điện thoại rồi mở file.</li>
+        <li>Android: nếu máy tính đang chạy app, bấm <b>Tải ATC-Desk-Mobile.apk</b> ở trên (cùng Wi-Fi). Hoặc copy <code>phat-hanh/ATC-Desk-Mobile.apk</code> sang điện thoại rồi mở file.</li>
         <li>iOS native: trên Mac mở <code>ios/App/App.xcworkspace</code>, chọn team ký, Run vào iPhone. Không build IPA được từ Windows.</li>
         <li>Không có Mac: iPhone dùng PWA HTTPS ở bước dưới (glossary / câu đáp, không dịch nguyên câu).</li>
         <li>Lần đầu còn mạng: bấm <b>Tải gói dịch EN+VI</b> (~60 MB). Sau đó airplane mode vẫn dịch cả câu.</li>
@@ -78,7 +78,7 @@
 
     <section class="card install-card">
       <header><h2>2. Mở bản HTTPS rồi ghim app</h2></header>
-      <p>Trên điện thoại, cùng Wi-Fi với máy tính đang chạy <code>ATC-Desk.exe</code> (hoặc <code>MO_APP</code>). Đổi cổng <b>8765 → 8766</b> và <b>http → https</b>.</p>
+      <p>Trên điện thoại, cùng Wi-Fi với máy tính đang chạy <code>CHAY.cmd</code> hoặc <code>ATC-Desk.exe</code>. Đổi cổng <b>8765 → 8766</b> và <b>http → https</b>.</p>
       <h3>iPhone — Safari</h3>
       <ol>
         <li>Mở <code>https://&lt;IPv4-máy-tính&gt;:8766/</code></li>
@@ -114,8 +114,10 @@
       .then(function (info) {
         if (!info || !info.apk) return;
         var card = document.getElementById("apkCard");
+        var link = document.getElementById("apkLink");
         var meta = document.getElementById("apkMeta");
         if (card) card.hidden = false;
+        if (link && info.apkUrl) link.setAttribute("href", info.apkUrl);
         if (meta) {
           var mb = (Number(info.apkBytes) / 1048576).toFixed(1);
           meta.textContent = " (" + mb + " MB, bản " + (info.version || "") + ")";

@@ -1,27 +1,29 @@
 """Transcribe English from a recording file (not the microphone)."""
 from __future__ import annotations
 
+import os
+import re
 import subprocess
 import tempfile
 import threading
 import time
 import uuid
+import wave
 from pathlib import Path
 
-import os
+import numpy as np
+
+import app_paths
 import media_transcode as tx
+from asr_dataset.hotwords import hotwords_for
 
 MAX_UPLOAD_BYTES = tx.MAX_UPLOAD_BYTES
 # CPU CTranslate2 / faster-whisper, English ATC radio only. No GPU / no torch
-# at inference. Prefer the local turbo CT2 (ATCO2 + ATCoSIM, published WER
-# 7.83%) then jacktol medium.en ATC (WER 15.08%). Override with ATC_WHISPER_MODEL.
-ATC_WHISPER_TURBO_DIR = Path(__file__).resolve().parents[1] / "models" / "whisper" / "atc-turbo-ct2"
-ATC_WHISPER_MEDIUM = "jacktol/whisper-medium.en-fine-tuned-for-ATC-faster-whisper"
-ATC_WHISPER_DEFAULT = ATC_WHISPER_MEDIUM
-ATC_PROMPT = (
-    "Vietjet Viet Nam Saigon Tower Noi Bai. "
-    "Cleared to land runway two five right. Continue approach. Squawk. QNH."
-)
+# at inference. Local turbo CT2 (ATCO2 + ATCoSIM, published WER 7.83%).
+# Override with ATC_WHISPER_MODEL.
+ATC_WHISPER_TURBO_DIR = app_paths.whisper_turbo_dir()
+ATC_PROMPT = "Viet Nam Vietjet Saigon Tower. Cleared to land. Squawk. QNH."
+LIVE_OVERLAP_SEC = 1.5
 # VHF band + de-click + light denoise. No gate/dynaudnorm: those chop PTT onsets
 # and pump hiss between syllables.
 RADIO_AF = (
@@ -30,47 +32,45 @@ RADIO_AF = (
     "alimiter=limit=0.89"
 )
 RADIO_AF_FALLBACK = "highpass=f=200,lowpass=f=3600,alimiter=limit=0.89"
-_VN_ICAO = {"HVN", "VJC", "BAV", "PIC", "VAG", "VFC", "SPQ", "VSM", "SAV", "HAI", "TVJ"}
+
+_live_tail: np.ndarray | None = None
+_live_tail_sr = 16000
 
 
-def _vn_spoken_hotwords() -> str:
-    bits = [
-        "Vietjet",
-        "Viet Nam",
-        "Bamboo",
-        "Pacific",
-        "Vasco",
-        "Saigon Tower",
-        "Noi Bai",
-        "Tan Son Nhat",
-        "cleared to land",
-        "continue approach",
-        "runway two five",
-        "squawk",
-        "QNH",
-    ]
-    path = Path(__file__).resolve().parents[1] / "data" / "vn-airline-spoken.tsv"
-    if not path.is_file():
-        return " ".join(bits)
-    try:
-        lines = path.read_text(encoding="utf-8").splitlines()
-    except OSError:
-        return " ".join(bits)
-    for line in lines[1:]:
-        cols = line.split("\t")
-        if len(cols) < 5:
+def reset_live_tail() -> None:
+    global _live_tail
+    _live_tail = None
+
+
+def _apply_live_overlap(samples: np.ndarray, sr: int, src_name: str) -> tuple[np.ndarray, float]:
+    global _live_tail, _live_tail_sr
+    if not str(src_name or "").lower().startswith("live-"):
+        _live_tail = None
+        return samples, 0.0
+    overlap = 0.0
+    n = max(1, int(LIVE_OVERLAP_SEC * sr))
+    if _live_tail is not None and len(_live_tail) and _live_tail_sr == sr:
+        samples = np.concatenate([_live_tail, samples])
+        overlap = float(len(_live_tail) / sr)
+    _live_tail = np.array(samples[-n:], dtype=np.float32, copy=True)
+    _live_tail_sr = sr
+    return samples, overlap
+
+
+def _drop_overlap_turns(turns: list[dict], overlap: float) -> list[dict]:
+    if overlap <= 0.05:
+        return turns
+    kept: list[dict] = []
+    for turn in turns:
+        t_end = float(turn.get("t_end") or 0)
+        t_start = float(turn.get("t_start") or 0)
+        if t_end <= overlap:
             continue
-        kind, icao, spoken = cols[0].strip(), cols[1].strip(), (cols[4] or "").strip()
-        if not spoken:
-            continue
-        if kind == "airline" and icao and icao not in _VN_ICAO:
-            continue
-        if spoken not in bits:
-            bits.append(spoken)
-    return " ".join(bits)
+        turn["t_start"] = max(0.0, t_start - overlap)
+        turn["t_end"] = max(turn["t_start"], t_end - overlap)
+        kept.append(turn)
+    return kept
 
-
-ATC_HOTWORDS = _vn_spoken_hotwords()
 
 _JOBS: dict[str, dict] = {}
 _JOBS_LOCK = threading.Lock()
@@ -130,10 +130,12 @@ def _model_cache_dir() -> Path:
     if env:
         folder = Path(env)
     else:
-        # Keep weights on the project drive. %LOCALAPPDATA% (C:) is often too small
-        # for the ATC medium.en CTranslate2 checkpoint (~3 GB).
-        folder = Path(__file__).resolve().parents[1] / "models" / "whisper"
-    folder.mkdir(parents=True, exist_ok=True)
+        folder = app_paths.bundle_root() / "models" / "whisper"
+    try:
+        folder.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        folder = app_paths.app_home() / "models" / "whisper"
+        folder.mkdir(parents=True, exist_ok=True)
     return folder
 
 
@@ -151,9 +153,10 @@ def _resolve_model_id() -> str:
     env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
     if env:
         return env
-    if _local_ct2_ready(ATC_WHISPER_TURBO_DIR):
-        return str(ATC_WHISPER_TURBO_DIR)
-    return ATC_WHISPER_MEDIUM
+    turbo = app_paths.whisper_turbo_dir()
+    if _local_ct2_ready(turbo):
+        return str(turbo)
+    return str(turbo)
 
 
 WHISPER_MODEL = _resolve_model_id()
@@ -171,12 +174,11 @@ def load_model():
             return None
         candidates = []
         env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
+        turbo = app_paths.whisper_turbo_dir()
         if env:
             candidates.append(env)
-        else:
-            if _local_ct2_ready(ATC_WHISPER_TURBO_DIR):
-                candidates.append(str(ATC_WHISPER_TURBO_DIR))
-            candidates.append(ATC_WHISPER_MEDIUM)
+        if str(turbo) not in candidates:
+            candidates.append(str(turbo))
         last_exc: Exception | None = None
         for name in candidates:
             try:
@@ -246,11 +248,7 @@ def _extract_wav(src: Path, wav: Path, ffmpeg: str) -> tuple[bool, str]:
     return False, "File khong co kenh tieng." + ((" " + (err or err2)) if (err or err2) else "")
 
 
-def _read_wav_mono(path: Path) -> tuple["object", int]:
-    import wave
-
-    import numpy as np
-
+def _read_wav_mono(path: Path) -> tuple[np.ndarray, int]:
     with wave.open(str(path), "rb") as handle:
         sr = handle.getframerate()
         nch = handle.getnchannels()
@@ -262,8 +260,6 @@ def _read_wav_mono(path: Path) -> tuple["object", int]:
 
 
 def ptt_windows(samples, sr: int, min_dur: float = 0.4, merge_gap: float = 0.65, max_span: float = 14.0) -> list[tuple[float, float]]:
-    import numpy as np
-
     hop = max(1, int(sr * 0.03))
     energy = []
     for i in range(0, max(0, len(samples) - hop), hop):
@@ -316,8 +312,6 @@ def ptt_windows(samples, sr: int, min_dur: float = 0.4, merge_gap: float = 0.65,
 
 
 def collapse_loops(text: str) -> str:
-    import re
-
     out = " ".join((text or "").split())
     if not out:
         return ""
@@ -354,8 +348,6 @@ _RADIO_FIXES = (
 
 
 def repair_radio_text(text: str) -> str:
-    import re
-
     out = collapse_loops(text or "")
     for pattern, repl in _RADIO_FIXES:
         out = re.sub(pattern, repl, out, flags=re.I)
@@ -364,10 +356,6 @@ def repair_radio_text(text: str) -> str:
 
 
 def _write_wav_slice(src_samples, sr: int, t0: float, t1: float, dest: Path) -> None:
-    import wave
-
-    import numpy as np
-
     a = max(0, int(t0 * sr))
     b = min(len(src_samples), int(t1 * sr))
     if b <= a:
@@ -384,26 +372,27 @@ def _write_wav_slice(src_samples, sr: int, t0: float, t1: float, dest: Path) -> 
         handle.writeframes(pcm.tobytes())
 
 
-def _decode_window(model, wav: Path, duration_s: float) -> list[dict]:
+def _decode_window(model, wav: Path, duration_s: float, hotwords: str) -> list[dict]:
     token_cap = max(24, min(96, int(max(0.4, duration_s) * 10) + 16))
-    segments, _info = model.transcribe(
-        str(wav),
-        language="en",
-        beam_size=5,
-        vad_filter=False,
-        without_timestamps=True,
-        condition_on_previous_text=False,
-        initial_prompt=ATC_PROMPT,
-        hotwords=ATC_HOTWORDS,
-        temperature=0.0,
-        repetition_penalty=1.08,
-        no_repeat_ngram_size=3,
-        compression_ratio_threshold=2.2,
-        log_prob_threshold=-0.85,
-        no_speech_threshold=0.6,
-        max_new_tokens=token_cap,
-        word_timestamps=False,
-    )
+    kwargs = {
+        "language": "en",
+        "beam_size": 5,
+        "vad_filter": False,
+        "without_timestamps": True,
+        "condition_on_previous_text": False,
+        "initial_prompt": ATC_PROMPT,
+        "temperature": 0.0,
+        "repetition_penalty": 1.08,
+        "no_repeat_ngram_size": 3,
+        "compression_ratio_threshold": 2.2,
+        "log_prob_threshold": -0.85,
+        "no_speech_threshold": 0.6,
+        "max_new_tokens": token_cap,
+        "word_timestamps": False,
+    }
+    if hotwords:
+        kwargs["hotwords"] = hotwords
+    segments, _info = model.transcribe(str(wav), **kwargs)
     turns = []
     for seg in segments:
         chunk = repair_radio_text((seg.text or "").strip())
@@ -442,8 +431,10 @@ def transcribe_with_turns(src: Path, on_progress=None) -> tuple[str, list[dict],
             return "", [], _MODEL_ERROR or "Khong co Whisper."
         note(16, "Đang cắt theo PTT…")
         samples, sr = _read_wav_mono(wav)
+        samples, overlap = _apply_live_overlap(samples, sr, src.name)
         duration = len(samples) / float(sr or 1)
         windows = ptt_windows(samples, sr)
+        hotwords = hotwords_for(filename=src.name)
         note(18, "Đang ghi lời English từ file…")
         parts: list[str] = []
         turns: list[dict] = []
@@ -453,7 +444,7 @@ def transcribe_with_turns(src: Path, on_progress=None) -> tuple[str, list[dict],
             pad1 = t1 + 0.18
             _write_wav_slice(samples, sr, pad0, pad1, slice_wav)
             try:
-                segs = _decode_window(model, slice_wav, max(0.4, pad1 - pad0))
+                segs = _decode_window(model, slice_wav, max(0.4, pad1 - pad0), hotwords)
             finally:
                 try:
                     slice_wav.unlink(missing_ok=True)
@@ -472,7 +463,8 @@ def transcribe_with_turns(src: Path, on_progress=None) -> tuple[str, list[dict],
             if duration > 0:
                 pct = min(92.0, 18.0 + 74.0 * (t1 / duration))
             note(pct, "Đang ghi lời English…", joined)
-        text = repair_radio_text(" ".join(parts))
+        turns = _drop_overlap_turns(turns, overlap)
+        text = repair_radio_text(" ".join(t["text"] for t in turns) if turns else " ".join(parts))
         if not text:
             return "", [], "Whisper khong nghe ra loi English trong file nay."
         note(94, "Đang đối chiếu readback REDA…", text)

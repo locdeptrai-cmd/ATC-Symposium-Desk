@@ -70,6 +70,14 @@
     bits: []
   };
   var transcribeBusy = {};
+  var liveRadio = {
+    on: false,
+    rec: null,
+    stream: null,
+    started: 0,
+    busy: false
+  };
+  var searchQuery = "";
 
   var $ = function (id) {
     return document.getElementById(id);
@@ -333,6 +341,7 @@
     row.scriptEn = analysis.script_en || "";
     if (analysis.transcript && !row.transcriptEn) row.transcriptEn = analysis.transcript;
     if (player.id === row.id || !player.id) {
+      renderOps(row);
       renderTurns(row);
       renderIssues(row);
       setMinutes(row.minutesEn || "");
@@ -353,20 +362,38 @@
       list.innerHTML = "";
       return;
     }
+    var q = searchQuery.toLowerCase();
+    var clrByUtt = {};
+    ((row.analysis && row.analysis.clearances) || []).forEach(function (c) {
+      if (c.utterance_id) clrByUtt[c.utterance_id] = c;
+      if (c.readback_utterance_id) clrByUtt[c.readback_utterance_id] = c;
+    });
     list.innerHTML = turns
       .map(function (u) {
         var role = String(u.speaker_role || "UNKNOWN").toUpperCase();
         var roleClass = role === "ATCO" ? "is-atco" : role === "PILOT" ? "is-pilot" : "is-unknown";
         var stamp = u.t_clock || clock(u.t_start);
+        var clr = clrByUtt[u.id] || {};
+        var mark = clr.mark || "";
+        var st = String(clr.status || "").toLowerCase();
+        var hay = ((u.asr_text || "") + " " + (u.normalized || "") + " " + ((u.callsign && u.callsign.normalized) || "") + " " + (clr.status || "")).toLowerCase();
+        var hidden = q && hay.indexOf(q) < 0 ? " is-hidden" : "";
+        var norm = u.normalized && u.normalized !== (u.asr_text || "")
+          ? "<span class=\"reda-norm\">" + escapeHtml(u.normalized) + (u.callsign && u.callsign.uncertain ? "  ? CALLSIGN UNCERTAIN" : "") + "</span>"
+          : (u.callsign && u.callsign.uncertain ? "<span class=\"reda-norm\">? CALLSIGN UNCERTAIN</span>" : "");
         return (
-          "<li data-t=\"" +
+          "<li class=\"" +
+          hidden +
+          "\" data-t=\"" +
           escapeHtml(String(u.t_start || 0)) +
           "\"><span class=\"reda-role " +
           roleClass +
           "\">" +
           escapeHtml(role) +
           "</span><span class=\"reda-line\">" +
+          (mark ? "<span class=\"reda-mark is-" + escapeHtml(st) + "\">" + escapeHtml(mark) + "</span> " : "") +
           escapeHtml(u.asr_text || u.text || "") +
+          norm +
           "</span><span class=\"clock\">" +
           escapeHtml(stamp) +
           "</span></li>"
@@ -393,7 +420,8 @@
     list.innerHTML = issues
       .map(function (iss) {
         var sev = String(iss.severity || "AMBER").toLowerCase();
-        var title = (iss.severity || "") + " " + (iss.type || "") + (iss.field ? " · " + iss.field : "");
+        var icon = sev === "red" ? "!" : sev === "green" ? "✓" : "?";
+        var title = icon + " " + (iss.severity || "") + " " + (iss.type || "") + (iss.field ? " · " + iss.field : "");
         var detail =
           "Expected " +
           (iss.expected || "—") +
@@ -420,7 +448,70 @@
       .join("");
   }
 
+  function renderOps(row) {
+    var air = $("recAircraft");
+    var clr = $("recClearances");
+    var count = $("recClrCount");
+    var analysis = (row && row.analysis) || {};
+    var aircraft = analysis.aircraft || [];
+    var clearances = analysis.clearances || [];
+    if (count) {
+      var s = analysis.summary || {};
+      count.textContent = clearances.length
+        ? (s.matched || 0) + " ✓ · " + (s.mismatch || 0) + " ! · " + (s.missing || 0) + " …"
+        : "—";
+    }
+    if (air) {
+      air.innerHTML = aircraft.length
+        ? aircraft
+            .map(function (a) {
+              return (
+                "<li data-cs=\"" +
+                escapeHtml(a.callsign || "") +
+                "\"><strong>" +
+                escapeHtml(a.callsign || "?") +
+                "</strong>" +
+                (a.uncertain ? " <span class=\"reda-mark is-uncertain\">?</span>" : "") +
+                (a.spoken ? "<span class=\"reda-norm\">" + escapeHtml(a.spoken) + "</span>" : "") +
+                "</li>"
+              );
+            })
+            .join("")
+        : "<li class=\"rec-empty\">Chưa nhận callsign.</li>";
+    }
+    if (clr) {
+      clr.innerHTML = clearances.length
+        ? clearances
+            .map(function (c) {
+              var cmds = (c.commands || [])
+                .map(function (x) {
+                  return (x.action || "") + " " + (x.label || x.value || "");
+                })
+                .join(" · ");
+              var st = String(c.status || "").toLowerCase();
+              return (
+                "<li data-t=\"" +
+                escapeHtml(String(c.t_start || 0)) +
+                "\"><span class=\"reda-mark is-" +
+                escapeHtml(st) +
+                "\">" +
+                escapeHtml(c.mark || "") +
+                "</span><strong>" +
+                escapeHtml(c.callsign || "?") +
+                "</strong> " +
+                escapeHtml(c.status || "") +
+                " · " +
+                escapeHtml(cmds) +
+                "</li>"
+              );
+            })
+            .join("")
+        : "<li class=\"rec-empty\">Chưa có clearance.</li>";
+    }
+  }
+
   function showRowAnalysis(row) {
+    renderOps(row);
     renderTurns(row);
     renderIssues(row);
     setMinutes((row && row.minutesEn) || "");
@@ -461,6 +552,19 @@
           throw new Error((analysis && analysis.error) || "Không phân tích được readback.");
         }
         applyAnalysis(row, analysis);
+        if (analysis.session_id && body.text && analysis.transcript && body.text.trim() !== analysis.transcript.trim()) {
+          fetch("/api/reda/correction", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              session_id: analysis.session_id,
+              utterance_id: (analysis.utterances && analysis.utterances[0] && analysis.utterances[0].id) || "",
+              before: analysis.transcript,
+              after: body.text,
+              reason: "transcript edit"
+            })
+          }).catch(function () {});
+        }
         return putRow(row).then(function () {
           render();
           return analysis;
@@ -1262,11 +1366,127 @@
     if (dot) dot.classList.toggle("is-on", !!listen.on);
   }
 
+  function stopLiveRadio(quiet) {
+    liveRadio.on = false;
+    try {
+      if (liveRadio.rec && liveRadio.rec.state !== "inactive") liveRadio.rec.stop();
+    } catch (e) {}
+    liveRadio.rec = null;
+    if (liveRadio.stream) {
+      liveRadio.stream.getTracks().forEach(function (t) {
+        t.stop();
+      });
+    }
+    liveRadio.stream = null;
+    var btn = $("btnRecLive");
+    if (btn) btn.classList.remove("btn-live-on");
+    if (!quiet) setStatus("Đã dừng LIVE radio.", "");
+  }
+
+  function ensureLiveRow() {
+    var i;
+    for (i = 0; i < rows.length; i++) {
+      if (rows[i].live) return rows[i];
+    }
+    var row = {
+      id: uid(),
+      name: "LIVE-radio.webm",
+      kind: "audio",
+      status: "ready",
+      live: true,
+      addedAt: Date.now(),
+      turns: [],
+      transcriptEn: "",
+      blob: new Blob([], { type: "audio/webm" })
+    };
+    rows.unshift(row);
+    putRow(row);
+    render();
+    return row;
+  }
+
+  function ingestLiveChunk(blob) {
+    if (!blob || !blob.size || liveRadio.busy) return;
+    liveRadio.busy = true;
+    var row = ensureLiveRow();
+    var offset = (Date.now() - liveRadio.started) / 1000;
+    transcribeOnServer(blob, "live-" + Math.floor(offset) + ".webm", function (partial) {
+      if ($("recInterim")) $("recInterim").textContent = partial || "";
+    })
+      .then(function (payload) {
+        var extra = (payload && payload.turns) || [];
+        extra.forEach(function (t) {
+          t.t_start = (Number(t.t_start) || 0) + Math.max(0, offset - 8);
+          t.t_end = (Number(t.t_end) || t.t_start) + Math.max(0, offset - 8);
+        });
+        row.turns = (row.turns || []).concat(extra);
+        var text = typeof payload === "string" ? payload : (payload && payload.text) || "";
+        if (text) {
+          row.transcriptEn = ((row.transcriptEn || "") + "\n" + text).trim();
+        }
+        player.id = row.id;
+        return analyzeRow(row);
+      })
+      .then(function () {
+        setStatus("LIVE: đã ghi đoạn radio.", "live");
+      })
+      .catch(function (err) {
+        setStatus((err && err.message) || "LIVE không ghi được đoạn này.", "warn");
+      })
+      .then(function () {
+        liveRadio.busy = false;
+      });
+  }
+
+  function startLiveRadio() {
+    if (liveRadio.on) {
+      stopLiveRadio();
+      return;
+    }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setStatus("Trình duyệt không cho phép LIVE radio.", "warn");
+      return;
+    }
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+          channelCount: 1
+        }
+      })
+      .then(function (stream) {
+        liveRadio.stream = stream;
+        liveRadio.started = Date.now();
+        liveRadio.on = true;
+        var mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+          ? "audio/webm;codecs=opus"
+          : "audio/webm";
+        var rec = new MediaRecorder(stream, { mimeType: mime, audioBitsPerSecond: 64000 });
+        liveRadio.rec = rec;
+        rec.ondataavailable = function (ev) {
+          if (ev.data && ev.data.size > 800) ingestLiveChunk(ev.data);
+        };
+        rec.start(7000);
+        ensureLiveRow();
+        var btn = $("btnRecLive");
+        if (btn) btn.classList.add("btn-live-on");
+        listen.on = true;
+        updateListenButtons();
+        setStatus("LIVE radio: line-in / micro (tắt echo). Đoạn ~7s, overlap 1.5s trên máy.", "live");
+      })
+      .catch(function (err) {
+        setStatus((err && err.message) || "Không mở được micro / line-in.", "warn");
+      });
+  }
+
   function stopRecListen(quiet) {
     var speech = speechApi();
     if (speech && speech.listening) {
       speech.stop({ keepTape: true });
     }
+    if (liveRadio.on) stopLiveRadio(true);
     listen.on = false;
     updateListenButtons();
     if ($("recInterim")) $("recInterim").textContent = "";
@@ -1306,6 +1526,7 @@
     var btn = $("btnRecImport");
     var list = $("recList");
     var listenBtn = $("btnRecListen");
+    var liveBtn = $("btnRecLive");
     var listenStop = $("btnRecListenStop");
     var copyEn = $("copyRecEn");
     var copyMin = $("copyRecMinutes");
@@ -1464,9 +1685,49 @@
     if (listenBtn) {
       listenBtn.addEventListener("click", startRecListen);
     }
+    if (liveBtn) {
+      liveBtn.addEventListener("click", startLiveRadio);
+    }
     if (listenStop) {
       listenStop.addEventListener("click", function () {
         stopRecListen();
+      });
+    }
+    if ($("recSearch")) {
+      $("recSearch").addEventListener("input", function () {
+        searchQuery = String(this.value || "").trim();
+        var id = player.id || playableRowId();
+        var row = id ? findRow(id) : rows[0];
+        renderTurns(row);
+        if (searchQuery.length >= 2) {
+          fetch("/api/reda/search?q=" + encodeURIComponent(searchQuery), { cache: "no-store" })
+            .then(function (res) {
+              return res.json();
+            })
+            .then(function (payload) {
+              if (!payload || !payload.hits) return;
+              var n = payload.hits.length;
+              if (n) setStatus("Kho phiên: " + n + " lượt khớp “" + searchQuery + "”.", "");
+            })
+            .catch(function () {});
+        }
+      });
+    }
+    if ($("recAircraft")) {
+      $("recAircraft").addEventListener("click", function (e) {
+        var item = e.target.closest("[data-cs]");
+        if (!item) return;
+        searchQuery = item.getAttribute("data-cs") || "";
+        if ($("recSearch")) $("recSearch").value = searchQuery;
+        var id = player.id || playableRowId();
+        renderTurns(id ? findRow(id) : rows[0]);
+      });
+    }
+    if ($("recClearances")) {
+      $("recClearances").addEventListener("click", function (e) {
+        var item = e.target.closest("[data-t]");
+        if (!item) return;
+        seekTo(Number(item.getAttribute("data-t") || 0));
       });
     }
     if (copyEn) {

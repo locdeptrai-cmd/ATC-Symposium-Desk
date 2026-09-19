@@ -11,17 +11,25 @@ Một codebase cho **máy tính (PWA)** và **điện thoại (Capacitor — iOS
 
 Không gọi Google Translate API, không gọi Whisper đám mây.
 
+## Ba file chạy
+
+| File | Máy | Việc |
+| --- | --- | --- |
+| **`CHAY.cmd`** | Máy có bộ mã nguồn | Gọi tool + model Whisper ATC + DB thư viện, ghi hội thoại English (REDA) |
+| **`phat-hanh/ATC-Desk.exe`** | Máy Windows mới | Cùng chức năng và cùng model/DB/ffmpeg, không cần Python |
+| **`phat-hanh/ATC-Desk-Mobile.apk`** | Android (iOS: PWA cùng web) | Cùng giao diện; ghi lời English cùng chất lượng khi điện thoại cùng Wi-Fi với máy đang chạy `CHAY.cmd` / EXE |
+
 ## Cài đặt trên máy tính (Windows) — 1 file
 
-Copy **`phat-hanh/ATC-Desk.exe`** sang máy mới (USB, mạng nội bộ…). Double-click. Không cần Python, không cần bộ mã nguồn.
+Copy **`phat-hanh/ATC-Desk.exe`** sang máy mới (USB, mạng nội bộ…). Double-click. Không cần Python, không cần bộ mã nguồn. EXE kèm giao diện, DB thư viện, model Whisper ATC và ffmpeg.
 
 1. Lần đầu, EXE ghi giao diện + DB thư viện vào `%LOCALAPPDATA%\ATC-Symposium-Desk`.
 2. Trình duyệt tự mở `http://127.0.0.1:8765`.
 3. Giữ cửa sổ đen mở. Tắt: `Ctrl+C`.
 
-Cùng một bản này phục vụ điện thoại trên cùng Wi-Fi (PWA). Nếu `ATC-Desk.apk` nằm **cùng thư mục** với EXE, điện thoại tải native APK tại `http://<IPv4>:8765/ATC-Desk.apk` (trang Cài máy). iOS native **không** đóng gói được trên Windows — cần Mac + Xcode; không có Mac thì ghim PWA HTTPS.
+Cùng một bản này phục vụ điện thoại trên cùng Wi-Fi (PWA — iOS và Android, cùng API ghi lời). Nếu `ATC-Desk-Mobile.apk` nằm **cùng thư mục** với EXE, điện thoại tải native APK tại `http://<IPv4>:8765/ATC-Desk-Mobile.apk` (trang Cài máy). iOS native **không** đóng gói được trên Windows — cần Mac + Xcode; không có Mac thì ghim PWA HTTPS.
 
-Máy đang có bộ mã nguồn: double-click **`CAI_DAT_VA_CHAY.cmd`** (hoặc `MO_APP.cmd`) — tự cài Python nếu thiếu rồi chạy. Đóng gói lại (EXE kèm DB + APK Android) vào `phat-hanh\`:
+Máy đang có bộ mã nguồn: double-click **`CHAY.cmd`**. Đóng gói lại (EXE kèm DB + model + APK) vào `phat-hanh\`:
 
 ```
 DONG_GOI.cmd
@@ -46,17 +54,17 @@ IPv4 LAN in ra trong cửa sổ khi app chạy. Máy tính và điện thoại p
 
 Dùng file APK đã đóng gói:
 
-`phat-hanh/ATC-Desk.apk`
+`phat-hanh/ATC-Desk-Mobile.apk`
 
 **Cách 1 — USB (tự cài khi bấm file chạy):**
 
 1. Cắm điện thoại, bật **Gỡ lỗi USB**.
-2. Double-click `CAI_DAT_VA_CHAY.cmd`.
+2. Double-click `CHAY.cmd`.
 3. App cài APK rồi mở trên điện thoại (đồng thời mở trên máy tính).
 
 **Cách 2 — copy file:**
 
-1. Copy `phat-hanh/ATC-Desk.apk` sang điện thoại.
+1. Copy `phat-hanh/ATC-Desk-Mobile.apk` sang điện thoại.
 2. Mở file → Cài (cho phép nguồn không rõ nếu máy hỏi).
 3. Mở **ATC Desk**.
 
@@ -66,7 +74,7 @@ Lần đầu còn Wi-Fi: trong app bấm **Tải gói dịch EN+VI** (~60 MB). H
 
 Safari/Chrome chỉ lưu PWA khi trang là **HTTPS**. Không có dịch cả câu — cần APK/IPA ở trên.
 
-1. Máy tính đang chạy `ATC-Desk.exe` hoặc `CAI_DAT_VA_CHAY.cmd`.
+1. Máy tính đang chạy `ATC-Desk.exe` hoặc `CHAY.cmd`.
 2. Điện thoại cùng Wi-Fi, mở `http://<IPv4-máy-tính>:8765/cai-dat.html`.
 3. Tải **ATC-Desk-CA.cer** và tin cậy chứng chỉ  
    (iOS: Cài đặt → Cài đặt chung → Giới thiệu → Cài đặt tin cậy chứng chỉ).
@@ -103,7 +111,7 @@ Trong PowerShell, từ thư mục dự án:
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\dong-goi-apk.ps1
 ```
 
-File ra: `phat-hanh/ATC-Desk.apk` (và bản debug `android/app/build/outputs/apk/debug/app-debug.apk`).
+File ra: `phat-hanh/ATC-Desk-Mobile.apk` (và bản debug `android/app/build/outputs/apk/debug/app-debug.apk`).
 
 Hoặc từng bước (nhớ đặt `JAVA_HOME` trước):
 
@@ -125,6 +133,17 @@ Trong Android Studio: Run lên máy USB, hoặc Build → Build APK.
 | Phiên dịch | Bám thuật ngữ, không thêm lập trường |
 
 Mỗi lần phân tích có 4 lớp: bản dịch chuyên ngành → câu đầy đủ → 60–90 giây → talking points + glossary.
+
+## REDA (ghi lời ATC)
+
+Tab REDA là công cụ hỗ trợ huấn luyện / bình giảng, **không** thay hearback của ATCO.
+
+- **FILE:** Whisper ATC (turbo) + cắt PTT + phân vai ATCO/PILOT + mốc giờ file.
+- **LIVE radio:** line-in / micro (tắt echo cancel) gửi từng đoạn ~7 giây cùng pipeline.
+- Lớp ngữ nghĩa: callsign (HVN372, `?` nếu chỉ nghe số), FL / heading / SSR / QNH / RWY, clearance `MATCHED / MISMATCH / PARTIAL / MISSING / UNCERTAIN`.
+- Giữ độc lập lời ASR thô và bản chuẩn hóa. Sửa ô kịch bản rồi Phân tích lại = hiệu đính người (HUMAN).
+- Tìm trên phiên hiện tại và kho `data/reda-sessions.sqlite` (callsign, FL, MISMATCH…).
+- Bấm dòng thoại / huấn lệnh để tua waveform.
 
 ## Offline sau khi đã cài app native
 
@@ -156,11 +175,10 @@ python tools/build_library.py
 
 ```
 ATC-Symposium-Desk/
-  CAI_DAT_VA_CHAY.cmd      ← máy có bộ mã: cài (nếu thiếu) rồi chạy
-  MO_APP.cmd               ← cùng việc
-  DONG_GOI.cmd             ← đóng gói EXE (kem DB) + APK vào phat-hanh\
-  phat-hanh/ATC-Desk.exe   ← 1 file cho máy Windows mới (kèm DB)
-  phat-hanh/ATC-Desk.apk   ← Android native; EXE đang chạy cũng phục vụ /ATC-Desk.apk
+  CHAY.cmd                 ← máy có bộ mã: tool + model + DB, rồi chạy
+  DONG_GOI.cmd             ← đóng gói EXE (kem DB + Whisper ATC) + APK vào phat-hanh\
+  phat-hanh/ATC-Desk.exe   ← 1 file cho máy Windows mới (kèm DB + model STT)
+  phat-hanh/ATC-Desk-Mobile.apk  ← Android; iOS dùng PWA cùng web từ EXE/CHAY
   ATC-Desk.spec            ← PyInstaller one-file
   package.json             ← Capacitor
   capacitor.config.json

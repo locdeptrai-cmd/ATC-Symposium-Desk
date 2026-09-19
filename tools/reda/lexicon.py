@@ -92,6 +92,22 @@ TEMPLATES = [
         param_map={"spd": "speed"},
         must_readback=True,
     ),
+    Template(
+        template_id="TPL_LINE_UP",
+        intent="LINE_UP",
+        role="BOTH",
+        regex=r"line up(?: and wait)?(?: runway (?P<rwy>[0-9]{2}[lrc]?))?",
+        param_map={"rwy": "runway"},
+        must_readback=True,
+    ),
+    Template(
+        template_id="TPL_CLEARED_APP",
+        intent="CLEARED_APPROACH",
+        role="BOTH",
+        regex=r"cleared (?:the )?(?:ils |rnav |vor |visual )?approach(?: runway (?P<rwy>[0-9]{2}[lrc]?))?",
+        param_map={"rwy": "runway"},
+        must_readback=True,
+    ),
 ]
 
 RULES = [

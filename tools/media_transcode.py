@@ -65,29 +65,44 @@ class TranscodeResult:
     error: str = ""
 
 
+def _ffmpeg_ok(path: Path) -> bool:
+    try:
+        real = path.resolve() if path.exists() else path
+        return real.is_file() and real.stat().st_size > 1_000_000
+    except OSError:
+        return False
+
+
 def find_ffmpeg() -> str | None:
     global _FFMPEG
     if _FFMPEG is not False:
         return None if _FFMPEG is None else str(_FFMPEG)
     found = shutil.which("ffmpeg")
-    if not found:
-        local = os.environ.get("LOCALAPPDATA") or ""
-        candidates = [
-            Path(local) / "Microsoft" / "WinGet" / "Links" / "ffmpeg.exe",
-            Path("C:/ffmpeg/bin/ffmpeg.exe"),
-            Path("C:/Program Files/ffmpeg/bin/ffmpeg.exe"),
-        ]
-        for item in candidates:
-            if item.is_file() and item.name.lower().startswith("ffmpeg"):
-                found = str(item)
-                break
-        if not found:
-            packages = Path(local) / "Microsoft" / "WinGet" / "Packages"
-            if packages.is_dir():
-                matches = sorted(packages.glob("Gyan.FFmpeg*/ffmpeg*/bin/ffmpeg.exe"))
-                if matches:
-                    found = str(matches[-1])
-    _FFMPEG = found or None
+    try:
+        import app_paths
+
+        extra = app_paths.ffmpeg_candidates()
+    except Exception:
+        extra = []
+    candidates: list[Path] = []
+    if found:
+        candidates.append(Path(found))
+    candidates.extend(extra)
+    local = os.environ.get("LOCALAPPDATA") or ""
+    packages = Path(local) / "Microsoft" / "WinGet" / "Packages"
+    picked = ""
+    for item in candidates:
+        if _ffmpeg_ok(item):
+            try:
+                picked = str(item.resolve()) if item.is_symlink() else str(item)
+            except OSError:
+                picked = str(item)
+            break
+    if not picked and packages.is_dir():
+        matches = sorted(packages.glob("Gyan.FFmpeg*/ffmpeg*/bin/ffmpeg.exe"))
+        if matches:
+            picked = str(matches[-1])
+    _FFMPEG = picked or None
     return None if _FFMPEG is None else str(_FFMPEG)
 
 

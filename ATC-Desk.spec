@@ -12,6 +12,13 @@ ROOT = Path(SPECPATH).resolve()
 WEB = ROOT / "web"
 
 crypto_datas, crypto_binaries, crypto_hidden = collect_all("cryptography")
+fw_datas, fw_binaries, fw_hidden = collect_all("faster_whisper")
+ct_datas, ct_binaries, ct_hidden = collect_all("ctranslate2")
+np_datas, np_binaries, np_hidden = collect_all("numpy")
+try:
+    av_datas, av_binaries, av_hidden = collect_all("av")
+except Exception:
+    av_datas, av_binaries, av_hidden = [], [], []
 
 
 def web_datas() -> list[tuple[str, str]]:
@@ -34,24 +41,75 @@ def web_datas() -> list[tuple[str, str]]:
     return entries
 
 
-datas = crypto_datas + web_datas() + [
-    (str(ROOT / "VERSION"), "."),
-    (str(ROOT / "SIGNATURE.txt"), "."),
-]
-binaries = crypto_binaries
-hiddenimports = list(crypto_hidden) + [
-    "media_transcode",
-    "media_transcribe",
-    "reda",
-    "reda.engine",
-    "reda.compare",
-    "reda.concept",
-    "reda.lexicon",
-    "reda.normalize",
-    "reda.normalize_fn",
-    "reda.pairing",
-    "reda.parse",
-]
+def stt_datas() -> list[tuple[str, str]]:
+    entries: list[tuple[str, str]] = []
+    turbo = ROOT / "models" / "whisper" / "atc-turbo-ct2"
+    weights = turbo / "model.bin"
+    if not weights.is_file() or weights.stat().st_size < 400_000_000:
+        raise SystemExit("ATC-Desk.spec: thieu models/whisper/atc-turbo-ct2 (model.bin)")
+    for item in turbo.iterdir():
+        if item.is_file():
+            entries.append((str(item), "models/whisper/atc-turbo-ct2"))
+    spoken = ROOT / "data" / "vn-airline-spoken.tsv"
+    if spoken.is_file():
+        entries.append((str(spoken), "data"))
+    return entries
+
+
+def ffmpeg_binaries() -> list[tuple[str, str]]:
+    ff = ROOT / "tools" / "bin" / "ffmpeg.exe"
+    if not ff.is_file() or ff.stat().st_size < 1_000_000:
+        raise SystemExit("ATC-Desk.spec: thieu tools/bin/ffmpeg.exe — chay tools/dong-goi-windows.ps1")
+    return [(str(ff.resolve()), "bin")]
+
+
+datas = (
+    crypto_datas
+    + fw_datas
+    + ct_datas
+    + np_datas
+    + av_datas
+    + web_datas()
+    + stt_datas()
+    + [
+        (str(ROOT / "VERSION"), "."),
+        (str(ROOT / "SIGNATURE.txt"), "."),
+    ]
+)
+binaries = crypto_binaries + fw_binaries + ct_binaries + np_binaries + av_binaries + ffmpeg_binaries()
+hiddenimports = list(
+    dict.fromkeys(
+        list(crypto_hidden)
+        + list(fw_hidden)
+        + list(ct_hidden)
+        + list(np_hidden)
+        + list(av_hidden)
+        + [
+            "app_paths",
+            "media_transcode",
+            "media_transcribe",
+            "reda",
+            "reda.engine",
+            "reda.compare",
+            "reda.concept",
+            "reda.lexicon",
+            "reda.normalize",
+            "reda.normalize_fn",
+            "reda.pairing",
+            "reda.parse",
+            "reda.callsign",
+            "reda.store",
+            "asr_dataset",
+            "asr_dataset.entities",
+            "asr_dataset.metrics",
+            "asr_dataset.hotwords",
+            "asr_dataset.paths",
+            "asr_dataset.audio_io",
+            "asr_dataset.export_gold",
+            "asr_dataset.append_gold",
+        ]
+    )
+)
 ICON = ROOT / "build" / "app.ico"
 
 a = Analysis(
@@ -85,7 +143,6 @@ a = Analysis(
         "matplotlib",
         "PIL",
         "cv2",
-        "numpy.f2py",
         "notebook",
         "jupyter",
         "jupyter_client",

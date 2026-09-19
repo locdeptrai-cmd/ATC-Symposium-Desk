@@ -49,18 +49,20 @@ FILLERS = {
 }
 
 CALLSIGN_PREFIX = {
-    "vietnam": "VN",
-    "viet nam": "VN",
-    "viet-nam": "VN",
-    "hvn": "VN",
-    "vietnam airlines": "VN",
-    "bamboo": "QH",
-    "vietjet": "VJ",
-    "pacific airlines": "BL",
-    "speedbird": "BA",
-    "qantas": "QF",
-    "cathay": "CX",
-    "singapore": "SQ",
+    "vietnam": "HVN",
+    "viet nam": "HVN",
+    "viet-nam": "HVN",
+    "hvn": "HVN",
+    "vietnam airlines": "HVN",
+    "bamboo": "BAV",
+    "vietjet": "VJC",
+    "vietjetair": "VJC",
+    "pacific airlines": "PIC",
+    "vasco": "VFC",
+    "speedbird": "BAW",
+    "qantas": "QFA",
+    "cathay": "CPA",
+    "singapore": "SIA",
 }
 
 

@@ -31,9 +31,11 @@ from urllib.parse import parse_qs, unquote, urlparse
 _TOOLS_DIR = Path(__file__).resolve().parent
 if str(_TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(_TOOLS_DIR))
+import app_paths  # noqa: E402
 import media_transcode  # noqa: E402
 import media_transcribe  # noqa: E402
 from reda.engine import analyze as reda_analyze  # noqa: E402
+from reda import store as reda_store  # noqa: E402
 
 APP_FOLDER = "ATC-Symposium-Desk"
 HTTP_PORT = 8765
@@ -199,7 +201,10 @@ USER_LIBRARY_MAX = 2000
 
 
 def user_library_path() -> Path:
-    path = ROOT / "data" / "user-phraseology.json"
+    if frozen():
+        path = app_home() / "data" / "user-phraseology.json"
+    else:
+        path = bundle_root() / "data" / "user-phraseology.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -250,11 +255,15 @@ def resolve_apk(bundle: Path | None = None) -> Path | None:
     """APK next to the EXE, extracted bundle, AppData, or repo phat-hanh/."""
     root = bundle if bundle is not None else bundle_root()
     candidates: list[Path] = []
+    names = ("ATC-Desk-Mobile.apk", "ATC-Desk.apk")
     if frozen():
-        candidates.append(Path(sys.executable).resolve().parent / "ATC-Desk.apk")
-        candidates.append(Path(getattr(sys, "_MEIPASS")) / "ATC-Desk.apk")
-        candidates.append(app_home() / "ATC-Desk.apk")
-    candidates.append(root / "phat-hanh" / "ATC-Desk.apk")
+        parent = Path(sys.executable).resolve().parent
+        meipass = Path(getattr(sys, "_MEIPASS"))
+        home = app_home()
+        for name in names:
+            candidates.extend([parent / name, meipass / name, home / name])
+    for name in names:
+        candidates.append(root / "phat-hanh" / name)
     seen: set[str] = set()
     for path in candidates:
         key = str(path)
@@ -274,7 +283,7 @@ def app_info(version: str, apk: Path | None) -> dict:
         "name": "ATC Symposium Desk",
         "version": version,
         "apk": apk is not None,
-        "apkUrl": "/ATC-Desk.apk" if apk is not None else None,
+        "apkUrl": "/ATC-Desk-Mobile.apk" if apk is not None else None,
         "apkBytes": 0,
     }
     if apk is not None:
@@ -471,14 +480,14 @@ class DeskHandler(SimpleHTTPRequestHandler):
     def _send_apk(self) -> None:
         apk = APK_PATH
         if apk is None or not apk.is_file():
-            self.send_error(404, "ATC-Desk.apk khong kem theo ban nay")
+            self.send_error(404, "ATC-Desk-Mobile.apk khong kem theo ban nay")
             return
         try:
             size = apk.stat().st_size
             self.send_response(200)
             self.send_header("Content-Type", "application/vnd.android.package-archive")
             self.send_header("Content-Length", str(size))
-            self.send_header("Content-Disposition", 'attachment; filename="ATC-Desk.apk"')
+            self.send_header("Content-Disposition", 'attachment; filename="ATC-Desk-Mobile.apk"')
             self.end_headers()
             if self.command == "HEAD":
                 return
@@ -515,7 +524,15 @@ class DeskHandler(SimpleHTTPRequestHandler):
         if path == "/api/library/user":
             self._library_user_get()
             return
-        if path in ("/ATC-Desk.apk", "/downloads/ATC-Desk.apk"):
+        if path == "/api/reda/search":
+            self._reda_search()
+            return
+        if path in (
+            "/ATC-Desk.apk",
+            "/ATC-Desk-Mobile.apk",
+            "/downloads/ATC-Desk.apk",
+            "/downloads/ATC-Desk-Mobile.apk",
+        ):
             self._send_apk()
             return
         super().do_GET()
@@ -528,7 +545,12 @@ class DeskHandler(SimpleHTTPRequestHandler):
         if path == "/app-info.json":
             self._send_json(app_info(APP_VERSION, APK_PATH))
             return
-        if path in ("/ATC-Desk.apk", "/downloads/ATC-Desk.apk"):
+        if path in (
+            "/ATC-Desk.apk",
+            "/ATC-Desk-Mobile.apk",
+            "/downloads/ATC-Desk.apk",
+            "/downloads/ATC-Desk-Mobile.apk",
+        ):
             self._send_apk()
             return
         super().do_HEAD()
@@ -545,6 +567,9 @@ class DeskHandler(SimpleHTTPRequestHandler):
             return
         if self._route_path() == "/api/reda/analyze":
             self._reda_analyze()
+            return
+        if self._route_path() == "/api/reda/correction":
+            self._reda_correction()
             return
         if self._route_path() == "/api/library/user":
             self._library_user_save()
@@ -583,7 +608,50 @@ class DeskHandler(SimpleHTTPRequestHandler):
         except Exception as exc:
             self._send_json({"ok": False, "error": str(exc)}, 500)
             return
+        audio_path = str(body.get("audio_path") or "")
+        if audio_path:
+            result["audio_path"] = audio_path
+        try:
+            reda_store.save_analysis(result)
+        except Exception:
+            pass
         self._send_json(result)
+
+    def _reda_search(self) -> None:
+        qs = parse_qs(urlparse(self.path).query)
+        def one(key: str) -> str:
+            vals = qs.get(key) or []
+            return str(vals[0]) if vals else ""
+        try:
+            rows = reda_store.search(
+                query=one("q"),
+                callsign=one("callsign"),
+                status=one("status"),
+                speaker=one("speaker"),
+            )
+        except Exception as exc:
+            self._send_json({"ok": False, "error": str(exc)}, 500)
+            return
+        self._send_json({"ok": True, "hits": rows})
+
+    def _reda_correction(self) -> None:
+        try:
+            body = self._read_json_body()
+        except ValueError as exc:
+            self._send_json({"ok": False, "error": str(exc)}, 400)
+            return
+        try:
+            cid = reda_store.save_correction(
+                str(body.get("session_id") or ""),
+                str(body.get("utterance_id") or ""),
+                str(body.get("before") or ""),
+                str(body.get("after") or ""),
+                str(body.get("reason") or ""),
+            )
+        except Exception as exc:
+            self._send_json({"ok": False, "error": str(exc)}, 500)
+            return
+        self._send_json({"ok": True, "id": cid, "source": "HUMAN"})
 
     def _transcribe_status(self) -> None:
         media_transcribe.sweep_jobs()
@@ -792,11 +860,15 @@ def main(argv: list[str] | None = None) -> None:
     if not creator_signature_ok(ROOT):
         print("UNG DUNG DA KHOA: SIGNATURE.txt bi thieu hoac bi sua.", flush=True)
     print("  Thu muc app:      %s" % WEB, flush=True)
-    db = WEB / "data" / "library.sqlite"
+    db = app_paths.library_sqlite()
     if db.is_file():
         print("  DB thu vien:      %s" % db, flush=True)
     else:
         raise SystemExit("Thieu DB thu vien: %s" % db)
+    model = media_transcribe._resolve_model_id()
+    print("  Model STT ATC:    %s" % model, flush=True)
+    ffmpeg = media_transcode.find_ffmpeg()
+    print("  ffmpeg:           %s" % (ffmpeg or "KHONG THAY — khong ghi loi file duoc"), flush=True)
     if APK_PATH is not None:
         print("  APK Android:      %s" % APK_PATH, flush=True)
     threading.Thread(target=media_transcode.warm_encoder, daemon=True).start()
@@ -812,7 +884,7 @@ def main(argv: list[str] | None = None) -> None:
         httpsd = ThreadingHTTPServer(("0.0.0.0", https_port), DeskHandler)
     except OSError as exc:
         print(
-            "Khong mo duoc cong %s/%s (dang dung). Dong cua so MO_APP cu, hoac bam lai MO_APP.cmd.\n%s"
+            "Khong mo duoc cong %s/%s (dang dung). Dong cua so CHAY cu, hoac bam lai CHAY.cmd.\n%s"
             % (http_port, https_port, exc),
             flush=True,
         )
@@ -838,9 +910,9 @@ def main(argv: list[str] | None = None) -> None:
         print("    (khong thay IPv4 LAN — ket Wi-Fi/hotspot roi mo lai)", flush=True)
     print("  Chung chi CA:     %s" % ca_cer, flush=True)
     if APK_PATH is not None:
-        print("  Tai APK Android:  http://127.0.0.1:%s/ATC-Desk.apk" % http_port, flush=True)
+        print("  Tai APK Android:  http://127.0.0.1:%s/ATC-Desk-Mobile.apk" % http_port, flush=True)
         if ips:
-            print("                    http://%s:%s/ATC-Desk.apk" % (ips[0], http_port), flush=True)
+            print("                    http://%s:%s/ATC-Desk-Mobile.apk" % (ips[0], http_port), flush=True)
     print("  Dien thoai (cung Wi-Fi): mo /cai-dat.html roi ghim PWA (iOS/Android).", flush=True)
     print("  Giu cua so nay mo. Ctrl+C de dung.", flush=True)
     print("", flush=True)

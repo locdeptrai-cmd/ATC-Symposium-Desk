@@ -44,7 +44,11 @@ if (-not (Test-Path -LiteralPath $built)) {
 
 $outDir = Join-Path $Root "phat-hanh"
 New-Item -ItemType Directory -Force -Path $outDir | Out-Null
-$dest = Join-Path $outDir "ATC-Desk.apk"
+$dest = Join-Path $outDir "ATC-Desk-Mobile.apk"
 Copy-Item -LiteralPath $built -Destination $dest -Force
+$legacy = Join-Path $outDir "ATC-Desk.apk"
+if (Test-Path -LiteralPath $legacy) {
+    Remove-Item -LiteralPath $legacy -Force
+}
 $sizeMb = [math]::Round((Get-Item -LiteralPath $dest).Length / 1MB, 2)
 Write-Host "APK: $dest ($sizeMb MB)"

@@ -809,6 +809,49 @@ table.gloss td:last-child { color: var(--muted); }
 }
 #recConvertStage { margin: 8px 0 0; }
 
+.rec-search-field { margin: 10px 0 0; }
+.rec-search-field input { width: 100%; }
+.reda-board {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+@media (min-width: 900px) {
+  .reda-board { grid-template-columns: 0.7fr 1.3fr; }
+}
+.reda-aircraft, .reda-clearances {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  max-height: 180px;
+  overflow: auto;
+}
+.reda-aircraft li, .reda-clearances li {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #07141f;
+  cursor: pointer;
+  font-size: 0.84rem;
+}
+.reda-mark {
+  font-weight: 700;
+  font-family: var(--mono);
+  min-width: 1.1rem;
+}
+.reda-mark.is-matched { color: #7dce82; }
+.reda-mark.is-mismatch { color: var(--live); }
+.reda-mark.is-partial { color: var(--amber); }
+.reda-mark.is-missing, .reda-mark.is-uncertain { color: var(--muted); }
+.reda-norm { display: block; color: var(--muted); font-size: 0.75rem; font-family: var(--mono); margin-top: 2px; }
+.reda-turns li.is-hidden { display: none; }
+.btn-live-on { outline: 2px solid var(--live); }
 .reda-grid {
   display: grid;
   gap: 12px;
