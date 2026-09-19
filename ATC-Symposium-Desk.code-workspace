@@ -8,5 +8,10 @@
 
 		}
 	],
-	"settings": {}
+	"settings": {},
+	"extensions": {
+		"recommendations": [
+			"openai.chatgpt"
+		]
+	}
 }
