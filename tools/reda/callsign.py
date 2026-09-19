@@ -24,6 +24,16 @@ def _data_file(name: str) -> Path | None:
     return path if path.is_file() else None
 
 
+def _add_spoken(lex: dict[str, str], spoken: str, icao: str, overwrite: bool = True) -> None:
+    val = fold(spoken)
+    if not val:
+        return
+    if len(val) <= 2 and val not in {"vn", "vj"}:
+        return
+    if overwrite or val not in lex:
+        lex[val] = icao
+
+
 @lru_cache(maxsize=1)
 def telephony_lexicon() -> dict[str, str]:
     """spoken phrase (lower) → ICAO prefix (HVN, VJC, …)."""
@@ -32,34 +42,38 @@ def telephony_lexicon() -> dict[str, str]:
         "viet nam": "HVN",
         "vietnam airlines": "HVN",
         "viet nam airlines": "HVN",
-        "hvn": "HVN",
         "vietjet": "VJC",
         "viet jet": "VJC",
         "vietjetair": "VJC",
-        "vjc": "VJC",
-        "bamboo": "BAV",
-        "pacific": "PIC",
-        "pacific airlines": "PIC",
-        "vasco": "VFC",
-        "vasco air": "VFC",
+        "charlie jet": "VJC",
         "speedbird": "BAW",
         "qantas": "QFA",
-        "cathay": "CPA",
-        "singapore": "SIA",
-        "thai": "THA",
     }
     spoken = _data_file("vn-airline-spoken.tsv")
     if spoken:
         try:
             with spoken.open(encoding="utf-8", newline="") as fh:
                 for row in csv.DictReader(fh, delimiter="\t"):
-                    icao = (row.get("icao") or "").strip().upper()
-                    if not icao:
+                    if (row.get("kind") or "").strip() != "airline":
                         continue
-                    for key in ("spoken_en", "telephony"):
-                        val = fold(row.get(key) or "")
-                        if val:
-                            lex[val] = icao
+                    icao = (row.get("icao") or "").strip().upper()
+                    if not icao or len(icao) != 3:
+                        continue
+                    _add_spoken(lex, row.get("spoken_en") or "", icao)
+                    tel = row.get("telephony") or ""
+                    _add_spoken(lex, tel, icao)
+                    compact = fold(tel).replace(" ", "")
+                    if compact:
+                        _add_spoken(lex, compact, icao)
+                    _add_spoken(lex, icao, icao)
+                    for alias in (row.get("aliases") or "").replace(";", ",").split(","):
+                        folded = fold(alias)
+                        if not folded:
+                            continue
+                        last = folded.split()[-1]
+                        if last in DIGIT_WORDS or last.isdigit():
+                            continue
+                        _add_spoken(lex, alias, icao, overwrite=len(folded) >= 4)
         except OSError:
             pass
     calls = _data_file("vn-callsigns.tsv")
@@ -68,10 +82,10 @@ def telephony_lexicon() -> dict[str, str]:
             with calls.open(encoding="utf-8", newline="") as fh:
                 for row in csv.DictReader(fh, delimiter="\t"):
                     abbr = (row.get("abbr") or "").strip().upper()
-                    en = fold(row.get("en") or "")
-                    if abbr.isalpha() and 2 <= len(abbr) <= 3 and en:
-                        lex.setdefault(en.lower(), abbr)
-                        lex.setdefault(abbr.lower(), abbr)
+                    en = row.get("en") or ""
+                    if abbr.isalpha() and len(abbr) == 3:
+                        _add_spoken(lex, abbr, abbr, overwrite=False)
+                        _add_spoken(lex, en, abbr, overwrite=False)
         except OSError:
             pass
     return lex

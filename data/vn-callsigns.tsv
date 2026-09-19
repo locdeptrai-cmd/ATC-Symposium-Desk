@@ -1,135 +1,187 @@
 domain	abbr	en	vi	note	source
-callsign	HVN	VIET NAM AIRLINES	Vietnam Airlines	ICAO HVN. IATA VN. Telephony / callsign: VIET NAM AIRLINES. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hãng quốc gia. Đọc: Viet Nam Airlines + số hiệu. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	VN	Vietnam Airlines	Vietnam Airlines (hãng)	Tên hãng. Callsign vô tuyến: VIET NAM AIRLINES. ICAO HVN. IATA VN. Hãng quốc gia. Đọc: Viet Nam Airlines + số hiệu.	icao8585
-callsign	VJC	VIETJETAIR	Vietjet Air	ICAO VJC. IATA VJ. Telephony / callsign: VIETJETAIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Một số tài liệu ghi VIETJET. Đọc: Vietjet Air + số hiệu. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	VJ	Vietjet Air	Vietjet Air (hãng)	Tên hãng. Callsign vô tuyến: VIETJETAIR. ICAO VJC. IATA VJ. Một số tài liệu ghi VIETJET. Đọc: Vietjet Air + số hiệu.	icao8585
-callsign	BAV	BAMBOO	Bamboo Airways	ICAO BAV. IATA QH. Telephony / callsign: BAMBOO. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Đọc: Bamboo + số hiệu. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	QH	Bamboo Airways	Bamboo Airways (hãng)	Tên hãng. Callsign vô tuyến: BAMBOO. ICAO BAV. IATA QH. Đọc: Bamboo + số hiệu.	icao8585
-callsign	PIC	PACIFIC AIRLINES	Pacific Airlines	ICAO PIC. IATA BL. Telephony / callsign: PACIFIC AIRLINES. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Trước đây Jetstar Pacific. Số hiệu hay codeshare VN6xxx. Đọc: Pacific Airlines. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	BL	Pacific Airlines	Pacific Airlines (hãng)	Tên hãng. Callsign vô tuyến: PACIFIC AIRLINES. ICAO PIC. IATA BL. Trước đây Jetstar Pacific. Số hiệu hay codeshare VN6xxx. Đọc: Pacific Airlines.	icao8585
-callsign	VAG	VIETRAVEL AIR	Vietravel Airlines	ICAO VAG. IATA VU. Telephony / callsign: VIETRAVEL AIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Đọc: Vietravel Air + số hiệu. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	VU	Vietravel Airlines	Vietravel Airlines (hãng)	Tên hãng. Callsign vô tuyến: VIETRAVEL AIR. ICAO VAG. IATA VU. Đọc: Vietravel Air + số hiệu.	icao8585
-callsign	VFC	VASCO AIR	VASCO (Vietnam Air Services Company)	ICAO VFC. IATA 0V. Telephony / callsign: VASCO AIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hãng vùng, thuộc Vietnam Airlines. Đọc: Vasco Air. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	0V	VASCO	VASCO (Vietnam Air Services Company) (hãng)	Tên hãng. Callsign vô tuyến: VASCO AIR. ICAO VFC. IATA 0V. Hãng vùng, thuộc Vietnam Airlines. Đọc: Vasco Air.	icao8585
-callsign	SPQ	SUN LUX	Sun PhuQuoc Airways	ICAO SPQ. IATA 9G. Telephony / callsign: SUN LUX. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hãng giải trí/Phú Quốc. ICAO SPQ. Đọc: Sun Lux. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	9G	Sun PhuQuoc Airways	Sun PhuQuoc Airways (hãng)	Tên hãng. Callsign vô tuyến: SUN LUX. ICAO SPQ. IATA 9G. Hãng giải trí/Phú Quốc. ICAO SPQ. Đọc: Sun Lux.	icao8585
-callsign	VSM	VIETSTAR	Vietstar Airlines	ICAO VSM. Telephony / callsign: VIETSTAR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Charter / AOC. Đọc: Vietstar. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	VSM	Vietstar Airlines	Vietstar Airlines (hãng)	Tên hãng. Callsign vô tuyến: VIETSTAR. ICAO VSM. Charter / AOC. Đọc: Vietstar.	icao8585
-callsign	HAI	HAI AU	Hải Âu Aviation	ICAO HAI. IATA HA. Telephony / callsign: HAI AU. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Charter / thủy phi cơ (lịch sử). Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	HA	Hai Au Aviation	Hải Âu Aviation (hãng)	Tên hãng. Callsign vô tuyến: HAI AU. ICAO HAI. IATA HA. Charter / thủy phi cơ (lịch sử).	icao8585
-callsign	SAV	SUN AIR	Sun Air	ICAO SAV. Telephony / callsign: SUN AIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Thuộc Sun Group. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	SAV	Sun Air	Sun Air (hãng)	Tên hãng. Callsign vô tuyến: SUN AIR. ICAO SAV. Thuộc Sun Group.	icao8585
-callsign	BSF	BLUE LIGHT	Blue Sky Airways	ICAO BSF. Telephony / callsign: BLUE LIGHT. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Charter. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	BSF	Blue Sky Airways	Blue Sky Airways (hãng)	Tên hãng. Callsign vô tuyến: BLUE LIGHT. ICAO BSF. Charter.	icao8585
-callsign	TTG	VIETNAM CARGO	Trải Thiên Air Cargo	ICAO TTG. Telephony / callsign: VIETNAM CARGO. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàng hóa. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	TTG	Trai Thien Air Cargo	Trải Thiên Air Cargo (hãng)	Tên hãng. Callsign vô tuyến: VIETNAM CARGO. ICAO TTG. Hàng hóa.	icao8585
-callsign	KAL	KOREAN AIR	Korean Air	ICAO KAL. IATA KE. Telephony / callsign: KOREAN AIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Thường xuyên HAN/SGN. Cargo + pax. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	KE	Korean Air	Korean Air (hãng)	Tên hãng. Callsign vô tuyến: KOREAN AIR. ICAO KAL. IATA KE. Thường xuyên HAN/SGN. Cargo + pax.	icao8585
-callsign	AAR	ASIANA	Asiana Airlines	ICAO AAR. IATA OZ. Telephony / callsign: ASIANA. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàn Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	OZ	Asiana Airlines	Asiana Airlines (hãng)	Tên hãng. Callsign vô tuyến: ASIANA. ICAO AAR. IATA OZ. Hàn Quốc.	icao8585
-callsign	JJA	JEJU AIR	Jeju Air	ICAO JJA. IATA 7C. Telephony / callsign: JEJU AIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàn Quốc LCC. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	7C	Jeju Air	Jeju Air (hãng)	Tên hãng. Callsign vô tuyến: JEJU AIR. ICAO JJA. IATA 7C. Hàn Quốc LCC.	icao8585
-callsign	JNA	JIN AIR	Jin Air	ICAO JNA. IATA LJ. Telephony / callsign: JIN AIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàn Quốc LCC. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	LJ	Jin Air	Jin Air (hãng)	Tên hãng. Callsign vô tuyến: JIN AIR. ICAO JNA. IATA LJ. Hàn Quốc LCC.	icao8585
-callsign	TWB	TEEWAY	T'way Air	ICAO TWB. IATA TW. Telephony / callsign: TEEWAY. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàn Quốc. Telephony TEEWAY. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	TW	T'way Air	T'way Air (hãng)	Tên hãng. Callsign vô tuyến: TEEWAY. ICAO TWB. IATA TW. Hàn Quốc. Telephony TEEWAY.	icao8585
-callsign	ABL	AIR BUSAN	Air Busan	ICAO ABL. IATA BX. Telephony / callsign: AIR BUSAN. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàn Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	BX	Air Busan	Air Busan (hãng)	Tên hãng. Callsign vô tuyến: AIR BUSAN. ICAO ABL. IATA BX. Hàn Quốc.	icao8585
-callsign	ESR	EASTARJET	Eastar Jet	ICAO ESR. IATA ZE. Telephony / callsign: EASTARJET. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàn Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	ZE	Eastar Jet	Eastar Jet (hãng)	Tên hãng. Callsign vô tuyến: EASTARJET. ICAO ESR. IATA ZE. Hàn Quốc.	icao8585
-callsign	CSN	CHINA SOUTHERN	China Southern Airlines	ICAO CSN. IATA CZ. Telephony / callsign: CHINA SOUTHERN. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Trung Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	CZ	China Southern	China Southern Airlines (hãng)	Tên hãng. Callsign vô tuyến: CHINA SOUTHERN. ICAO CSN. IATA CZ. Trung Quốc.	icao8585
-callsign	CES	CHINA EASTERN	China Eastern Airlines	ICAO CES. IATA MU. Telephony / callsign: CHINA EASTERN. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Trung Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	MU	China Eastern	China Eastern Airlines (hãng)	Tên hãng. Callsign vô tuyến: CHINA EASTERN. ICAO CES. IATA MU. Trung Quốc.	icao8585
-callsign	CCA	AIR CHINA	Air China	ICAO CCA. IATA CA. Telephony / callsign: AIR CHINA. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Trung Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	CA	Air China	Air China (hãng)	Tên hãng. Callsign vô tuyến: AIR CHINA. ICAO CCA. IATA CA. Trung Quốc.	icao8585
-callsign	CXA	XIAMEN AIR	Xiamen Airlines	ICAO CXA. IATA MF. Telephony / callsign: XIAMEN AIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Trung Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	MF	Xiamen Airlines	Xiamen Airlines (hãng)	Tên hãng. Callsign vô tuyến: XIAMEN AIR. ICAO CXA. IATA MF. Trung Quốc.	icao8585
-callsign	CSZ	SHENZHEN AIR	Shenzhen Airlines	ICAO CSZ. IATA ZH. Telephony / callsign: SHENZHEN AIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Trung Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	ZH	Shenzhen Airlines	Shenzhen Airlines (hãng)	Tên hãng. Callsign vô tuyến: SHENZHEN AIR. ICAO CSZ. IATA ZH. Trung Quốc.	icao8585
-callsign	CSC	SICHUAN	Sichuan Airlines	ICAO CSC. IATA 3U. Telephony / callsign: SICHUAN. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Trung Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	3U	Sichuan Airlines	Sichuan Airlines (hãng)	Tên hãng. Callsign vô tuyến: SICHUAN. ICAO CSC. IATA 3U. Trung Quốc.	icao8585
-callsign	CQH	AIR SPRING	Spring Airlines	ICAO CQH. IATA 9C. Telephony / callsign: AIR SPRING. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Trung Quốc LCC. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	9C	Spring Airlines	Spring Airlines (hãng)	Tên hãng. Callsign vô tuyến: AIR SPRING. ICAO CQH. IATA 9C. Trung Quốc LCC.	icao8585
-callsign	DKH	AIR JUNEYAO	Juneyao Airlines	ICAO DKH. IATA HO. Telephony / callsign: AIR JUNEYAO. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Trung Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	HO	Juneyao Airlines	Juneyao Airlines (hãng)	Tên hãng. Callsign vô tuyến: AIR JUNEYAO. ICAO DKH. IATA HO. Trung Quốc.	icao8585
-callsign	CAL	DYNASTY	China Airlines (Đài Loan)	ICAO CAL. IATA CI. Telephony / callsign: DYNASTY. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Telephony DYNASTY. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	CI	China Airlines	China Airlines (Đài Loan) (hãng)	Tên hãng. Callsign vô tuyến: DYNASTY. ICAO CAL. IATA CI. Telephony DYNASTY.	icao8585
-callsign	EVA	EVA	EVA Air	ICAO EVA. IATA BR. Telephony / callsign: EVA. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Đài Loan. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	BR	EVA Air	EVA Air (hãng)	Tên hãng. Callsign vô tuyến: EVA. ICAO EVA. IATA BR. Đài Loan.	icao8585
-callsign	SJX	STARWALKER	STARLUX Airlines	ICAO SJX. IATA JX. Telephony / callsign: STARWALKER. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Đài Loan. Telephony STARWALKER. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	JX	STARLUX Airlines	STARLUX Airlines (hãng)	Tên hãng. Callsign vô tuyến: STARWALKER. ICAO SJX. IATA JX. Đài Loan. Telephony STARWALKER.	icao8585
-callsign	CPA	CATHAY	Cathay Pacific	ICAO CPA. IATA CX. Telephony / callsign: CATHAY. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hồng Kông. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	CX	Cathay Pacific	Cathay Pacific (hãng)	Tên hãng. Callsign vô tuyến: CATHAY. ICAO CPA. IATA CX. Hồng Kông.	icao8585
-callsign	CRK	BAUHINIA	Hong Kong Airlines	ICAO CRK. IATA HX. Telephony / callsign: BAUHINIA. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Telephony BAUHINIA. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	HX	Hong Kong Airlines	Hong Kong Airlines (hãng)	Tên hãng. Callsign vô tuyến: BAUHINIA. ICAO CRK. IATA HX. Telephony BAUHINIA.	icao8585
-callsign	HKE	HONGKONG SHUTTLE	HK Express	ICAO HKE. IATA UO. Telephony / callsign: HONGKONG SHUTTLE. Hãng thường xuyên hoặc theo mùa tại Việt Nam. LCC Hồng Kông. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	UO	HK Express	HK Express (hãng)	Tên hãng. Callsign vô tuyến: HONGKONG SHUTTLE. ICAO HKE. IATA UO. LCC Hồng Kông.	icao8585
-callsign	SIA	SINGAPORE	Singapore Airlines	ICAO SIA. IATA SQ. Telephony / callsign: SINGAPORE. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	SQ	Singapore Airlines	Singapore Airlines (hãng)	Tên hãng. Callsign vô tuyến: SINGAPORE. ICAO SIA. IATA SQ. 	icao8585
-callsign	TGW	SCOOTER	Scoot	ICAO TGW. IATA TR. Telephony / callsign: SCOOTER. Hãng thường xuyên hoặc theo mùa tại Việt Nam. LCC Singapore. Telephony SCOOTER. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	TR	Scoot	Scoot (hãng)	Tên hãng. Callsign vô tuyến: SCOOTER. ICAO TGW. IATA TR. LCC Singapore. Telephony SCOOTER.	icao8585
-callsign	THA	THAI	Thai Airways	ICAO THA. IATA TG. Telephony / callsign: THAI. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	TG	Thai Airways	Thai Airways (hãng)	Tên hãng. Callsign vô tuyến: THAI. ICAO THA. IATA TG. 	icao8585
-callsign	AIQ	THAI ASIA	Thai AirAsia	ICAO AIQ. IATA FD. Telephony / callsign: THAI ASIA. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	FD	Thai AirAsia	Thai AirAsia (hãng)	Tên hãng. Callsign vô tuyến: THAI ASIA. ICAO AIQ. IATA FD. 	icao8585
-callsign	TVJ	THAIVIET JET	Thai Vietjet Air	ICAO TVJ. IATA VZ. Telephony / callsign: THAIVIET JET. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Liên danh Vietjet. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	VZ	Thai Vietjet Air	Thai Vietjet Air (hãng)	Tên hãng. Callsign vô tuyến: THAIVIET JET. ICAO TVJ. IATA VZ. Liên danh Vietjet.	icao8585
-callsign	AXM	ASIAN EXPRESS	AirAsia (Malaysia)	ICAO AXM. IATA AK. Telephony / callsign: ASIAN EXPRESS. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Một số tài liệu ghi XANADU cho AirAsia X. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	AK	AirAsia	AirAsia (Malaysia) (hãng)	Tên hãng. Callsign vô tuyến: ASIAN EXPRESS. ICAO AXM. IATA AK. Một số tài liệu ghi XANADU cho AirAsia X.	icao8585
-callsign	MAS	MALAYSIAN	Malaysia Airlines	ICAO MAS. IATA MH. Telephony / callsign: MALAYSIAN. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	MH	Malaysia Airlines	Malaysia Airlines (hãng)	Tên hãng. Callsign vô tuyến: MALAYSIAN. ICAO MAS. IATA MH. 	icao8585
-callsign	BTK	BATIK	Batik Air	ICAO BTK. IATA ID. Telephony / callsign: BATIK. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Indonesia. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	ID	Batik Air	Batik Air (hãng)	Tên hãng. Callsign vô tuyến: BATIK. ICAO BTK. IATA ID. Indonesia.	icao8585
-callsign	GIA	INDONESIA	Garuda Indonesia	ICAO GIA. IATA GA. Telephony / callsign: INDONESIA. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	GA	Garuda Indonesia	Garuda Indonesia (hãng)	Tên hãng. Callsign vô tuyến: INDONESIA. ICAO GIA. IATA GA. 	icao8585
-callsign	PAL	PHILIPPINE	Philippine Airlines	ICAO PAL. IATA PR. Telephony / callsign: PHILIPPINE. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	PR	Philippine Airlines	Philippine Airlines (hãng)	Tên hãng. Callsign vô tuyến: PHILIPPINE. ICAO PAL. IATA PR. 	icao8585
-callsign	CEB	CEBU	Cebu Pacific	ICAO CEB. IATA 5J. Telephony / callsign: CEBU. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Cũng nghe BLUE JAY. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	5J	Cebu Pacific	Cebu Pacific (hãng)	Tên hãng. Callsign vô tuyến: CEBU. ICAO CEB. IATA 5J. Cũng nghe BLUE JAY.	icao8585
-callsign	QTR	QATARI	Qatar Airways	ICAO QTR. IATA QR. Telephony / callsign: QATARI. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Pax + cargo. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	QR	Qatar Airways	Qatar Airways (hãng)	Tên hãng. Callsign vô tuyến: QATARI. ICAO QTR. IATA QR. Pax + cargo.	icao8585
-callsign	UAE	EMIRATES	Emirates	ICAO UAE. IATA EK. Telephony / callsign: EMIRATES. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	EK	Emirates	Emirates (hãng)	Tên hãng. Callsign vô tuyến: EMIRATES. ICAO UAE. IATA EK. 	icao8585
-callsign	ETD	ETIHAD	Etihad Airways	ICAO ETD. IATA EY. Telephony / callsign: ETIHAD. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	EY	Etihad Airways	Etihad Airways (hãng)	Tên hãng. Callsign vô tuyến: ETIHAD. ICAO ETD. IATA EY. 	icao8585
-callsign	THY	TURKISH	Turkish Airlines	ICAO THY. IATA TK. Telephony / callsign: TURKISH. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	TK	Turkish Airlines	Turkish Airlines (hãng)	Tên hãng. Callsign vô tuyến: TURKISH. ICAO THY. IATA TK. 	icao8585
-callsign	AFL	AEROFLOT	Aeroflot	ICAO AFL. IATA SU. Telephony / callsign: AEROFLOT. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Theo mùa / tình trạng khai thác. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	SU	Aeroflot	Aeroflot (hãng)	Tên hãng. Callsign vô tuyến: AEROFLOT. ICAO AFL. IATA SU. Theo mùa / tình trạng khai thác.	icao8585
-callsign	AFR	AIRFRANS	Air France	ICAO AFR. IATA AF. Telephony / callsign: AIRFRANS. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Telephony AIRFRANS. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	AF	Air France	Air France (hãng)	Tên hãng. Callsign vô tuyến: AIRFRANS. ICAO AFR. IATA AF. Telephony AIRFRANS.	icao8585
-callsign	ANA	ALL NIPPON	All Nippon Airways	ICAO ANA. IATA NH. Telephony / callsign: ALL NIPPON. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	NH	ANA	All Nippon Airways (hãng)	Tên hãng. Callsign vô tuyến: ALL NIPPON. ICAO ANA. IATA NH. 	icao8585
-callsign	JAL	JAPAN AIR	Japan Airlines	ICAO JAL. IATA JL. Telephony / callsign: JAPAN AIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	JL	Japan Airlines	Japan Airlines (hãng)	Tên hãng. Callsign vô tuyến: JAPAN AIR. ICAO JAL. IATA JL. 	icao8585
-callsign	AIC	AIRINDIA	Air India	ICAO AIC. IATA AI. Telephony / callsign: AIRINDIA. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	AI	Air India	Air India (hãng)	Tên hãng. Callsign vô tuyến: AIRINDIA. ICAO AIC. IATA AI. 	icao8585
-callsign	IGO	IFLY	IndiGo	ICAO IGO. IATA 6E. Telephony / callsign: IFLY. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Telephony IFLY. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	6E	IndiGo	IndiGo (hãng)	Tên hãng. Callsign vô tuyến: IFLY. ICAO IGO. IATA 6E. Telephony IFLY.	icao8585
-callsign	FIN	FINNAIR	Finnair	ICAO FIN. IATA AY. Telephony / callsign: FINNAIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Theo mùa. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	AY	Finnair	Finnair (hãng)	Tên hãng. Callsign vô tuyến: FINNAIR. ICAO FIN. IATA AY. Theo mùa.	icao8585
-callsign	BKP	BANGKOK AIR	Bangkok Airways	ICAO BKP. IATA PG. Telephony / callsign: BANGKOK AIR. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	PG	Bangkok Airways	Bangkok Airways (hãng)	Tên hãng. Callsign vô tuyến: BANGKOK AIR. ICAO BKP. IATA PG. 	icao8585
-callsign	LLA	LAO	Lao Airlines	ICAO LLA. IATA QV. Telephony / callsign: LAO. Hãng thường xuyên hoặc theo mùa tại Việt Nam.  Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	QV	Lao Airlines	Lao Airlines (hãng)	Tên hãng. Callsign vô tuyến: LAO. ICAO LLA. IATA QV. 	icao8585
-callsign	KHV	CAMBODIA	Air Cambodia	ICAO KHV. IATA K6. Telephony / callsign: CAMBODIA. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Tên/telephony có thể đổi theo AOC. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	K6	Air Cambodia	Air Cambodia (hãng)	Tên hãng. Callsign vô tuyến: CAMBODIA. ICAO KHV. IATA K6. Tên/telephony có thể đổi theo AOC.	icao8585
-callsign	FDX	FEDEX	FedEx	ICAO FDX. IATA FX. Telephony / callsign: FEDEX. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàng hóa. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	FX	FedEx	FedEx (hãng)	Tên hãng. Callsign vô tuyến: FEDEX. ICAO FDX. IATA FX. Hàng hóa.	icao8585
-callsign	UPS	UPS	UPS	ICAO UPS. IATA 5X. Telephony / callsign: UPS. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàng hóa. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	5X	UPS	UPS (hãng)	Tên hãng. Callsign vô tuyến: UPS. ICAO UPS. IATA 5X. Hàng hóa.	icao8585
-callsign	CLX	CARGOLUX	Cargolux	ICAO CLX. IATA CV. Telephony / callsign: CARGOLUX. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàng hóa. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	CV	Cargolux	Cargolux (hãng)	Tên hãng. Callsign vô tuyến: CARGOLUX. ICAO CLX. IATA CV. Hàng hóa.	icao8585
-callsign	CSS	SHUN FENG	SF Airlines	ICAO CSS. IATA O3. Telephony / callsign: SHUN FENG. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàng hóa Trung Quốc. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	O3	SF Airlines	SF Airlines (hãng)	Tên hãng. Callsign vô tuyến: SHUN FENG. ICAO CSS. IATA O3. Hàng hóa Trung Quốc.	icao8585
-callsign	CKK	CARGO KING	China Cargo Airlines	ICAO CKK. IATA CK. Telephony / callsign: CARGO KING. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàng hóa. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	CK	China Cargo Airlines	China Cargo Airlines (hãng)	Tên hãng. Callsign vô tuyến: CARGO KING. ICAO CKK. IATA CK. Hàng hóa.	icao8585
-callsign	CAO	AIRCHINA FREIGHT	Air China Cargo	ICAO CAO. IATA CA. Telephony / callsign: AIRCHINA FREIGHT. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàng hóa. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	CA	Air China Cargo	Air China Cargo (hãng)	Tên hãng. Callsign vô tuyến: AIRCHINA FREIGHT. ICAO CAO. IATA CA. Hàng hóa.	icao8585
-callsign	YZR	YANGTZE RIVER	Suparna Airlines	ICAO YZR. IATA Y8. Telephony / callsign: YANGTZE RIVER. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàng hóa / Yangtze River. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	Y8	Suparna Airlines	Suparna Airlines (hãng)	Tên hãng. Callsign vô tuyến: YANGTZE RIVER. ICAO YZR. IATA Y8. Hàng hóa / Yangtze River.	icao8585
-callsign	GTI	GIANT	Atlas Air	ICAO GTI. IATA 5Y. Telephony / callsign: GIANT. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàng hóa / ACMI. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	5Y	Atlas Air	Atlas Air (hãng)	Tên hãng. Callsign vô tuyến: GIANT. ICAO GTI. IATA 5Y. Hàng hóa / ACMI.	icao8585
-callsign	CKS	CONNIE	Kalitta Air	ICAO CKS. IATA K4. Telephony / callsign: CONNIE. Hãng thường xuyên hoặc theo mùa tại Việt Nam. Hàng hóa. Đối chiếu Doc 8585 / AIP GEN 2.4 khi có xung đột.	icao8585
-callsign	K4	Kalitta Air	Kalitta Air (hãng)	Tên hãng. Callsign vô tuyến: CONNIE. ICAO CKS. IATA K4. Hàng hóa.	icao8585
+callsign	HVN	VIET NAM	Vietnam Airlines	ICAO HVN. IATA VN. Telephony: VIET NAM. Việt Nam. Passenger. Active. Độ tin cậy High. Đọc: VIET NAM ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	VN	Vietnam Airlines	Vietnam Airlines (IATA VN)	IATA VN. Callsign vô tuyến: VIET NAM. ICAO HVN. Việt Nam.	airline2026
+callsign	VJC	VIETJET	VietJet Air	ICAO VJC. IATA VJ. Telephony: VIETJET. Việt Nam. Passenger. Active. Độ tin cậy High. Đọc: VIETJET ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	VJ	VietJet Air	VietJet Air (IATA VJ)	IATA VJ. Callsign vô tuyến: VIETJET. ICAO VJC. Việt Nam.	airline2026
+callsign	BAV	BAMBOO	Bamboo Airways	ICAO BAV. IATA QH. Telephony: BAMBOO. Việt Nam. Passenger. Active. Độ tin cậy High. Đọc: BAMBOO ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	QH	Bamboo Airways	Bamboo Airways (IATA QH)	IATA QH. Callsign vô tuyến: BAMBOO. ICAO BAV. Việt Nam.	airline2026
+callsign	VAG	VIETRAVEL	Vietravel Airlines	ICAO VAG. IATA VU. Telephony: VIETRAVEL. Việt Nam. Passenger. Active. Độ tin cậy High. Đọc: VIETRAVEL ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	VU	Vietravel Airlines	Vietravel Airlines (IATA VU)	IATA VU. Callsign vô tuyến: VIETRAVEL. ICAO VAG. Việt Nam.	airline2026
+callsign	PIC	PACIFIC	Pacific Airlines	ICAO PIC. IATA BL. Telephony: PACIFIC. Việt Nam. Passenger. Active. Độ tin cậy High. Đọc: PACIFIC ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	BL	Pacific Airlines	Pacific Airlines (IATA BL)	IATA BL. Callsign vô tuyến: PACIFIC. ICAO PIC. Việt Nam.	airline2026
+callsign	VFC	VASCO	VASCO	ICAO VFC. IATA 0V. Telephony: VASCO. Việt Nam. Passenger. Active. Độ tin cậy High. Đọc: VASCO ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	0V	VASCO	VASCO (IATA 0V)	IATA 0V. Callsign vô tuyến: VASCO. ICAO VFC. Việt Nam.	airline2026
+callsign	SPQ	SUN LUX	Sun PhuQuoc Airways	ICAO SPQ. IATA 9G. Telephony: SUN LUX. Việt Nam. Passenger. Active / verify telephony before operational use. Độ tin cậy Medium. Đọc: SUN LUX ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	9G	Sun PhuQuoc Airways	Sun PhuQuoc Airways (IATA 9G)	IATA 9G. Callsign vô tuyến: SUN LUX. ICAO SPQ. Việt Nam.	airline2026
+callsign	AXM	RED CAP	AirAsia	ICAO AXM. IATA AK. Telephony: RED CAP. Malaysia. Passenger. Active. Độ tin cậy High. Đọc: RED CAP ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	AK	AirAsia	AirAsia (IATA AK)	IATA AK. Callsign vô tuyến: RED CAP. ICAO AXM. Malaysia.	airline2026
+callsign	MXD	MALINDO	Batik Air Malaysia	ICAO MXD. IATA OD. Telephony: MALINDO. Malaysia. Passenger. Active. Độ tin cậy High. Đọc: MALINDO ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	OD	Batik Air Malaysia	Batik Air Malaysia (IATA OD)	IATA OD. Callsign vô tuyến: MALINDO. ICAO MXD. Malaysia.	airline2026
+callsign	MAS	MALAYSIAN	Malaysia Airlines	ICAO MAS. IATA MH. Telephony: MALAYSIAN. Malaysia. Passenger. Active. Độ tin cậy High. Đọc: MALAYSIAN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	MH	Malaysia Airlines	Malaysia Airlines (IATA MH)	IATA MH. Callsign vô tuyến: MALAYSIAN. ICAO MAS. Malaysia.	airline2026
+callsign	SIA	SINGAPORE	Singapore Airlines	ICAO SIA. IATA SQ. Telephony: SINGAPORE. Singapore. Passenger. Active. Độ tin cậy High. Đọc: SINGAPORE ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	SQ	Singapore Airlines	Singapore Airlines (IATA SQ)	IATA SQ. Callsign vô tuyến: SINGAPORE. ICAO SIA. Singapore.	airline2026
+callsign	TGW	SCOOTER	Scoot	ICAO TGW. IATA TR. Telephony: SCOOTER. Singapore. Passenger. Active. Độ tin cậy High. Đọc: SCOOTER ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	TR	Scoot	Scoot (IATA TR)	IATA TR. Callsign vô tuyến: SCOOTER. ICAO TGW. Singapore.	airline2026
+callsign	THA	THAI	Thai Airways	ICAO THA. IATA TG. Telephony: THAI. Thái Lan. Passenger. Active. Độ tin cậy High. Đọc: THAI ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	TG	Thai Airways	Thai Airways (IATA TG)	IATA TG. Callsign vô tuyến: THAI. ICAO THA. Thái Lan.	airline2026
+callsign	AIQ	THAI ASIA	Thai AirAsia	ICAO AIQ. IATA FD. Telephony: THAI ASIA. Thái Lan. Passenger. Active. Độ tin cậy High. Đọc: THAI ASIA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	FD	Thai AirAsia	Thai AirAsia (IATA FD)	IATA FD. Callsign vô tuyến: THAI ASIA. ICAO AIQ. Thái Lan.	airline2026
+callsign	TVJ	THAI VIETJET	Thai Vietjet Air	ICAO TVJ. IATA VZ. Telephony: THAI VIETJET. Thái Lan. Passenger. Active. Độ tin cậy High. Đọc: THAI VIETJET ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	VZ	Thai Vietjet Air	Thai Vietjet Air (IATA VZ)	IATA VZ. Callsign vô tuyến: THAI VIETJET. ICAO TVJ. Thái Lan.	airline2026
+callsign	PAL	PHILIPPINE	Philippine Airlines	ICAO PAL. IATA PR. Telephony: PHILIPPINE. Philippines. Passenger. Active. Độ tin cậy High. Đọc: PHILIPPINE ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	PR	Philippine Airlines	Philippine Airlines (IATA PR)	IATA PR. Callsign vô tuyến: PHILIPPINE. ICAO PAL. Philippines.	airline2026
+callsign	CEB	CEBU	Cebu Pacific	ICAO CEB. IATA 5J. Telephony: CEBU. Philippines. Passenger. Active. Độ tin cậy High. Đọc: CEBU ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	5J	Cebu Pacific	Cebu Pacific (IATA 5J)	IATA 5J. Callsign vô tuyến: CEBU. ICAO CEB. Philippines.	airline2026
+callsign	APG	COOL RED	Philippines AirAsia	ICAO APG. IATA Z2. Telephony: COOL RED. Philippines. Passenger. Active. Độ tin cậy High. Đọc: COOL RED ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	Z2	Philippines AirAsia	Philippines AirAsia (IATA Z2)	IATA Z2. Callsign vô tuyến: COOL RED. ICAO APG. Philippines.	airline2026
+callsign	LAO	LAO	Lao Airlines	ICAO LAO. IATA QV. Telephony: LAO. Lào. Passenger. Active. Độ tin cậy High. Đọc: LAO ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	QV	Lao Airlines	Lao Airlines (IATA QV)	IATA QV. Callsign vô tuyến: LAO. ICAO LAO. Lào.	airline2026
+callsign	KHV	CAMBODIA	Air Cambodia	ICAO KHV. IATA K6. Telephony: CAMBODIA. Campuchia. Passenger. Active. Độ tin cậy High. Đọc: CAMBODIA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	K6	Air Cambodia	Air Cambodia (IATA K6)	IATA K6. Callsign vô tuyến: CAMBODIA. ICAO KHV. Campuchia.	airline2026
+callsign	KME	GIANT	Cambodia Airways	ICAO KME. IATA KR. Telephony: GIANT. Campuchia. Passenger. Active. Độ tin cậy High. Đọc: GIANT ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	KR	Cambodia Airways	Cambodia Airways (IATA KR)	IATA KR. Callsign vô tuyến: GIANT. ICAO KME. Campuchia.	airline2026
+callsign	KTC	RED NAGA	AirAsia Cambodia	ICAO KTC. IATA KT. Telephony: RED NAGA. Campuchia. Passenger. Active. Độ tin cậy Medium. Đọc: RED NAGA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	KT	AirAsia Cambodia	AirAsia Cambodia (IATA KT)	IATA KT. Callsign vô tuyến: RED NAGA. ICAO KTC. Campuchia.	airline2026
+callsign	KAL	KOREANAIR	Korean Air	ICAO KAL. IATA KE. Telephony: KOREANAIR. Hàn Quốc. Passenger. Active. Độ tin cậy High. Đọc: KOREANAIR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	KE	Korean Air	Korean Air (IATA KE)	IATA KE. Callsign vô tuyến: KOREANAIR. ICAO KAL. Hàn Quốc.	airline2026
+callsign	AAR	ASIANA	Asiana Airlines	ICAO AAR. IATA OZ. Telephony: ASIANA. Hàn Quốc. Passenger. Active. Độ tin cậy High. Đọc: ASIANA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	OZ	Asiana Airlines	Asiana Airlines (IATA OZ)	IATA OZ. Callsign vô tuyến: ASIANA. ICAO AAR. Hàn Quốc.	airline2026
+callsign	JJA	JEJU	Jeju Air	ICAO JJA. IATA 7C. Telephony: JEJU. Hàn Quốc. Passenger. Active. Độ tin cậy High. Đọc: JEJU AIR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	7C	Jeju Air	Jeju Air (IATA 7C)	IATA 7C. Callsign vô tuyến: JEJU. ICAO JJA. Hàn Quốc.	airline2026
+callsign	JNA	JIN AIR	Jin Air	ICAO JNA. IATA LJ. Telephony: JIN AIR. Hàn Quốc. Passenger. Active. Độ tin cậy High. Đọc: JIN AIR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	LJ	Jin Air	Jin Air (IATA LJ)	IATA LJ. Callsign vô tuyến: JIN AIR. ICAO JNA. Hàn Quốc.	airline2026
+callsign	TWB	TEEWAY	T'way Air	ICAO TWB. IATA TW. Telephony: TEEWAY. Hàn Quốc. Passenger. Active. Độ tin cậy High. Đọc: TEEWAY ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	TW	T'way Air	T'way Air (IATA TW)	IATA TW. Callsign vô tuyến: TEEWAY. ICAO TWB. Hàn Quốc.	airline2026
+callsign	ABL	AIR BUSAN	Air Busan	ICAO ABL. IATA BX. Telephony: AIR BUSAN. Hàn Quốc. Passenger. Active. Độ tin cậy High. Đọc: AIR BUSAN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	BX	Air Busan	Air Busan (IATA BX)	IATA BX. Callsign vô tuyến: AIR BUSAN. ICAO ABL. Hàn Quốc.	airline2026
+callsign	ASV	AIR SEOUL	Air Seoul	ICAO ASV. IATA RS. Telephony: AIR SEOUL. Hàn Quốc. Passenger. Active. Độ tin cậy High. Đọc: AIR SEOUL ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	RS	Air Seoul	Air Seoul (IATA RS)	IATA RS. Callsign vô tuyến: AIR SEOUL. ICAO ASV. Hàn Quốc.	airline2026
+callsign	ESR	EASTAR	Eastar Jet	ICAO ESR. IATA ZE. Telephony: EASTAR. Hàn Quốc. Passenger. Active. Độ tin cậy High. Đọc: EASTAR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	ZE	Eastar Jet	Eastar Jet (IATA ZE)	IATA ZE. Callsign vô tuyến: EASTAR. ICAO ESR. Hàn Quốc.	airline2026
+callsign	EOK	AEROHANGUK	Aero K	ICAO EOK. IATA RF. Telephony: AEROHANGUK. Hàn Quốc. Passenger. Active. Độ tin cậy Medium. Đọc: AEROHANGUK ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	RF	Aero K	Aero K (IATA RF)	IATA RF. Callsign vô tuyến: AEROHANGUK. ICAO EOK. Hàn Quốc.	airline2026
+callsign	APZ	AIR PREMIA	Air Premia	ICAO APZ. IATA YP. Telephony: AIR PREMIA. Hàn Quốc. Passenger. Active. Độ tin cậy High. Đọc: AIR PREMIA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	YP	Air Premia	Air Premia (IATA YP)	IATA YP. Callsign vô tuyến: AIR PREMIA. ICAO APZ. Hàn Quốc.	airline2026
+callsign	JAL	JAPANAIR	Japan Airlines	ICAO JAL. IATA JL. Telephony: JAPANAIR. Nhật Bản. Passenger. Active. Độ tin cậy High. Đọc: JAPANAIR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	JL	Japan Airlines	Japan Airlines (IATA JL)	IATA JL. Callsign vô tuyến: JAPANAIR. ICAO JAL. Nhật Bản.	airline2026
+callsign	ANA	ALL NIPPON	ANA All Nippon Airways	ICAO ANA. IATA NH. Telephony: ALL NIPPON. Nhật Bản. Passenger. Active. Độ tin cậy High. Đọc: ALL NIPPON ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	NH	ANA All Nippon Airways	ANA All Nippon Airways (IATA NH)	IATA NH. Callsign vô tuyến: ALL NIPPON. ICAO ANA. Nhật Bản.	airline2026
+callsign	CSN	CHINA SOUTHERN	China Southern Airlines	ICAO CSN. IATA CZ. Telephony: CHINA SOUTHERN. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: CHINA SOUTHERN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	CZ	China Southern Airlines	China Southern Airlines (IATA CZ)	IATA CZ. Callsign vô tuyến: CHINA SOUTHERN. ICAO CSN. Trung Quốc.	airline2026
+callsign	CES	CHINA EASTERN	China Eastern Airlines	ICAO CES. IATA MU. Telephony: CHINA EASTERN. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: CHINA EASTERN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	MU	China Eastern Airlines	China Eastern Airlines (IATA MU)	IATA MU. Callsign vô tuyến: CHINA EASTERN. ICAO CES. Trung Quốc.	airline2026
+callsign	CCA	AIR CHINA	Air China	ICAO CCA. IATA CA. Telephony: AIR CHINA. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: AIR CHINA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	CA	Air China	Air China (IATA CA)	IATA CA. Callsign vô tuyến: AIR CHINA. ICAO CCA. Trung Quốc.	airline2026
+callsign	CSZ	SHENZHEN	Shenzhen Airlines	ICAO CSZ. IATA ZH. Telephony: SHENZHEN. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: SHENZHEN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	ZH	Shenzhen Airlines	Shenzhen Airlines (IATA ZH)	IATA ZH. Callsign vô tuyến: SHENZHEN. ICAO CSZ. Trung Quốc.	airline2026
+callsign	CXA	XIAMEN	Xiamen Airlines	ICAO CXA. IATA MF. Telephony: XIAMEN. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: XIAMEN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	MF	Xiamen Airlines	Xiamen Airlines (IATA MF)	IATA MF. Callsign vô tuyến: XIAMEN. ICAO CXA. Trung Quốc.	airline2026
+callsign	CSC	SICHUAN	Sichuan Airlines	ICAO CSC. IATA 3U. Telephony: SICHUAN. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: SICHUAN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	3U	Sichuan Airlines	Sichuan Airlines (IATA 3U)	IATA 3U. Callsign vô tuyến: SICHUAN. ICAO CSC. Trung Quốc.	airline2026
+callsign	DKH	AIR JUNEYAO	Juneyao Airlines	ICAO DKH. IATA HO. Telephony: AIR JUNEYAO. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: AIR JUNEYAO ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	HO	Juneyao Airlines	Juneyao Airlines (IATA HO)	IATA HO. Callsign vô tuyến: AIR JUNEYAO. ICAO DKH. Trung Quốc.	airline2026
+callsign	CDG	SHANDONG	Shandong Airlines	ICAO CDG. IATA SC. Telephony: SHANDONG. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: SHANDONG ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	SC	Shandong Airlines	Shandong Airlines (IATA SC)	IATA SC. Callsign vô tuyến: SHANDONG. ICAO CDG. Trung Quốc.	airline2026
+callsign	CHH	HAINAN	Hainan Airlines	ICAO CHH. IATA HU. Telephony: HAINAN. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: HAINAN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	HU	Hainan Airlines	Hainan Airlines (IATA HU)	IATA HU. Callsign vô tuyến: HAINAN. ICAO CHH. Trung Quốc.	airline2026
+callsign	CQH	AIR SPRING	Spring Airlines	ICAO CQH. IATA 9C. Telephony: AIR SPRING. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: AIR SPRING ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	9C	Spring Airlines	Spring Airlines (IATA 9C)	IATA 9C. Callsign vô tuyến: AIR SPRING. ICAO CQH. Trung Quốc.	airline2026
+callsign	RLH	SENDI	Ruili Airlines	ICAO RLH. IATA DR. Telephony: SENDI. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: SENDI ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	DR	Ruili Airlines	Ruili Airlines (IATA DR)	IATA DR. Callsign vô tuyến: SENDI. ICAO RLH. Trung Quốc.	airline2026
+callsign	CBG	GREEN CITY	GX Airlines	ICAO CBG. IATA GX. Telephony: GREEN CITY. Trung Quốc. Passenger. Active. Độ tin cậy Medium. Đọc: GREEN CITY ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	GX	GX Airlines	GX Airlines (IATA GX)	IATA GX. Callsign vô tuyến: GREEN CITY. ICAO CBG. Trung Quốc.	airline2026
+callsign	UEA	UNITED EAGLE	Chengdu Airlines	ICAO UEA. IATA EU. Telephony: UNITED EAGLE. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: UNITED EAGLE ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	EU	Chengdu Airlines	Chengdu Airlines (IATA EU)	IATA EU. Callsign vô tuyến: UNITED EAGLE. ICAO UEA. Trung Quốc.	airline2026
+callsign	QDA	SKY LEGEND	Qingdao Airlines	ICAO QDA. IATA QW. Telephony: SKY LEGEND. Trung Quốc. Passenger. Active. Độ tin cậy Medium. Đọc: SKY LEGEND ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	QW	Qingdao Airlines	Qingdao Airlines (IATA QW)	IATA QW. Callsign vô tuyến: SKY LEGEND. ICAO QDA. Trung Quốc.	airline2026
+callsign	LKE	LUCKY AIR	Lucky Air	ICAO LKE. IATA 8L. Telephony: LUCKY AIR. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: LUCKY AIR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	8L	Lucky Air	Lucky Air (IATA 8L)	IATA 8L. Callsign vô tuyến: LUCKY AIR. ICAO LKE. Trung Quốc.	airline2026
+callsign	CHB	WEST CHINA	West Air (China)	ICAO CHB. IATA PN. Telephony: WEST CHINA. Trung Quốc. Passenger. Active. Độ tin cậy High. Đọc: WEST CHINA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	PN	West Air (China)	West Air (China) (IATA PN)	IATA PN. Callsign vô tuyến: WEST CHINA. ICAO CHB. Trung Quốc.	airline2026
+callsign	CGZ	COLORFUL	Colorful Guizhou Airlines	ICAO CGZ. IATA GY. Telephony: COLORFUL. Trung Quốc. Passenger. Active. Độ tin cậy Medium. Đọc: COLORFUL ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	GY	Colorful Guizhou Airlines	Colorful Guizhou Airlines (IATA GY)	IATA GY. Callsign vô tuyến: COLORFUL. ICAO CGZ. Trung Quốc.	airline2026
+callsign	TBA	TIBET	Tibet Airlines	ICAO TBA. IATA TV. Telephony: TIBET. Trung Quốc. Passenger. Route/status at Vietnam to verify. Độ tin cậy Medium. Đọc: TIBET ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	TV	Tibet Airlines	Tibet Airlines (IATA TV)	IATA TV. Callsign vô tuyến: TIBET. ICAO TBA. Trung Quốc.	airline2026
+callsign	CPA	CATHAY	Cathay Pacific	ICAO CPA. IATA CX. Telephony: CATHAY. Hong Kong. Passenger. Active. Độ tin cậy High. Đọc: CATHAY ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	CX	Cathay Pacific	Cathay Pacific (IATA CX)	IATA CX. Callsign vô tuyến: CATHAY. ICAO CPA. Hong Kong.	airline2026
+callsign	CRK	BAUHINIA	Hong Kong Airlines	ICAO CRK. IATA HX. Telephony: BAUHINIA. Hong Kong. Passenger. Active. Độ tin cậy High. Đọc: BAUHINIA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	HX	Hong Kong Airlines	Hong Kong Airlines (IATA HX)	IATA HX. Callsign vô tuyến: BAUHINIA. ICAO CRK. Hong Kong.	airline2026
+callsign	HKE	HONGKONG SHUTTLE	HK Express	ICAO HKE. IATA UO. Telephony: HONGKONG SHUTTLE. Hong Kong. Passenger. Active. Độ tin cậy High. Đọc: HONGKONG SHUTTLE ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	UO	HK Express	HK Express (IATA UO)	IATA UO. Callsign vô tuyến: HONGKONG SHUTTLE. ICAO HKE. Hong Kong.	airline2026
+callsign	AMU	AIR MACAU	Air Macau	ICAO AMU. IATA NX. Telephony: AIR MACAU. Macao. Passenger. Active. Độ tin cậy High. Đọc: AIR MACAU ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	NX	Air Macau	Air Macau (IATA NX)	IATA NX. Callsign vô tuyến: AIR MACAU. ICAO AMU. Macao.	airline2026
+callsign	EVA	EVA	EVA Air	ICAO EVA. IATA BR. Telephony: EVA. Đài Loan. Passenger. Active. Độ tin cậy High. Đọc: EVA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	BR	EVA Air	EVA Air (IATA BR)	IATA BR. Callsign vô tuyến: EVA. ICAO EVA. Đài Loan.	airline2026
+callsign	CAL	DYNASTY	China Airlines	ICAO CAL. IATA CI. Telephony: DYNASTY. Đài Loan. Passenger. Active. Độ tin cậy High. Đọc: DYNASTY ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	CI	China Airlines	China Airlines (IATA CI)	IATA CI. Callsign vô tuyến: DYNASTY. ICAO CAL. Đài Loan.	airline2026
+callsign	SJX	STARWALKER	STARLUX Airlines	ICAO SJX. IATA JX. Telephony: STARWALKER. Đài Loan. Passenger. Active. Độ tin cậy High. Đọc: STARWALKER ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	JX	STARLUX Airlines	STARLUX Airlines (IATA JX)	IATA JX. Callsign vô tuyến: STARWALKER. ICAO SJX. Đài Loan.	airline2026
+callsign	TTW	SMART CAT	Tigerair Taiwan	ICAO TTW. IATA IT. Telephony: SMART CAT. Đài Loan. Passenger. Active. Độ tin cậy High. Đọc: SMART CAT ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	IT	Tigerair Taiwan	Tigerair Taiwan (IATA IT)	IATA IT. Callsign vô tuyến: SMART CAT. ICAO TTW. Đài Loan.	airline2026
+callsign	MDA	MANDARIN	Mandarin Airlines	ICAO MDA. IATA AE. Telephony: MANDARIN. Đài Loan. Passenger. Active. Độ tin cậy High. Đọc: MANDARIN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	AE	Mandarin Airlines	Mandarin Airlines (IATA AE)	IATA AE. Callsign vô tuyến: MANDARIN. ICAO MDA. Đài Loan.	airline2026
+callsign	AIC	AIR INDIA	Air India	ICAO AIC. IATA AI. Telephony: AIR INDIA. Ấn Độ. Passenger. Active. Độ tin cậy High. Đọc: AIR INDIA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	AI	Air India	Air India (IATA AI)	IATA AI. Callsign vô tuyến: AIR INDIA. ICAO AIC. Ấn Độ.	airline2026
+callsign	IGO	IFLY	IndiGo	ICAO IGO. IATA 6E. Telephony: IFLY. Ấn Độ. Passenger. Active. Độ tin cậy High. Đọc: IFLY ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	6E	IndiGo	IndiGo (IATA 6E)	IATA 6E. Callsign vô tuyến: IFLY. ICAO IGO. Ấn Độ.	airline2026
+callsign	AKJ	AKASA AIR	Akasa Air	ICAO AKJ. IATA QP. Telephony: AKASA AIR. Ấn Độ. Passenger. Active. Độ tin cậy Medium. Đọc: AKASA AIR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	QP	Akasa Air	Akasa Air (IATA QP)	IATA QP. Callsign vô tuyến: AKASA AIR. ICAO AKJ. Ấn Độ.	airline2026
+callsign	UAE	EMIRATES	Emirates	ICAO UAE. IATA EK. Telephony: EMIRATES. UAE. Passenger. Active. Độ tin cậy High. Đọc: EMIRATES ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	EK	Emirates	Emirates (IATA EK)	IATA EK. Callsign vô tuyến: EMIRATES. ICAO UAE. UAE.	airline2026
+callsign	ETD	ETIHAD	Etihad Airways	ICAO ETD. IATA EY. Telephony: ETIHAD. UAE. Passenger. Active. Độ tin cậy High. Đọc: ETIHAD ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	EY	Etihad Airways	Etihad Airways (IATA EY)	IATA EY. Callsign vô tuyến: ETIHAD. ICAO ETD. UAE.	airline2026
+callsign	QTR	QATARI	Qatar Airways	ICAO QTR. IATA QR. Telephony: QATARI. Qatar. Passenger. Active. Độ tin cậy High. Đọc: QATARI ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	QR	Qatar Airways	Qatar Airways (IATA QR)	IATA QR. Callsign vô tuyến: QATARI. ICAO QTR. Qatar.	airline2026
+callsign	THY	TURKISH	Turkish Airlines	ICAO THY. IATA TK. Telephony: TURKISH. Thổ Nhĩ Kỳ. Passenger. Active. Độ tin cậy High. Đọc: TURKISH ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	TK	Turkish Airlines	Turkish Airlines (IATA TK)	IATA TK. Callsign vô tuyến: TURKISH. ICAO THY. Thổ Nhĩ Kỳ.	airline2026
+callsign	AFR	AIRFRANS	Air France	ICAO AFR. IATA AF. Telephony: AIRFRANS. Pháp. Passenger. Active. Độ tin cậy High. Đọc: AIRFRANS ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	AF	Air France	Air France (IATA AF)	IATA AF. Callsign vô tuyến: AIRFRANS. ICAO AFR. Pháp.	airline2026
+callsign	LOT	LOT	LOT Polish Airlines	ICAO LOT. IATA LO. Telephony: LOT. Ba Lan. Passenger. Active / seasonal possible. Độ tin cậy High. Đọc: LOT ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	LO	LOT Polish Airlines	LOT Polish Airlines (IATA LO)	IATA LO. Callsign vô tuyến: LOT. ICAO LOT. Ba Lan.	airline2026
+callsign	AFL	AEROFLOT	Aeroflot	ICAO AFL. IATA SU. Telephony: AEROFLOT. Nga. Passenger. Active. Độ tin cậy High. Đọc: AEROFLOT ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	SU	Aeroflot	Aeroflot (IATA SU)	IATA SU. Callsign vô tuyến: AEROFLOT. ICAO AFL. Nga.	airline2026
+callsign	AZV	AZUR AIR	Azur Air	ICAO AZV. IATA ZF. Telephony: AZUR AIR. Nga. Passenger/Charter. Active / seasonal-charter possible. Độ tin cậy High. Đọc: AZUR AIR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	ZF	Azur Air	Azur Air (IATA ZF)	IATA ZF. Callsign vô tuyến: AZUR AIR. ICAO AZV. Nga.	airline2026
+callsign	IAE	IRAERO	IrAero	ICAO IAE. IATA IO. Telephony: IRAERO. Nga. Passenger. Active / seasonal possible. Độ tin cậy High. Đọc: IRAERO ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	IO	IrAero	IrAero (IATA IO)	IATA IO. Callsign vô tuyến: IRAERO. ICAO IAE. Nga.	airline2026
+callsign	BRU	BELARUS AVIA	Belavia	ICAO BRU. IATA B2. Telephony: BELARUS AVIA. Belarus. Passenger. Active / seasonal possible. Độ tin cậy High. Đọc: BELARUS AVIA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	B2	Belavia	Belavia (IATA B2)	IATA B2. Callsign vô tuyến: BELARUS AVIA. ICAO BRU. Belarus.	airline2026
+callsign	AIZ	ARKIA	Arkia	ICAO AIZ. IATA IZ. Telephony: ARKIA. Israel. Passenger. Active / seasonal possible. Độ tin cậy High. Đọc: ARKIA ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	IZ	Arkia	Arkia (IATA IZ)	IATA IZ. Callsign vô tuyến: ARKIA. ICAO AIZ. Israel.	airline2026
+callsign	KZR	ASTANALINE	Air Astana	ICAO KZR. IATA KC. Telephony: ASTANALINE. Kazakhstan. Passenger. Active / seasonal possible. Độ tin cậy High. Đọc: ASTANALINE ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	KC	Air Astana	Air Astana (IATA KC)	IATA KC. Callsign vô tuyến: ASTANALINE. ICAO KZR. Kazakhstan.	airline2026
+callsign	UZB	UZBEK	Uzbekistan Airways	ICAO UZB. IATA HY. Telephony: UZBEK. Uzbekistan. Passenger. Active. Độ tin cậy High. Đọc: UZBEK ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	HY	Uzbekistan Airways	Uzbekistan Airways (IATA HY)	IATA HY. Callsign vô tuyến: UZBEK. ICAO UZB. Uzbekistan.	airline2026
+callsign	QNT	SHARQ	Qanot Sharq	ICAO QNT. IATA HH. Telephony: SHARQ. Uzbekistan. Passenger. Active. Độ tin cậy Medium. Đọc: SHARQ ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	HH	Qanot Sharq	Qanot Sharq (IATA HH)	IATA HH. Callsign vô tuyến: SHARQ. ICAO QNT. Uzbekistan.	airline2026
+callsign	MFX	WHITEBIRD	Centrum Air	ICAO MFX. IATA C6. Telephony: WHITEBIRD. Uzbekistan. Passenger. Active. Độ tin cậy Medium. Đọc: WHITEBIRD ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	C6	Centrum Air	Centrum Air (IATA C6)	IATA C6. Callsign vô tuyến: WHITEBIRD. ICAO MFX. Uzbekistan.	airline2026
+callsign	TUA	TURKMENISTAN	Turkmenistan Airlines	ICAO TUA. IATA T5. Telephony: TURKMENISTAN. Turkmenistan. Passenger. Active / seasonal possible. Độ tin cậy High. Đọc: TURKMENISTAN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	T5	Turkmenistan Airlines	Turkmenistan Airlines (IATA T5)	IATA T5. Callsign vô tuyến: TURKMENISTAN. ICAO TUA. Turkmenistan.	airline2026
+callsign	MGL	MONGOL AIR	MIAT Mongolian Airlines	ICAO MGL. IATA OM. Telephony: MONGOL AIR. Mông Cổ. Passenger. Active / seasonal possible. Độ tin cậy High. Đọc: MONGOL AIR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	OM	MIAT Mongolian Airlines	MIAT Mongolian Airlines (IATA OM)	IATA OM. Callsign vô tuyến: MONGOL AIR. ICAO MGL. Mông Cổ.	airline2026
+callsign	UAL	UNITED	United Airlines	ICAO UAL. IATA UA. Telephony: UNITED. Hoa Kỳ. Passenger. Active. Độ tin cậy High. Đọc: UNITED ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	UA	United Airlines	United Airlines (IATA UA)	IATA UA. Callsign vô tuyến: UNITED. ICAO UAL. Hoa Kỳ.	airline2026
+callsign	JST	JETSTAR	Jetstar Airways	ICAO JST. IATA JQ. Telephony: JETSTAR. Úc. Passenger. Active. Độ tin cậy High. Đọc: JETSTAR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	JQ	Jetstar Airways	Jetstar Airways (IATA JQ)	IATA JQ. Callsign vô tuyến: JETSTAR. ICAO JST. Úc.	airline2026
+callsign	RBA	BRUNEI	Royal Brunei Airlines	ICAO RBA. IATA BI. Telephony: BRUNEI. Brunei. Passenger. Active. Độ tin cậy High. Đọc: BRUNEI ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	BI	Royal Brunei Airlines	Royal Brunei Airlines (IATA BI)	IATA BI. Callsign vô tuyến: BRUNEI. ICAO RBA. Brunei.	airline2026
+callsign	ETH	ETHIOPIAN	Ethiopian Airlines	ICAO ETH. IATA ET. Telephony: ETHIOPIAN. Ethiopia. Passenger. Active. Độ tin cậy High. Đọc: ETHIOPIAN ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	ET	Ethiopian Airlines	Ethiopian Airlines (IATA ET)	IATA ET. Callsign vô tuyến: ETHIOPIAN. ICAO ETH. Ethiopia.	airline2026
+callsign	TOM	TOMJET	TUI Airways	ICAO TOM. IATA BY. Telephony: TOMJET. Vương quốc Anh. Charter/Passenger. Seasonal / charter possible. Độ tin cậy High. Đọc: TOMJET ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	BY	TUI Airways	TUI Airways (IATA BY)	IATA BY. Callsign vô tuyến: TOMJET. ICAO TOM. Vương quốc Anh.	airline2026
+callsign	KMI	KAY-MILE AIR	K-Mile Air	ICAO KMI. IATA 8K. Telephony: KAY-MILE AIR. Thái Lan. Cargo. Regular cargo / verify current route. Độ tin cậy Medium. Đọc: KAY-MILE AIR ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	8K	K-Mile Air	K-Mile Air (IATA 8K)	IATA 8K. Callsign vô tuyến: KAY-MILE AIR. ICAO KMI. Thái Lan.	airline2026
+callsign	CSS	SHUN FENG	SF Airlines	ICAO CSS. IATA O3. Telephony: SHUN FENG. Trung Quốc. Cargo. Regular cargo / verify current route. Độ tin cậy High. Đọc: SHUN FENG ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	O3	SF Airlines	SF Airlines (IATA O3)	IATA O3. Callsign vô tuyến: SHUN FENG. ICAO CSS. Trung Quốc.	airline2026
+callsign	YZR	YANGTZE RIVER	Suparna Airlines	ICAO YZR. IATA Y8. Telephony: YANGTZE RIVER. Trung Quốc. Cargo/Passenger. Regular cargo / verify current route. Độ tin cậy High. Đọc: YANGTZE RIVER ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	Y8	Suparna Airlines	Suparna Airlines (IATA Y8)	IATA Y8. Callsign vô tuyến: YANGTZE RIVER. ICAO YZR. Trung Quốc.	airline2026
+callsign	CYZ	CHINA POST	China Postal Airlines	ICAO CYZ. IATA CF. Telephony: CHINA POST. Trung Quốc. Cargo. Regular cargo / verify current route. Độ tin cậy High. Đọc: CHINA POST ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	CF	China Postal Airlines	China Postal Airlines (IATA CF)	IATA CF. Callsign vô tuyến: CHINA POST. ICAO CYZ. Trung Quốc.	airline2026
+callsign	FDX	FEDEX	FedEx Express	ICAO FDX. IATA FX. Telephony: FEDEX. Hoa Kỳ. Cargo. Regular cargo / overflight/airport activity. Độ tin cậy High. Đọc: FEDEX ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	FX	FedEx Express	FedEx Express (IATA FX)	IATA FX. Callsign vô tuyến: FEDEX. ICAO FDX. Hoa Kỳ.	airline2026
+callsign	UPS	UPS	UPS Airlines	ICAO UPS. IATA 5X. Telephony: UPS. Hoa Kỳ. Cargo. Regular cargo / overflight/airport activity. Độ tin cậy High. Đọc: UPS ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	5X	UPS Airlines	UPS Airlines (IATA 5X)	IATA 5X. Callsign vô tuyến: UPS. ICAO UPS. Hoa Kỳ.	airline2026
+callsign	CLX	CARGOLUX	Cargolux	ICAO CLX. IATA CV. Telephony: CARGOLUX. Luxembourg. Cargo. Regular cargo / overflight possible. Độ tin cậy High. Đọc: CARGOLUX ONE TWO THREE. Đối chiếu Doc 8585 / FPL khi có xung đột.	airline2026
+callsign	CV	Cargolux	Cargolux (IATA CV)	IATA CV. Callsign vô tuyến: CARGOLUX. ICAO CLX. Luxembourg.	airline2026

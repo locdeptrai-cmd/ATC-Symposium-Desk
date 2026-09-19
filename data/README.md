@@ -1,6 +1,6 @@
 # Thư viện biên dịch hội nghị
 
-Nguồn chỉnh sửa: `conference-library.tsv`, `vatm-terminology.tsv`, `doc4444-phraseology.tsv`, `vn-taxiways.tsv`, `vn-callsigns.tsv` (UTF-8, tab-separated). Mỗi dòng gồm domain, abbr, en, vi, note, source. Không sửa trực tiếp file SQLite/JSON/JS sinh tự động. Chạy `python tools/build_library.py` từ thư mục gốc sau khi sửa TSV. `tools/extract_vn_ops.py` dựng lại taxiway/callsign từ cache AIP local.
+Nguồn chỉnh sửa: `conference-library.tsv`, `vatm-terminology.tsv`, `doc4444-phraseology.tsv`, `vn-taxiways.tsv`, `vn-callsigns.tsv` (UTF-8, tab-separated). Mỗi dòng gồm domain, abbr, en, vi, note, source. Không sửa trực tiếp file SQLite/JSON/JS sinh tự động. Chạy `python tools/build_library.py` từ thư mục gốc sau khi sửa TSV. `tools/extract_vn_ops.py` dựng lại taxiway từ cache AIP local. Callsign hãng: `python tools/import_airline_db.py` đọc `Database_hang_hang_khong_ATC_Vietnam_2026.xlsx` rồi ghi `vn-airline-spoken.tsv` + `vn-callsigns.tsv`.
 
 Domain: editor, phraseology, callsign, taxiway, navigation, atc, atm, conference, aviation_sentence. `legacy` và `general` được nhập từ dữ liệu có sẵn. Cùng từ có thể có nhiều nghĩa/ngữ cảnh; không xóa khác biệt nghĩa bằng cách gộp theo riêng từ tiếng Anh. ID được tạo ổn định từ cặp Anh–Việt và domain. Mẫu Editor lưu `data/user-phraseology.json` (máy này) và IndexedDB.
 

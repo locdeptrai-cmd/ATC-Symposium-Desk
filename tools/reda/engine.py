@@ -5,6 +5,7 @@ import uuid
 from typing import Any
 
 from .callsign import resolve_callsign, telephony_lexicon
+from .script_polish import polish_script_en
 from .compare import compare
 from .concept import AtcConcept, IssueType, SpeakerRole
 from .lexicon import RULES, TEACHING, TEMPLATES
@@ -369,7 +370,7 @@ def analyze(turns: list[dict] | None = None, filename: str = "", text: str = "")
     lex = telephony_lexicon()
     for item in raw:
         uid = str(uuid.uuid4())
-        raw_text = item["text"]
+        raw_text = polish_script_en(item["text"])
         norm = normalize_text(raw_text)
         role = infer_role(norm, item.get("speaker_role"))
         cs = resolve_callsign(raw_text)

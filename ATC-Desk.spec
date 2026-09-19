@@ -50,9 +50,10 @@ def stt_datas() -> list[tuple[str, str]]:
     for item in turbo.iterdir():
         if item.is_file():
             entries.append((str(item), "models/whisper/atc-turbo-ct2"))
-    spoken = ROOT / "data" / "vn-airline-spoken.tsv"
-    if spoken.is_file():
-        entries.append((str(spoken), "data"))
+    for name in ("vn-airline-spoken.tsv", "vn-callsigns.tsv"):
+        path = ROOT / "data" / name
+        if path.is_file():
+            entries.append((str(path), "data"))
     return entries
 
 
@@ -99,6 +100,7 @@ hiddenimports = list(
             "reda.parse",
             "reda.callsign",
             "reda.store",
+            "reda.script_polish",
             "asr_dataset",
             "asr_dataset.entities",
             "asr_dataset.metrics",

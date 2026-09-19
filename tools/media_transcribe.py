@@ -328,12 +328,18 @@ _RADIO_FIXES = (
     (r"\bviet\s*jet(?:air)?\b", "Vietjet"),
     (r"\bvietnam(?:\s+airlines?)?\b", "Viet Nam"),
     (r"\bviet\s*nam(?:\s+airlines?)?\b", "Viet Nam"),
-    (r"\b(?:qi|qq)\s+nine(?:\s+zero)?\s+nine\b", "Viet Nam nine zero nine"),
+    (r"\bair\s*france\b", "AirFrans"),
+    (r"\bkorean\s*air\b", "Korean Air"),
+    (r"\bcathay(?:\s+pacific)?\b", "Cathay"),
+    (r"\bchina\s+south(?:ern)?\b", "China Southern"),
+    (r"\brejet\b", "Vietjet"),
+    (r"\b(?:qi|qq|qqe)\s+nine(?:\s+zero){0,2}\s+nine\b", "Viet Nam nine zero nine"),
     (r"\bsona\s+tower\b", "Saigon Tower"),
     (r"\bsai\s*gon(?:\s+tower)?\b", "Saigon Tower"),
     (r"\btan\s+son\s+nhat\b", "Tan Son Nhat"),
     (r"\bnoy?\s*bai\b", "Noi Bai"),
     (r"\blater\s+to\s+land\b", "cleared to land"),
+    (r"\bcontinue\s+of\s+course\b", "continue approach"),
     (r"\bcontinue\s+approach\s+over\s+to\s+ukraine\b", "continue approach"),
     (r"\bover\s+to\s+ukraine\b", ""),
     (r"\btwo\s+fellay\b", "two five"),
@@ -348,11 +354,14 @@ _RADIO_FIXES = (
 
 
 def repair_radio_text(text: str) -> str:
+    from reda.script_polish import polish_script_en
+
     out = collapse_loops(text or "")
     for pattern, repl in _RADIO_FIXES:
         out = re.sub(pattern, repl, out, flags=re.I)
     out = re.sub(r"\s+", " ", out).strip(" ,.-")
-    return collapse_loops(out)
+    out = collapse_loops(out)
+    return polish_script_en(out)
 
 
 def _write_wav_slice(src_samples, sr: int, t0: float, t1: float, dest: Path) -> None:

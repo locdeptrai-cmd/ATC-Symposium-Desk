@@ -90,12 +90,17 @@ def test_infer_unit_from_filename():
 
 def test_radio_fixes_each_rule():
     cases = [
-        ("charlie jet one two", "Vietjet"),
-        ("sion one two three", "Vietjet"),
+        ("charlie jet one two", "VJC12"),
+        ("sion one two three", "VJC123"),
         ("viet jet air", "Vietjet"),
-        ("vietnam airlines one", "Viet Nam"),
-        ("viet nam one", "Viet Nam"),
-        ("qi nine nine", "Viet Nam"),
+        ("vietnam airlines one", "HVN1"),
+        ("viet nam one", "HVN1"),
+        ("qi nine nine", "HVN"),
+        ("Viet nam one two two five", "HVN1225"),
+        ("runway two five right", "RWY 25R"),
+        ("ils whiskey runway two five right", "ILS RWY 25R"),
+        ("continue of course runway two seven right", "continue approach RWY 25R"),
+        ("rejet one two two five", "VJC1225"),
         ("sona tower", "Saigon Tower"),
         ("sai gon tower", "Saigon Tower"),
         ("tan son nhat", "Tan Son Nhat"),
@@ -104,7 +109,7 @@ def test_radio_fixes_each_rule():
         ("continue approach over to ukraine", "continue approach"),
         ("two fellay", "two five"),
         ("fellay", "five"),
-        ("runway two final", "runway two five"),
+        ("runway two final", "RWY 25"),
         ("niner", "nine"),
         ("tree", "three"),
         ("fife", "five"),
@@ -156,4 +161,14 @@ if __name__ == "__main__":
     test_radio_fixes_each_rule()
     with tempfile.TemporaryDirectory() as folder:
         test_gold_record_roundtrip(Path(folder))
+    sample = (
+        "Saigon Tower sin charo Vietjet one two two five or ils whiskey "
+        "runway two five right Vietjet one two three five tower continue of course "
+        "runway two seven right"
+    )
+    polished = repair_radio_text(sample)
+    assert "VJC1225" in polished, polished
+    assert "ILS RWY 25R" in polished, polished
+    assert "VJC1235" in polished, polished
+    assert "continue approach RWY 25R" in polished, polished
     print("asr_dataset tests ok")

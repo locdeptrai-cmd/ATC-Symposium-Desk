@@ -54,6 +54,9 @@ ATCO_CUES = (
     "increase speed",
     "maintain flight level",
     "runway ",
+    "rwy ",
+    "ils ",
+    "continue approach",
     "wind ",
 )
 

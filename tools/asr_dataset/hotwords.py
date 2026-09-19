@@ -106,7 +106,9 @@ def hotwords_for(filename: str = "", unit: str | None = None) -> str:
         if not spoken:
             continue
         if kind == "airline":
-            if icao and icao not in _VN_ICAO:
+            country = (row.get("country") or "").lower()
+            vn = "việt nam" in country or "viet nam" in country or icao in _VN_ICAO
+            if not vn:
                 continue
         elif kind == "station":
             if not _station_matches(row, resolved):

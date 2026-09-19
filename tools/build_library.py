@@ -24,6 +24,7 @@ def build():
         dict(id='doc4444', title='ICAO Doc 4444 — PANS-ATM, Chapter 12 Phraseologies', url='https://store.icao.int/', note='Huấn lệnh / phraseology vô tuyến chuẩn ICAO (kèm từ chuẩn Annex 10 Vol II). Bản rút gọn song ngữ cho tra cứu điều hành; không phải toàn văn Doc 4444. Bản dịch tiếng Việt theo cách dùng VATM (đường CHC, vào đường CHC và chờ, đặt mã đáp, vòng lại). Đối chiếu Amendment 10 (2021) cho tình trạng bề mặt đường CHC / RCR. Không thay AIP Việt Nam khi có xung đột.'),
         dict(id='aipvn', title='AIP Việt Nam — AD 2.8 đường lăn', url='https://aim.vatm.vn/', note='Ký hiệu đường lăn 22 cảng ACV (+ Vân Đồn). Trích AD 2.8 AIRAC 02/26 (hiệu lực 2026-05-14). Không thay AIP/NOTAM khi có xung đột.'),
         dict(id='icao8585', title='ICAO telephony / callsign hãng bay', url='', note='Callsign vô tuyến các hãng thường xuyên hoặc theo mùa tại Việt Nam. Đối chiếu Doc 8585 và AIP GEN 2.4.'),
+        dict(id='airline2026', title='Airline ATC callsign DB Việt Nam 2026', url='', note='Hãng hành khách/hàng hóa thường xuyên tại hoặc qua Việt Nam. Telephony + ICAO 3LD + alias, rà soát 2026-09-18. Đối chiếu Doc 8585 / FPL khi có xung đột. Không phải danh mục pháp lý đầy đủ mọi chuyến quá cảnh FIR.'),
         dict(id='editor', title='Editor — nhập tay trên máy này', url='', note='Mẫu huấn lệnh do người dùng thêm. Chưa thẩm định độc lập.'),
         dict(id='legacy', title='Thư viện ATC Desk có sẵn', url='', note='glossary.js / lexicon.js; chưa đối chiếu nguồn từng mục.'),
         dict(id='general', title='Từ điển phổ thông có sẵn — anhviet109K', url='https://github.com/yenthanh132/avdict-database-sqlite-converter', note='Nghĩa đầu rút gọn, có thể thiếu hoặc sai ngữ cảnh; xem NOTICE.txt.')]
@@ -32,7 +33,7 @@ def build():
         en, vi = en.strip(), vi.strip()
         if not en or not vi: return
         key = (normalize(en), normalize(vi), domain)
-        entries[key] = dict(id=hashlib.sha256('\t'.join(key).encode()).hexdigest()[:20], en=en, vi=vi, domain=domain, source=source, abbr=abbr, note=note, kind='sentence' if en.endswith(('.', '?', '!')) else 'term', status='referenced' if source in ('vn19', 'pbn', 'vatm', 'doc4444', 'aipvn', 'icao8585') else 'unreviewed')
+        entries[key] = dict(id=hashlib.sha256('\t'.join(key).encode()).hexdigest()[:20], en=en, vi=vi, domain=domain, source=source, abbr=abbr, note=note, kind='sentence' if en.endswith(('.', '?', '!')) else 'term', status='referenced' if source in ('vn19', 'pbn', 'vatm', 'doc4444', 'aipvn', 'icao8585', 'airline2026') else 'unreviewed')
     for en, vi in old['EN_VI_DICT'].items(): add(en, vi, 'general', 'general')
     for r in old['TERMS'] + old['PHRASES']: add(r.get('en',''), r.get('vi',''), 'legacy', 'legacy', r.get('abbr',''))
     for en, vi in old['EN_VI_LEXICON']: add(en, vi, 'legacy', 'legacy')
@@ -52,7 +53,7 @@ def build():
             with path.open(encoding='utf-8', newline='') as f:
                 for row in csv.DictReader(f, delimiter='\t'): add(**row)
     rows = sorted(entries.values(), key=lambda r: (r['domain'], r['en'], r['id']))
-    payload = dict(version='2026.09.12.3', sources=sources, entries=rows)
+    payload = dict(version='2026.09.18.1', sources=sources, entries=rows)
     OUT.mkdir(parents=True, exist_ok=True)
     temp = OUT / 'library.build.sqlite'
     if temp.exists(): temp.unlink()
