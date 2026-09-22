@@ -24,6 +24,23 @@
     return m ? m[1].toLowerCase() : "";
   }
 
+  function stemKey(name) {
+    var stem = String(name || "").replace(/\.[^.]+$/, "").toLowerCase().replace(/đ/g, "d");
+    var compact = stem.replace(/[^a-z0-9]+/g, "");
+    var suffixes = ["text", "gold", "transcript", "kichban", "script", "noidung", "hoithoai"];
+    var changed = true;
+    while (changed) {
+      changed = false;
+      suffixes.forEach(function (suffix) {
+        if (compact.length > suffix.length + 2 && compact.slice(-suffix.length) === suffix) {
+          compact = compact.slice(0, -suffix.length);
+          changed = true;
+        }
+      });
+    }
+    return compact;
+  }
+
   function guessMime(file) {
     var type = String(file && file.type || "").toLowerCase();
     if (type === "video/avi" || type === "video/msvideo" || type === "application/x-troff-msvideo") {
@@ -70,12 +87,18 @@
     bits: []
   };
   var transcribeBusy = {};
+  var vocabularyRevision = "";
+  var vocabularyCheck = null;
+  var pendingGold = {};
   var liveRadio = {
     on: false,
     rec: null,
     stream: null,
     started: 0,
-    busy: false
+    busy: false,
+    queue: [],
+    mime: "",
+    sliceTimer: 0
   };
   var searchQuery = "";
   var transcriptEdited = false;
@@ -358,7 +381,7 @@
   function renderTurns(row) {
     var list = $("recTurns");
     if (!list) return;
-    var turns = (row && (row.turns || (row.analysis && row.analysis.utterances))) || [];
+    var turns = (row && row.analysis && row.analysis.utterances) || [];
     if (!turns.length) {
       list.innerHTML = "";
       return;
@@ -573,6 +596,107 @@
       });
   }
 
+  function formatGoldTurns(turns) {
+    return (turns || []).map(function (t) {
+      var who = t.speaker_role || t.speaker || "";
+      var label = who && who !== "UNKNOWN" ? who + "  " : "";
+      return "[" + clock(t.t_start) + "] " + label + (t.text || "");
+    }).join("\n");
+  }
+
+  function applyGoldPayload(row, payload) {
+    if (!row || !payload || !payload.turns || !payload.turns.length) return false;
+    row.goldTurns = payload.turns;
+    row.turns = payload.turns;
+    row.transcriptEn = payload.text || formatGoldTurns(payload.turns);
+    row.scriptEn = row.transcriptEn;
+    transcriptEdited = false;
+    putRow(row);
+    if (!player.id || player.id === row.id) showRowAnalysis(row);
+    return true;
+  }
+
+  function rowsForGoldStem(stem) {
+    return rows.filter(function (r) {
+      return !r.live && stemKey(r.name) === stem;
+    });
+  }
+
+  function parseExcelOnServer(file, audioName) {
+    return new Promise(function (resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      var q = "/api/finetune/parse?name=" + encodeURIComponent(file.name || "gold.xlsx");
+      if (audioName) q += "&audio=" + encodeURIComponent(audioName);
+      xhr.open("POST", q);
+      xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+      xhr.setRequestHeader("X-Filename", encodeURIComponent(file.name || "gold.xlsx"));
+      xhr.onerror = function () {
+        reject(new Error("Không gửi được Excel gold."));
+      };
+      xhr.onload = function () {
+        var payload = {};
+        try {
+          payload = JSON.parse(xhr.responseText || "{}");
+        } catch (e) {
+          reject(new Error("Máy chủ đọc Excel trả lời không hợp lệ."));
+          return;
+        }
+        if (xhr.status >= 400 || !payload.ok) {
+          reject(new Error(payload.error || "Không đọc được Excel hội thoại."));
+          return;
+        }
+        resolve(payload);
+      };
+      xhr.send(file);
+    });
+  }
+
+  function lookupGold(name) {
+    return fetch("/api/finetune/gold?name=" + encodeURIComponent(name || ""), { cache: "no-store" })
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (payload) {
+        if (!payload || payload.ok === false || !(payload.turns && payload.turns.length)) return null;
+        return payload;
+      });
+  }
+
+  function attachGoldFromExcel(file) {
+    var matches = rowsForGoldStem(stemKey(file.name));
+    var audioName = matches[0] ? matches[0].name : "";
+    return parseExcelOnServer(file, audioName).then(function (payload) {
+      var stem = payload.stem || stemKey(file.name);
+      var hit = rowsForGoldStem(stem);
+      if (!hit.length) {
+        pendingGold[stem] = payload;
+        return { stem: stem, attached: 0, count: payload.count || payload.turns.length };
+      }
+      hit.forEach(function (row) {
+        applyGoldPayload(row, payload);
+      });
+      delete pendingGold[stem];
+      return { stem: stem, attached: hit.length, count: payload.count || payload.turns.length };
+    });
+  }
+
+  function attachGoldToRow(row) {
+    if (!row || row.live) return Promise.resolve(false);
+    if (row.goldTurns && row.goldTurns.length) return Promise.resolve(true);
+    var stem = stemKey(row.name);
+    if (pendingGold[stem]) {
+      applyGoldPayload(row, pendingGold[stem]);
+      delete pendingGold[stem];
+      return Promise.resolve(true);
+    }
+    return lookupGold(row.name).then(function (payload) {
+      if (!payload) return false;
+      return applyGoldPayload(row, payload);
+    }).catch(function () {
+      return false;
+    });
+  }
+
   function transcribeOnServer(blob, name, onPartial) {
     return new Promise(function (resolve, reject) {
       var xhr = new XMLHttpRequest();
@@ -602,6 +726,7 @@
 
   function pollTranscribeJob(jobId, onPartial, resolve, reject) {
     var tries = 0;
+    var failures = 0;
     function tick() {
       fetch("/api/media/transcribe/status?id=" + encodeURIComponent(jobId), { cache: "no-store" })
         .then(function (res) {
@@ -611,6 +736,7 @@
           if (!job || (job.ok === false && !job.id)) {
             throw new Error((job && job.error) || "Mất tiến trình ghi lời.");
           }
+          failures = 0;
           if (onPartial) onPartial(job.text || "", job.stage, job.turns || []);
           if (job.error) throw new Error(job.error);
           if (job.done) {
@@ -618,39 +744,71 @@
               text: job.text || "",
               turns: job.turns || [],
               analysis: job.analysis || null
+              , vocabularyRevision: job.vocabulary_revision || ""
             });
             return;
           }
           tries += 1;
-          if (tries > 1800) throw new Error("Ghi lời quá lâu.");
-          setTimeout(tick, 250);
+          setTimeout(tick, 1000);
           return null;
         })
-        .catch(reject);
+        .catch(function (err) {
+          if (++failures <= 5) setTimeout(tick, 2000);
+          else reject(err);
+        });
     }
     tick();
   }
 
-  function startFileTranscript(row) {
+  function startFileTranscript(row, force) {
     if (!row || !row.blob) return;
-    if (row.transcriptEn) {
+    if (row.manualTranscript || (row.goldTurns && row.goldTurns.length)) {
       showPlaybackTranscript(row);
       return;
     }
-    if (transcribeBusy[row.id]) return;
-    transcribeBusy[row.id] = true;
-    setStatus("Đang ghi lời English từ file…", "live");
-    transcribeOnServer(row.blob, row.name, function (partial, stage, turns) {
-      if (!findRow(row.id)) return;
-      row.partialTurns = turns;
+    if (row.transcriptEn && row.asrComplete && row.asrRevision === vocabularyRevision && !force) {
       showPlaybackTranscript(row);
+      return;
+    }
+    if (transcribeBusy[row.id]) {
+      showPlaybackTranscript(row);
+      return;
+    }
+    if (force) {
+      if (row.transcriptEn) {
+        row.transcriptHistory = (row.transcriptHistory || []).concat([{
+          text: row.transcriptEn, turns: row.turns || [], revision: row.asrRevision || "", saved: Date.now()
+        }]).slice(-3);
+      }
+      delete row.partialTurns;
+      row.analysis = null;
+      row.scriptEn = "";
+      row.minutesEn = "";
+      transcriptEdited = false;
+    }
+    row.asrComplete = false;
+    row.asrFailedRevision = "";
+    transcribeBusy[row.id] = true;
+    putRow(row);
+    setStatus("Đang ghi lời English từ file…", "live");
+    return transcribeOnServer(row.blob, row.name, function (partial, stage, turns) {
+      if (!findRow(row.id)) return;
+      if (row.manualTranscript || (row.goldTurns && row.goldTurns.length)) return;
+      row.asrStage = stage || "";
+      if (turns && turns.length) row.partialTurns = turns;
+      if (partial) row.transcriptEn = polishEn(partial);
+      showPlaybackTranscript(row);
+      putRow(row);
     })
       .then(function (payload) {
         if (!findRow(row.id)) return;
+        row.asrRevision = payload.vocabularyRevision;
+        row.asrComplete = true;
+        if (row.manualTranscript || (row.goldTurns && row.goldTurns.length)) return putRow(row);
         var text = typeof payload === "string" ? payload : (payload && payload.text) || "";
         var cleaned = polishEn(text);
-        row.transcriptEn = cleaned;
-        row.turns = (payload && payload.turns) || row.turns || [];
+        if (cleaned) row.transcriptEn = cleaned;
+        row.turns = (payload && payload.turns) || row.partialTurns || row.turns || [];
         delete row.partialTurns;
         showPlaybackTranscript(row);
         return putRow(row).then(function () {
@@ -659,38 +817,72 @@
         });
       })
       .catch(function (err) {
+        row.asrFailedRevision = vocabularyRevision;
+        row.asrComplete = false;
+        putRow(row);
         if (player.id === row.id) setStatus((err && err.message) || "Không ghi được lời từ file.", "warn");
       })
       .then(function () {
         delete transcribeBusy[row.id];
         showPlaybackTranscript(row);
+        setTimeout(refreshStaleTranscripts, 0);
       });
   }
 
+  function refreshStaleTranscripts() {
+    if (!vocabularyRevision || Object.keys(transcribeBusy).length || liveRadio.on) return;
+    var eligible = rows.filter(function (row) {
+      return row.blob && !row.live && !row.manualTranscript && !(row.goldTurns && row.goldTurns.length) &&
+        (row.status === "ready" || row.status === "heard") &&
+        (row.transcriptEn || row.id === player.id) && row.asrFailedRevision !== vocabularyRevision &&
+        (!row.asrComplete || row.asrRevision !== vocabularyRevision);
+    });
+    eligible.sort(function (a, b) { return (b.id === player.id ? 1 : 0) - (a.id === player.id ? 1 : 0); });
+    if (eligible.length) startFileTranscript(eligible[0], true);
+  }
+
+  function checkVocabulary() {
+    if (vocabularyCheck) return vocabularyCheck;
+    vocabularyCheck = fetch("/api/finetune/status", { cache: "no-store" })
+      .then(function (res) { if (!res.ok) throw new Error("Không đọc được từ vựng ASR."); return res.json(); })
+      .then(function (stats) {
+        if (stats.vocabulary_revision) vocabularyRevision = stats.vocabulary_revision;
+        refreshStaleTranscripts();
+      })
+      .catch(function () {})
+      .then(function () { vocabularyCheck = null; });
+    return vocabularyCheck;
+  }
+
   function showPlaybackTranscript(row) {
-    if (!row || player.id !== row.id || row.analysis || row.live || transcriptEdited) return;
+    if (!row || row.live) return;
+    var busy = !!transcribeBusy[row.id];
+    if (row.manualTranscript || transcriptEdited) return;
+    if (player.id && player.id !== row.id) return;
     var video = $("recVideo");
     var now = video ? video.currentTime : 0;
     var turns = row.partialTurns || row.turns || [];
-    var busy = !!transcribeBusy[row.id];
     var visible = turns;
     if (!busy && video && !video.paused && isFinite(now)) {
       visible = turns.filter(function (t) {
         return Number(t.t_start || 0) <= now + 1.2;
       });
     }
-    var text = visible.map(function (t) { return "[" + clock(t.t_start) + "] " + t.text; }).join("\n");
-    // Legacy transcripts without timestamps remain readable.
-    if (!turns.length && row.transcriptEn) text = row.transcriptEn;
+    var text = visible.map(function (t) { return "[" + clock(t.t_start) + "] " + (t.text || ""); }).join("\n");
+    if (!text && row.transcriptEn) text = row.transcriptEn;
     var box = $("recTranscript");
-    if (box && document.activeElement !== box && box.value !== text) {
+    if (box && (busy || document.activeElement !== box) && box.value !== text) {
       box.value = text;
       box.scrollTop = box.scrollHeight;
     }
     if ($("recInterim")) {
-      $("recInterim").textContent = busy
-        ? "Đang ghi từng đoạn ~2s (CPU, beam 1) — chữ hiện khi xong đoạn, không chờ hết file."
-        : "";
+      if (busy) {
+        $("recInterim").textContent = text
+          ? (row.asrStage || "Đang ghi lời…") + " · " + (turns.length || 0) + " thoại."
+          : (row.asrStage || "Đang tách tiếng và ghi lời English…");
+      } else {
+        $("recInterim").textContent = "";
+      }
     }
   }
 
@@ -725,6 +917,13 @@
     if (type.indexOf("audio/") === 0 || type.indexOf("video/") === 0) return true;
     if (type === "application/x-troff-msvideo") return true;
     return ACCEPT_EXT.test(file && file.name || "");
+  }
+
+  function isExcelFile(file) {
+    var name = String((file && file.name) || "").toLowerCase();
+    var type = String((file && file.type) || "").toLowerCase();
+    if (/\.(xlsx|xls|csv)$/.test(name)) return true;
+    return type.indexOf("sheet") >= 0 || type.indexOf("excel") >= 0 || type === "text/csv";
   }
 
   function openDb() {
@@ -1183,10 +1382,16 @@
     };
     video.onended = function () {
       player.playing = false;
-      stopRecListen(true);
+      listen.on = false;
+      updateListenButtons();
+      showPlaybackTranscript(row);
       markHeard(row.id).then(render);
       refreshNow();
-      setStatus("Hết “" + row.name + "”. Đã nghe.", "ok");
+      if (transcribeBusy[row.id]) {
+        setStatus("Hết băng. Đang ghi nốt lời vào bản ghi…", "live");
+      } else {
+        setStatus("Hết “" + row.name + "”. Đã nghe.", "ok");
+      }
     };
     video.onerror = function () {
       player.playing = false;
@@ -1239,7 +1444,7 @@
       });
     }
     setStatus("Đang phát “" + row.name + "”.", "live");
-    startFileTranscript(row);
+    checkVocabulary().then(function () { startFileTranscript(row, !row.asrComplete || row.asrRevision !== vocabularyRevision); });
   }
 
   function pauseRow(id) {
@@ -1269,21 +1474,16 @@
   function importFiles(fileList) {
     var files = Array.prototype.slice.call(fileList || []).filter(Boolean);
     if (!files.length) return;
-    var skipped = 0;
-    var accepted = files.filter(function (f) {
-      if (!isMediaFile(f)) {
-        skipped += 1;
-        return false;
-      }
-      return true;
-    });
-    if (!accepted.length) {
-      setStatus("Không có file ghi âm / video hợp lệ.", "warn");
+    var media = files.filter(isMediaFile);
+    var excels = files.filter(isExcelFile);
+    var skipped = files.length - media.length - excels.length;
+    if (!media.length && !excels.length) {
+      setStatus("Không có file ghi âm / video / Excel hội thoại hợp lệ.", "warn");
       return;
     }
-    setStatus("Đang kiểm tra " + accepted.length + " file…", "live");
+    setStatus("Đang kiểm tra " + (media.length + excels.length) + " file…", "live");
     var chain = Promise.resolve();
-    accepted.forEach(function (file) {
+    media.forEach(function (file) {
       chain = chain.then(function () {
         var row = {
           id: uid(),
@@ -1325,17 +1525,31 @@
           });
       });
     });
+    excels.forEach(function (file) {
+      chain = chain.then(function () {
+        return attachGoldFromExcel(file);
+      });
+    });
     chain
       .then(function () {
         var ready = rows.filter(function (r) {
           return r.status === "ready" || r.status === "heard";
         }).length;
-        var msg = "Đã import " + accepted.length + " file. " + ready + " sẵn sàng.";
-        if (skipped) msg += " Bỏ qua " + skipped + " file không phải âm thanh/video.";
+        var golded = rows.filter(function (r) {
+          return r.goldTurns && r.goldTurns.length;
+        }).length;
+        var msg = "Đã import " + media.length + " băng. " + ready + " sẵn sàng.";
+        if (excels.length) {
+          msg += " Excel gold: " + golded + " bản ghi đã gắn kịch bản.";
+          if (!media.length && !golded) {
+            msg = "Đã nạp Excel gold. Import băng cùng tên (ví dụ vjc1225.mp4) rồi bấm Phát.";
+          }
+        }
+        if (skipped) msg += " Bỏ qua " + skipped + " file không đọc được.";
         setStatus(msg, "ok");
       })
-      .catch(function () {
-        setStatus("Không lưu được bản ghi trên máy này.", "warn");
+      .catch(function (err) {
+        setStatus((err && err.message) || "Không lưu được bản ghi trên máy này.", "warn");
       });
   }
 
@@ -1387,19 +1601,34 @@
 
   function stopLiveRadio(quiet) {
     liveRadio.on = false;
-    try {
-      if (liveRadio.rec && liveRadio.rec.state !== "inactive") liveRadio.rec.stop();
-    } catch (e) {}
-    liveRadio.rec = null;
-    if (liveRadio.stream) {
-      liveRadio.stream.getTracks().forEach(function (t) {
-        t.stop();
-      });
+    if (liveRadio.sliceTimer) {
+      clearTimeout(liveRadio.sliceTimer);
+      liveRadio.sliceTimer = 0;
     }
-    liveRadio.stream = null;
-    var btn = $("btnRecLive");
-    if (btn) btn.classList.remove("btn-live-on");
-    if (!quiet) setStatus("Đã dừng LIVE radio.", "");
+    var rec = liveRadio.rec;
+    function finish() {
+      liveRadio.rec = null;
+      if (liveRadio.stream) {
+        liveRadio.stream.getTracks().forEach(function (t) {
+          t.stop();
+        });
+      }
+      liveRadio.stream = null;
+      var btn = $("btnRecLive");
+      if (btn) btn.classList.remove("btn-live-on");
+      drainLiveQueue();
+      if (!quiet) setStatus("Đã dừng LIVE radio. Đang ghi nốt các đoạn còn lại.", "");
+    }
+    if (rec && rec.state !== "inactive") {
+      rec.onstop = finish;
+      try {
+        rec.stop();
+      } catch (e) {
+        finish();
+      }
+      return;
+    }
+    finish();
   }
 
   function ensureLiveRow() {
@@ -1425,37 +1654,93 @@
   }
 
   function ingestLiveChunk(blob) {
-    if (!blob || !blob.size || liveRadio.busy) return;
+    if (!blob || !blob.size) return;
+    liveRadio.queue.push(blob);
+    drainLiveQueue();
+  }
+
+  function drainLiveQueue() {
+    if (liveRadio.busy || !liveRadio.queue.length) return;
+    var blob = liveRadio.queue.shift();
     liveRadio.busy = true;
     var row = ensureLiveRow();
     var offset = (Date.now() - liveRadio.started) / 1000;
-    transcribeOnServer(blob, "live-" + Math.floor(offset) + ".webm", function (partial) {
-      if ($("recInterim")) $("recInterim").textContent = partial || "";
+    var base = row.transcriptEn || "";
+    transcribeOnServer(blob, "live-" + Math.floor(offset) + ".webm", function (partial, stage) {
+      var cur = polishEn(partial || "");
+      var shown = base;
+      if (cur) shown = (base ? base + "\n" : "") + cur;
+      player.id = row.id;
+      setTranscriptBox(shown, cur ? cur : (stage || "Đang ghi lời English…"));
     })
       .then(function (payload) {
         var extra = (payload && payload.turns) || [];
         extra.forEach(function (t) {
-          t.t_start = (Number(t.t_start) || 0) + Math.max(0, offset - 8);
-          t.t_end = (Number(t.t_end) || t.t_start) + Math.max(0, offset - 8);
+          t.t_start = (Number(t.t_start) || 0) + Math.max(0, offset - 4);
+          t.t_end = (Number(t.t_end) || t.t_start) + Math.max(0, offset - 4);
         });
         row.turns = (row.turns || []).concat(extra);
         var text = typeof payload === "string" ? payload : (payload && payload.text) || "";
         if (text) {
-          row.transcriptEn = ((row.transcriptEn || "") + "\n" + text).trim();
+          row.transcriptEn = ((row.transcriptEn || "") + "\n" + polishEn(text)).trim();
+        } else {
+          var box = $("recTranscript");
+          var shown = (box && box.value) || "";
+          if (shown && shown.length > (row.transcriptEn || "").length) {
+            row.transcriptEn = shown.trim();
+          }
         }
         player.id = row.id;
         setTranscriptBox(row.transcriptEn, "");
         return putRow(row);
       })
       .then(function () {
-        setStatus("LIVE: đã ghi đoạn radio.", "live");
+        var waiting = liveRadio.queue.length;
+        setStatus(
+          waiting ? "LIVE: đang ghi, còn " + waiting + " đoạn chờ." : (liveRadio.on ? "LIVE: đã ghi đoạn radio." : "Đã lưu bản ghi LIVE."),
+          "live"
+        );
       })
       .catch(function (err) {
+        var box = $("recTranscript");
+        if (box && box.value && box.value !== (row.transcriptEn || "")) {
+          row.transcriptEn = box.value.trim();
+          putRow(row);
+        }
         setStatus((err && err.message) || "LIVE không ghi được đoạn này.", "warn");
       })
       .then(function () {
         liveRadio.busy = false;
+        drainLiveQueue();
       });
+  }
+
+  function armLiveSlice() {
+    if (!liveRadio.on || !liveRadio.stream) return;
+    var rec = new MediaRecorder(liveRadio.stream, { mimeType: liveRadio.mime, audioBitsPerSecond: 64000 });
+    liveRadio.rec = rec;
+    rec.ondataavailable = function (ev) {
+      if (ev.data && ev.data.size > 800) ingestLiveChunk(ev.data);
+    };
+    rec.onstop = function () {
+      liveRadio.rec = null;
+      if (liveRadio.sliceTimer) {
+        clearTimeout(liveRadio.sliceTimer);
+        liveRadio.sliceTimer = 0;
+      }
+      if (liveRadio.on) armLiveSlice();
+    };
+    try {
+      rec.start();
+    } catch (e) {
+      setStatus((e && e.message) || "Không ghi được LIVE radio.", "warn");
+      return;
+    }
+    liveRadio.sliceTimer = setTimeout(function () {
+      if (liveRadio.rec && liveRadio.rec.state === "recording") {
+        try { liveRadio.rec.stop(); } catch (err) {}
+      }
+    }, 3500);
   }
 
   function startLiveRadio() {
@@ -1480,21 +1765,16 @@
         liveRadio.stream = stream;
         liveRadio.started = Date.now();
         liveRadio.on = true;
-        var mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        liveRadio.mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
           ? "audio/webm;codecs=opus"
           : "audio/webm";
-        var rec = new MediaRecorder(stream, { mimeType: mime, audioBitsPerSecond: 64000 });
-        liveRadio.rec = rec;
-        rec.ondataavailable = function (ev) {
-          if (ev.data && ev.data.size > 800) ingestLiveChunk(ev.data);
-        };
-        rec.start(7000);
+        armLiveSlice();
         ensureLiveRow();
         var btn = $("btnRecLive");
         if (btn) btn.classList.add("btn-live-on");
         listen.on = true;
         updateListenButtons();
-        setStatus("LIVE radio: line-in / micro (tắt echo). Đoạn ~7s, overlap 1.5s trên máy.", "live");
+        setStatus("LIVE radio: line-in / micro. Chữ hiện từng đoạn ~3.5s, lưu khi hết thoại.", "live");
       })
       .catch(function (err) {
         setStatus((err && err.message) || "Không mở được micro / line-in.", "warn");
@@ -1534,14 +1814,22 @@
     }
     playRow(id);
     var row = findRow(id);
-    if (row) startFileTranscript(row);
+    if (row) startFileTranscript(row, true);
     listen.on = true;
     updateListenButtons();
     setStatus("Đang ghi lời English trực tiếp từ file (không cần micro).", "live");
   }
 
   function bindUi() {
-    $("recTranscript").addEventListener("input", function () { transcriptEdited = true; });
+    $("recTranscript").addEventListener("input", function () {
+      transcriptEdited = true;
+      var row = findRow(player.id);
+      if (row) {
+        row.manualTranscript = true;
+        row.transcriptEn = $("recTranscript").value;
+        putRow(row);
+      }
+    });
     var drop = $("recDrop");
     var input = $("recFile");
     var btn = $("btnRecImport");
@@ -1550,6 +1838,7 @@
     var liveBtn = $("btnRecLive");
     var listenStop = $("btnRecListenStop");
     var copyEn = $("copyRecEn");
+    var clearBtn = $("btnRecClear");
     var copyMin = $("copyRecMinutes");
     var analyzeBtn = $("btnRecAnalyze");
     var toHall = $("btnRecToHall");
@@ -1766,13 +2055,42 @@
         }
       });
     }
+    if (clearBtn) {
+      clearBtn.addEventListener("click", function () {
+        var id = player.id || playableRowId();
+        var row = id ? findRow(id) : null;
+        if ($("recTranscript")) $("recTranscript").value = "";
+        if ($("recInterim")) $("recInterim").textContent = "";
+        setMinutes("");
+        transcriptEdited = false;
+        if (!row) {
+          setStatus("Đã xóa kịch bản thoại.", "ok");
+          return;
+        }
+        row.transcriptEn = "";
+        row.manualTranscript = false;
+        row.asrComplete = false;
+        row.asrFailedRevision = "";
+        row.turns = [];
+        row.scriptEn = "";
+        row.minutesEn = "";
+        row.analysis = null;
+        delete row.partialTurns;
+        renderTurns(row);
+        renderIssues(row);
+        renderOps(row);
+        putRow(row).then(function () {
+          setStatus("Đã xóa kịch bản thoại.", "ok");
+        });
+      });
+    }
     if (copyMin) {
       copyMin.addEventListener("click", function () {
         var text = ($("recMinutes") && $("recMinutes").value) || "";
         if (!text.trim()) return;
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(function () {
-            setStatus("Đã sao chép biên bản bình giảng.", "ok");
+            setStatus("Đã sao chép biên bản hội thoại.", "ok");
           });
         }
       });
@@ -1836,4 +2154,7 @@
   bindUi();
   render();
   loadList();
+  checkVocabulary();
+  setInterval(checkVocabulary, 5000);
+  window.addEventListener("focus", checkVocabulary);
 })();

@@ -1,12 +1,16 @@
 """Ingest VHF audio + Excel gold transcript: gold JSONL + learned script repairs."""
 from __future__ import annotations
 
+import csv
 import json
 import re
 import shutil
+import tempfile
 import threading
 import time
+import unicodedata
 import uuid
+from datetime import datetime, time as dt_time, timedelta
 from difflib import SequenceMatcher
 from pathlib import Path
 
@@ -15,6 +19,13 @@ from openpyxl.styles import Font
 
 from asr_dataset.export_gold import build_record
 from asr_dataset.paths import audio_root, ensure_gold_dirs, gold_root, manifest_path
+from asr_dataset.recipe import recipe_status
+from asr_dataset.vocabulary import excel_phrases, vocabulary_revision
+
+try:
+    import app_paths
+except ImportError:
+    app_paths = None  # type: ignore
 
 try:
     import media_transcribe
@@ -32,9 +43,15 @@ def learned_path() -> Path:
     return gold_root() / "learned_repairs.json"
 
 
+def glossary_phrases_path() -> Path:
+    ensure_gold_dirs()
+    return gold_root() / "glossary_phrases.json"
+
+
 def _norm_header(value: object) -> str:
-    t = str(value or "").strip().lower()
-    t = t.replace("đ", "d")
+    t = str(value or "").strip().lower().replace("đ", "d")
+    t = unicodedata.normalize("NFKD", t)
+    t = "".join(ch for ch in t if not unicodedata.combining(ch))
     t = re.sub(r"[^a-z0-9]+", "_", t).strip("_")
     return t
 
@@ -42,6 +59,12 @@ def _norm_header(value: object) -> str:
 def parse_clock(value: object) -> float | None:
     if value is None or value == "":
         return None
+    if isinstance(value, timedelta):
+        return float(value.total_seconds())
+    if isinstance(value, datetime):
+        return value.hour * 3600 + value.minute * 60 + value.second + value.microsecond / 1_000_000
+    if isinstance(value, dt_time):
+        return value.hour * 3600 + value.minute * 60 + value.second + value.microsecond / 1_000_000
     if isinstance(value, (int, float)):
         return float(value)
     raw = str(value).strip()
@@ -74,9 +97,10 @@ def _pick(row: dict[str, object], *names: str) -> str:
 
 
 def parse_excel(path: Path) -> list[dict]:
-    if path.suffix.lower() == ".csv":
-        import csv
-
+    suffix = path.suffix.lower()
+    if suffix == ".xls":
+        raise ValueError("File .xls không đọc được. Lưu lại thành .xlsx hoặc .csv rồi nạp lại.")
+    if suffix == ".csv":
         with path.open(encoding="utf-8-sig", newline="") as fh:
             reader = csv.reader(fh)
             rows_raw = list(reader)
@@ -90,20 +114,23 @@ def parse_excel(path: Path) -> list[dict]:
                 continue
             mapped = {header[j]: raw[j] if j < len(raw) else None for j in range(len(header))}
             rows.extend(_rows_from_mapped(mapped, len(rows)))
-        return rows
+        return _rebase_times(rows)
     wb = load_workbook(path, data_only=True, read_only=True)
-    ws = wb[wb.sheetnames[0]]
-    header: list[str] = []
-    rows: list[dict] = []
-    for i, raw in enumerate(ws.iter_rows(values_only=True), 1):
-        if not raw or not any(c is not None and str(c).strip() for c in raw):
-            continue
-        if not header:
-            header = [_norm_header(c) for c in raw]
-            continue
-        mapped = {header[j]: raw[j] if j < len(raw) else None for j in range(len(header))}
-        rows.extend(_rows_from_mapped(mapped, len(rows)))
-    return rows
+    try:
+        ws = wb[wb.sheetnames[0]]
+        header: list[str] = []
+        rows: list[dict] = []
+        for raw in ws.iter_rows(values_only=True):
+            if not raw or not any(c is not None and str(c).strip() for c in raw):
+                continue
+            if not header:
+                header = [_norm_header(c) for c in raw]
+                continue
+            mapped = {header[j]: raw[j] if j < len(raw) else None for j in range(len(header))}
+            rows.extend(_rows_from_mapped(mapped, len(rows)))
+        return _rebase_times(rows)
+    finally:
+        wb.close()
 
 
 def _rows_from_mapped(mapped: dict[str, object], index: int) -> list[dict]:
@@ -154,6 +181,156 @@ def _rows_from_mapped(mapped: dict[str, object], index: int) -> list[dict]:
     return out
 
 
+_STRIP_STEM = ("text", "gold", "transcript", "kichban", "script", "noidung", "hoithoai")
+
+
+def stem_key(name: str) -> str:
+    stem = Path(str(name or "")).stem.lower().replace("đ", "d")
+    stem = unicodedata.normalize("NFKD", stem)
+    stem = "".join(ch for ch in stem if not unicodedata.combining(ch))
+    compact = re.sub(r"[^a-z0-9]+", "", stem)
+    changed = True
+    while changed:
+        changed = False
+        for suffix in _STRIP_STEM:
+            if compact.endswith(suffix) and len(compact) > len(suffix) + 2:
+                compact = compact[: -len(suffix)]
+                changed = True
+                break
+    return compact
+
+
+def _rebase_times(rows: list[dict]) -> list[dict]:
+    times = [float(row.get("t_start") or 0) for row in rows]
+    if not times:
+        return rows
+    tmin = min(times)
+    tmax = max(times)
+    if tmin < 15 * 60 or (tmax - tmin) > 3 * 3600:
+        return rows
+    for row in rows:
+        row["t_start"] = float(row.get("t_start") or 0) - tmin
+        row["t_end"] = float(row.get("t_end") or 0) - tmin
+        if row["t_end"] <= row["t_start"]:
+            row["t_end"] = row["t_start"] + 2.0
+    return rows
+
+
+def turns_from_rows(rows: list[dict]) -> list[dict]:
+    turns: list[dict] = []
+    for row in rows:
+        text = str(row.get("text") or "").strip()
+        if not text:
+            continue
+        t0 = float(row.get("t_start") or 0)
+        t1 = float(row.get("t_end") or 0) or t0 + 2.0
+        turns.append(
+            {
+                "t_start": t0,
+                "t_end": t1 if t1 > t0 else t0 + 2.0,
+                "text": text,
+                "speaker_role": str(row.get("speaker") or "UNKNOWN"),
+            }
+        )
+    turns.sort(key=lambda item: float(item["t_start"]))
+    return turns
+
+
+def script_from_turns(turns: list[dict]) -> str:
+    lines: list[str] = []
+    for turn in turns:
+        sec = max(0, int(float(turn.get("t_start") or 0)))
+        mm, ss = divmod(sec, 60)
+        prefix = "[%d:%02d] " % (mm, ss)
+        who = str(turn.get("speaker_role") or turn.get("speaker") or "")
+        if who and who != "UNKNOWN":
+            prefix += who + "  "
+        lines.append(prefix + str(turn.get("text") or ""))
+    return "\n".join(lines)
+
+
+def gold_turns_for(filename: str) -> list[dict]:
+    key = stem_key(filename)
+    if not key:
+        return []
+    path = manifest_path()
+    if not path.is_file():
+        return []
+    matched: dict[str, list[dict]] = {}
+    order: list[str] = []
+    seen: dict[str, set[tuple]] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            rec = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        names = [str(rec.get("filename") or ""), Path(str(rec.get("audio") or "")).name]
+        if not any(stem_key(item) == key for item in names if item and item != "."):
+            continue
+        text = str(rec.get("text") or "").strip()
+        if not text:
+            continue
+        sid = str(rec.get("session_id") or "unknown")
+        if sid not in matched:
+            matched[sid] = []
+            seen[sid] = set()
+            order.append(sid)
+        t0 = float(rec.get("t_start") or 0)
+        stamp = (round(t0, 1), text.lower())
+        if stamp in seen[sid]:
+            continue
+        seen[sid].add(stamp)
+        t1 = float(rec.get("t_end") or 0) or t0 + 2.0
+        matched[sid].append(
+            {
+                "t_start": t0,
+                "t_end": t1 if t1 > t0 else t0 + 2.0,
+                "text": text,
+                "speaker_role": str(rec.get("speaker") or "UNKNOWN"),
+            }
+        )
+    if not order:
+        return []
+    chosen = matched[order[-1]]
+    chosen.sort(key=lambda item: float(item["t_start"]))
+    return chosen
+
+
+def gold_payload_for(filename: str) -> dict:
+    turns = gold_turns_for(filename)
+    return {
+        "ok": True,
+        "stem": stem_key(filename),
+        "turns": turns,
+        "text": script_from_turns(turns),
+        "count": len(turns),
+    }
+
+
+def persist_parsed_gold(rows: list[dict], excel_name: str, audio_name: str = "") -> int:
+    filename = audio_name or excel_name or "gold.xlsx"
+    session_id = "reda-" + (stem_key(filename) or uuid.uuid4().hex[:8])
+    return append_gold_rows(rows, filename, None, session_id)
+
+
+def parse_excel_payload(path: Path, excel_name: str = "", audio_name: str = "") -> dict:
+    rows = parse_excel(path)
+    if not rows:
+        raise ValueError("Excel không có dòng hội thoại (cần cột text/gold/speaker).")
+    persist_parsed_gold(rows, excel_name or path.name, audio_name)
+    turns = turns_from_rows(rows)
+    return {
+        "ok": True,
+        "stem": stem_key(audio_name or excel_name or path.name),
+        "turns": turns,
+        "text": script_from_turns(turns),
+        "count": len(turns),
+        "filename": excel_name or path.name,
+    }
+
+
 def _script_lines(text: str) -> list[dict]:
     from reda.engine import parse_script
 
@@ -200,6 +377,119 @@ def write_template(path: Path) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(path)
     return path
+
+
+def _phrase_sources() -> list[Path]:
+    root = Path(__file__).resolve().parents[2]
+    out = [
+        root / "data" / "doc4444-phraseology.tsv",
+        root / "data" / "vn-callsigns.tsv",
+        root / "data" / "user-phraseology.json",
+    ]
+    if app_paths is not None:
+        for guess in (
+            app_paths.app_home() / "data" / "user-phraseology.json",
+            app_paths.bundle_root() / "data" / "user-phraseology.json",
+        ):
+            if guess not in out:
+                out.append(guess)
+    return out
+
+
+def _clean_phrase(raw: object) -> str:
+    text = str(raw or "").strip()
+    if not text:
+        return ""
+    text = re.sub(r"\([^)]*\)", " ", text)
+    text = re.sub(r"[/|]+", " ", text)
+    text = re.sub(r"\s+", " ", text).strip(" ,.;:-")
+    words = text.split()
+    if len(words) < 1 or len(words) > 8:
+        return ""
+    if any(ch in text for ch in "{}[]<>"):
+        return ""
+    if sum(ch.isalpha() for ch in text) < 3:
+        return ""
+    return text
+
+
+def _collect_seed_phrases() -> tuple[list[str], list[str]]:
+    phrases: list[str] = []
+    seen: set[str] = set()
+    sources: list[str] = []
+    for path in _phrase_sources():
+        if not path.is_file():
+            continue
+        sources.append(str(path))
+        if path.suffix.lower() == ".json":
+            try:
+                payload = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            rows = payload.get("entries") if isinstance(payload, dict) else payload
+            if not isinstance(rows, list):
+                continue
+            for row in rows:
+                if not isinstance(row, dict):
+                    continue
+                for value in (row.get("en"), row.get("abbr")):
+                    phrase = _clean_phrase(value)
+                    key = phrase.lower()
+                    if phrase and key not in seen:
+                        seen.add(key)
+                        phrases.append(phrase)
+            continue
+        try:
+            with path.open(encoding="utf-8", newline="") as fh:
+                for row in csv.DictReader(fh, delimiter="\t"):
+                    phrase = _clean_phrase(row.get("en"))
+                    key = phrase.lower()
+                    if phrase and key not in seen:
+                        seen.add(key)
+                        phrases.append(phrase)
+                    tele = _clean_phrase(row.get("telephony"))
+                    key2 = tele.lower()
+                    if tele and key2 not in seen:
+                        seen.add(key2)
+                        phrases.append(tele)
+        except OSError:
+            continue
+    return phrases, sources
+
+
+def load_glossary_phrases() -> list[str]:
+    path = glossary_phrases_path()
+    if not path.is_file():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    rows = payload.get("phrases") if isinstance(payload, dict) else payload
+    if not isinstance(rows, list):
+        return []
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in rows:
+        phrase = _clean_phrase(raw)
+        key = phrase.lower()
+        if phrase and key not in seen:
+            seen.add(key)
+            out.append(phrase)
+    return out
+
+
+def seed_glossary_phrases(limit: int = 1200) -> dict:
+    phrases, sources = _collect_seed_phrases()
+    payload = {
+        "updated": time.time(),
+        "count": min(len(phrases), max(1, limit)),
+        "sources": sources,
+        "phrases": phrases[: max(1, limit)],
+    }
+    path = glossary_phrases_path()
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"ok": True, "count": int(payload["count"]), "sources": sources, "path": str(path)}
 
 
 def load_learned() -> list[dict]:
@@ -329,12 +619,17 @@ def corpus_stats() -> dict:
             if row.get("audio"):
                 counts["with_audio"] += 1
     rules = load_learned()
+    phrases = load_glossary_phrases()
     return {
         "ok": True,
         "manifest": str(path),
         "counts": counts,
         "rules": rules[:80],
         "rule_count": len(rules),
+        "glossary_phrase_count": len(phrases),
+        "excel_phrase_count": len(excel_phrases()),
+        "vocabulary_revision": vocabulary_revision(),
+        "recipe": recipe_status(),
     }
 
 
@@ -442,6 +737,10 @@ def _run_ingest(job_id: str, audio: Path | None, excel: Path, audio_name: str, e
             learn_from_pair(str(row.get("asr") or ""), str(row.get("text") or ""), bucket)
         rules = merge_learned(bucket)
         save_learned(rules)
+        try:
+            seed_glossary_phrases()
+        except OSError:
+            pass
         new_rules = [{"src": s, "dst": d, "count": n} for (s, d), n in sorted(bucket.items(), key=lambda x: -x[1])]
         preview = [
             {
@@ -470,13 +769,11 @@ def _run_ingest(job_id: str, audio: Path | None, excel: Path, audio_name: str, e
             if path is None:
                 continue
             try:
-                if str(path).startswith(str(Path(tempfile_dir()))):
+                if str(path.resolve()).lower().startswith(str(tempfile_dir().resolve()).lower()):
                     path.unlink(missing_ok=True)
             except Exception:
                 pass
 
 
 def tempfile_dir() -> Path:
-    import tempfile as tf
-
-    return Path(tf.gettempdir())
+    return Path(tempfile.gettempdir())

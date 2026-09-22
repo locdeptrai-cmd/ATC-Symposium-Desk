@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import json
 import os
 import re
 from functools import lru_cache
@@ -12,6 +13,8 @@ try:
     import app_paths
 except ImportError:
     app_paths = None  # type: ignore
+from asr_dataset.paths import gold_root
+from asr_dataset.vocabulary import excel_phrases
 
 CORE_PHRASEOLOGY = (
     "cleared to land",
@@ -42,6 +45,33 @@ def _spoken_tsv() -> Path | None:
     root = Path(__file__).resolve().parents[2]
     path = root / "data" / "vn-airline-spoken.tsv"
     return path if path.is_file() else None
+
+
+def _seeded_glossary_path() -> Path:
+    return gold_root() / "glossary_phrases.json"
+
+
+def _seeded_glossary_phrases() -> list[str]:
+    path = _seeded_glossary_path()
+    if not path.is_file():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    rows = payload.get("phrases") if isinstance(payload, dict) else payload
+    if not isinstance(rows, list):
+        return []
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in rows:
+        phrase = str(raw or "").strip()
+        key = phrase.lower()
+        if not phrase or key in seen:
+            continue
+        seen.add(key)
+        out.append(phrase)
+    return out[:1200]
 
 
 @lru_cache(maxsize=1)
@@ -99,6 +129,11 @@ def hotwords_for(filename: str = "", unit: str | None = None) -> str:
     resolved = infer_unit(filename, unit)
     bits: list[str] = list(CORE_PHRASEOLOGY)
     seen = {b.lower() for b in bits}
+    for phrase in excel_phrases(filename):
+        key = phrase.lower()
+        if key not in seen:
+            seen.add(key)
+            bits.append(phrase)
     for row in _rows():
         kind = (row.get("kind") or "").strip()
         icao = (row.get("icao") or "").strip().upper()
@@ -121,4 +156,19 @@ def hotwords_for(filename: str = "", unit: str | None = None) -> str:
             bits.append(spoken)
     if "vietjet" not in seen:
         bits[0:0] = ["Vietjet", "Viet Nam"]
-    return " ".join(bits)
+    # Whisper's prompt has a small token budget. A full library dump silently
+    # loses the tail and wastes decoding time. Prioritize human Excel hints.
+    bits.extend(_seeded_glossary_phrases())
+    selected, used = [], set()
+    words_left = 75
+    for phrase in bits:
+        key = phrase.lower()
+        size = len(phrase.split())
+        if key in used or size > words_left:
+            continue
+        selected.append(phrase)
+        used.add(key)
+        words_left -= size
+        if not words_left:
+            break
+    return ", ".join(selected)

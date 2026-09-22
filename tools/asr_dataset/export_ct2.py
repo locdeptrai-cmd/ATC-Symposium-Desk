@@ -14,6 +14,7 @@ if str(_TOOLS) not in sys.path:
     sys.path.insert(0, str(_TOOLS))
 
 from asr_dataset.paths import repo_root
+from asr_dataset.recipe import AB_HF, TRAIN_BASE, ab_ct2_dir
 
 
 def merge_lora(base: str, adapter: Path, merged: Path) -> None:
@@ -37,7 +38,7 @@ def merge_lora(base: str, adapter: Path, merged: Path) -> None:
         torch.cuda.empty_cache()
 
 
-def convert_ct2(merged: Path, dest: Path, quantization: str) -> int:
+def convert_ct2(source: Path | str, dest: Path, quantization: str) -> int:
     dest.parent.mkdir(parents=True, exist_ok=True)
     if dest.exists():
         shutil.rmtree(dest)
@@ -46,7 +47,7 @@ def convert_ct2(merged: Path, dest: Path, quantization: str) -> int:
         "-m",
         "ctranslate2.converters.transformers",
         "--model",
-        str(merged),
+        str(source),
         "--output_dir",
         str(dest),
         "--quantization",
@@ -60,7 +61,7 @@ def convert_ct2(merged: Path, dest: Path, quantization: str) -> int:
         cmd = [
             alt,
             "--model",
-            str(merged),
+            str(source),
             "--output_dir",
             str(dest),
             "--quantization",
@@ -74,8 +75,8 @@ def convert_ct2(merged: Path, dest: Path, quantization: str) -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Export atc-vn-ct2 for faster-whisper.")
-    parser.add_argument("--base", default="openai/whisper-small.en")
+    parser = argparse.ArgumentParser(description="Export CT2 for faster-whisper (turbo default, tclin A/B).")
+    parser.add_argument("--base", default=TRAIN_BASE)
     parser.add_argument("--merge-from", type=Path, default=None, help="LoRA adapter dir.")
     parser.add_argument("--merged", type=Path, default=None)
     parser.add_argument(
@@ -84,18 +85,31 @@ def main() -> int:
         default=repo_root() / "models" / "whisper" / "atc-vn-ct2",
     )
     parser.add_argument("--quantization", default="int8")
+    parser.add_argument("--from-hf", action="store_true", help="Convert --base HF id/dir to CT2, no LoRA.")
+    parser.add_argument("--preset", choices=["tclin"], default=None, help="tclin = A/B turbo ATCoSIM.")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+    if args.preset == "tclin":
+        args.base = AB_HF
+        args.from_hf = True
+        args.output = ab_ct2_dir()
     plan = {
         "base": args.base,
         "adapter": str(args.merge_from) if args.merge_from else None,
+        "from_hf": bool(args.from_hf),
         "output": str(args.output),
         "quantization": args.quantization,
-        "next": "set ATC_WHISPER_MODEL to output dir; A/B with tools/asr_eval.py",
+        "next": "set ATC_WHISPER_MODEL=tclin (A/B) or path; python tools/asr_eval.py --from-corrections",
     }
     if args.dry_run:
         print(json.dumps(plan, indent=2))
         return 0
+    if args.from_hf:
+        code = convert_ct2(args.base, args.output, args.quantization)
+        if code == 0:
+            print(f"CT2 model: {args.output}")
+            print("A/B REDA: set ATC_WHISPER_MODEL=tclin roi chay lai CHAY.cmd")
+        return code
     merged = args.merged or (args.output.parent / "atc-vn-merged")
     if args.merge_from is not None:
         try:
@@ -104,7 +118,7 @@ def main() -> int:
             print("Can transformers+peft de merge LoRA:", exc, file=sys.stderr)
             return 2
     elif not merged.is_dir():
-        print("Can --merge-from LoRA hoac --merged HF dir.", file=sys.stderr)
+        print("Can --merge-from LoRA, --merged HF dir, hoac --from-hf / --preset tclin.", file=sys.stderr)
         return 1
     code = convert_ct2(merged, args.output, args.quantization)
     if code == 0:

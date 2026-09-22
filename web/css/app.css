@@ -939,6 +939,7 @@ table.gloss td:last-child { color: var(--muted); }
   .ft-grid { grid-template-columns: 1fr 1fr; }
 }
 .ft-drop {
+  position: relative;
   display: grid;
   gap: 6px;
   padding: 16px;
@@ -948,6 +949,18 @@ table.gloss td:last-child { color: var(--muted); }
   cursor: pointer;
 }
 .ft-drop:hover { border-color: var(--accent); }
+.ft-drop.is-over {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.ft-file {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 0;
+  pointer-events: none;
+}
 .ft-bar {
   height: 8px;
   border-radius: 99px;

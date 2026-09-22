@@ -39,6 +39,14 @@ def wav_dir() -> Path:
     return gold_root() / DATASET_VERSION / "wav"
 
 
+def mix_root() -> Path:
+    return gold_root() / "mix" / "atco2-1h"
+
+
+def mix_manifest_path() -> Path:
+    return mix_root() / MANIFEST_NAME
+
+
 def manifest_path() -> Path:
     return gold_root() / DATASET_VERSION / MANIFEST_NAME
 

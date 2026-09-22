@@ -11,6 +11,7 @@ function Write-Step([string]$Message) {
 
 function Get-Python {
     $candidates = @(
+        @{ Exe = (Join-Path $Root ".venv\Scripts\python.exe"); Args = @() },
         @{ Exe = "python"; Args = @() },
         @{ Exe = "py"; Args = @("-3") },
         @{ Exe = "python3"; Args = @() }
@@ -188,6 +189,7 @@ if (-not $python) {
 
 Install-CryptographyIfMissing $python
 Install-PythonPackage $python "faster_whisper" "faster-whisper"
+Install-PythonPackage $python "openpyxl" "openpyxl"
 Assert-Runtime
 Install-PhoneApkIfReady
 

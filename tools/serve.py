@@ -37,12 +37,75 @@ import media_transcribe  # noqa: E402
 from reda.engine import analyze as reda_analyze  # noqa: E402
 from reda import store as reda_store  # noqa: E402
 from asr_dataset import ingest_finetune  # noqa: E402
+from asr_dataset import prepare_mix  # noqa: E402
+from asr_eval import eval_payload  # noqa: E402
 
 APP_FOLDER = "ATC-Symposium-Desk"
 HTTP_PORT = 8765
 HTTPS_PORT = 8766
 CREATOR_SIGNATURE = "created by Lộc đẹp trai"
 CREATOR_SIGNATURE_SHA256 = "a2fbda0ad4297deda52d14d5dca9af8027c601730cec3ca359982dd151896373"
+
+
+def _multipart_boundary(content_type: str) -> bytes:
+    lower = content_type.lower()
+    marker = "boundary="
+    idx = lower.find(marker)
+    if idx < 0:
+        return b""
+    raw = content_type[idx + len(marker) :].split(";")[0].strip()
+    if len(raw) >= 2 and raw[0] == raw[-1] == '"':
+        raw = raw[1:-1]
+    return raw.encode("ascii", "replace")
+
+
+def _header_attr(header: str, key: str) -> str:
+    token = key.lower() + "="
+    lower = header.lower()
+    idx = lower.find(token)
+    if idx < 0:
+        return ""
+    rest = header[idx + len(token) :].strip()
+    if rest.lower().startswith("utf-8''"):
+        return unquote(rest.split(";", 1)[0][7:])
+    if rest.startswith('"'):
+        end = rest.find('"', 1)
+        return rest[1:end] if end > 0 else rest.strip('"')
+    return rest.split(";")[0].strip()
+
+
+def parse_multipart_uploads(body: bytes, content_type: str) -> dict[str, tuple[str, bytes]]:
+    boundary = _multipart_boundary(content_type)
+    if not boundary:
+        raise ValueError("Form không phải multipart/form-data.")
+    delim = b"--" + boundary
+    out: dict[str, tuple[str, bytes]] = {}
+    for raw in body.split(delim):
+        part = raw
+        if part.startswith(b"--"):
+            continue
+        if part.startswith(b"\r\n"):
+            part = part[2:]
+        if part.endswith(b"\r\n"):
+            part = part[:-2]
+        if not part:
+            continue
+        header_blob, sep, data = part.partition(b"\r\n\r\n")
+        if not sep:
+            continue
+        headers = header_blob.decode("utf-8", "replace")
+        disp = ""
+        for line in headers.split("\r\n"):
+            if line.lower().startswith("content-disposition:"):
+                disp = line
+                break
+        name = _header_attr(disp, "name")
+        filename = _header_attr(disp, "filename*") or _header_attr(disp, "filename")
+        if name:
+            out[name] = (Path(filename).name if filename else "", data)
+    return out
+
+
 LOCKED_HTML = (
     "<!doctype html><html lang='vi'><meta charset='utf-8'>"
     "<meta name='viewport' content='width=device-width, initial-scale=1'>"
@@ -534,8 +597,17 @@ class DeskHandler(SimpleHTTPRequestHandler):
         if path == "/api/finetune/job":
             self._finetune_job()
             return
+        if path == "/api/finetune/eval":
+            self._finetune_eval()
+            return
         if path == "/api/finetune/template.xlsx":
             self._finetune_template()
+            return
+        if path == "/api/finetune/gold":
+            self._finetune_gold()
+            return
+        if path == "/api/finetune/seed-glossary":
+            self._finetune_seed_glossary()
             return
         if path in (
             "/ATC-Desk.apk",
@@ -586,6 +658,15 @@ class DeskHandler(SimpleHTTPRequestHandler):
             return
         if self._route_path() == "/api/finetune/ingest":
             self._finetune_ingest()
+            return
+        if self._route_path() == "/api/finetune/parse":
+            self._finetune_parse()
+            return
+        if self._route_path() == "/api/finetune/seed-glossary":
+            self._finetune_seed_glossary()
+            return
+        if self._route_path() == "/api/finetune/prepare-mix":
+            self._finetune_prepare_mix()
             return
         self.send_error(404, "Not Found")
 
@@ -699,7 +780,7 @@ class DeskHandler(SimpleHTTPRequestHandler):
                 handle.write(chunk)
                 remaining -= len(chunk)
             handle.close()
-            job_id = media_transcribe.start_job(src)
+            job_id = media_transcribe.start_job(src, self._upload_name())
             started = True
             self._send_json({"ok": True, "id": job_id})
         except OSError as exc:
@@ -719,12 +800,31 @@ class DeskHandler(SimpleHTTPRequestHandler):
         self._send_json(ingest_finetune.corpus_stats())
 
     def _finetune_job(self) -> None:
-        job = ingest_finetune.job_snapshot(self._query_id())
+        job_id = self._query_id()
+        job = ingest_finetune.job_snapshot(job_id) or prepare_mix.job_snapshot(job_id)
         if not job:
             self._send_json({"ok": False, "error": "Khong tim thay tien trinh fine-tune."}, 404)
             return
         job["ok"] = True
         self._send_json(job)
+
+    def _finetune_eval(self) -> None:
+        qs = parse_qs(urlparse(self.path).query)
+        mix = (qs.get("mix") or [""])[0].strip() in {"1", "true", "yes"}
+        try:
+            payload = eval_payload(from_corrections=not mix, mix=mix)
+        except Exception as exc:
+            self._send_json({"ok": False, "error": str(exc)}, 500)
+            return
+        self._send_json(payload)
+
+    def _finetune_prepare_mix(self) -> None:
+        try:
+            job_id = prepare_mix.start_prepare()
+        except Exception as exc:
+            self._send_json({"ok": False, "error": str(exc)}, 500)
+            return
+        self._send_json({"ok": True, "id": job_id})
 
     def _finetune_template(self) -> None:
         dest = Path(tempfile.gettempdir()) / "ATC-Desk-finetune-template.xlsx"
@@ -739,46 +839,108 @@ class DeskHandler(SimpleHTTPRequestHandler):
             self.wfile.write(data)
 
     def _finetune_ingest(self) -> None:
-        import cgi
-
         try:
-            form = cgi.FieldStorage(
-                fp=self.rfile,
-                headers=self.headers,
-                environ={
-                    "REQUEST_METHOD": "POST",
-                    "CONTENT_TYPE": self.headers.get("Content-Type", ""),
-                    "CONTENT_LENGTH": self.headers.get("Content-Length") or "0",
-                },
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            length = 0
+        if length <= 0:
+            self._send_json({"ok": False, "error": "Thiếu dữ liệu form."}, 400)
+            return
+        if length > media_transcribe.MAX_UPLOAD_BYTES:
+            self._send_json({"ok": False, "error": "File quá lớn (tối đa 512 MB)."}, 413)
+            return
+        try:
+            files = parse_multipart_uploads(
+                self.rfile.read(length),
+                self.headers.get("Content-Type") or "",
             )
-        except Exception as exc:
-            self._send_json({"ok": False, "error": "Khong doc duoc form: %s" % exc}, 400)
+        except ValueError as exc:
+            self._send_json({"ok": False, "error": str(exc)}, 400)
             return
-        excel_item = form["excel"] if "excel" in form else None
-        audio_item = form["audio"] if "audio" in form else None
-        if excel_item is None or not getattr(excel_item, "file", None):
-            self._send_json({"ok": False, "error": "Thieu file Excel hoi thoai."}, 400)
+        excel_name, excel_bytes = files.get("excel") or ("", b"")
+        audio_name, audio_bytes = files.get("audio") or ("", b"")
+        if not excel_bytes:
+            for fname, data in files.values():
+                lower = fname.lower()
+                if lower.endswith((".xlsx", ".xls", ".csv")):
+                    excel_name, excel_bytes = fname, data
+                elif data and not audio_bytes:
+                    audio_name, audio_bytes = fname, data
+        if not excel_bytes:
+            self._send_json({"ok": False, "error": "Thiếu file Excel hội thoại."}, 400)
             return
-        excel_name = Path(getattr(excel_item, "filename", None) or "gold.xlsx").name
-        audio_name = ""
+        excel_name = Path(excel_name or "gold.xlsx").name
+        audio_path = None
         fd, excel_tmp = tempfile.mkstemp(suffix=Path(excel_name).suffix or ".xlsx")
         os.close(fd)
         excel_path = Path(excel_tmp)
-        audio_path = None
         try:
-            with excel_path.open("wb") as fh:
-                shutil.copyfileobj(excel_item.file, fh)
-            if audio_item is not None and getattr(audio_item, "file", None) and getattr(audio_item, "filename", None):
-                audio_name = Path(str(audio_item.filename)).name
+            excel_path.write_bytes(excel_bytes)
+            if audio_bytes and audio_name:
+                audio_name = Path(audio_name).name
                 fd, audio_tmp = tempfile.mkstemp(suffix=Path(audio_name).suffix or ".wav")
                 os.close(fd)
                 audio_path = Path(audio_tmp)
-                with audio_path.open("wb") as fh:
-                    shutil.copyfileobj(audio_item.file, fh)
+                audio_path.write_bytes(audio_bytes)
             job_id = ingest_finetune.start_ingest(audio_path, excel_path, audio_name, excel_name)
             self._send_json({"ok": True, "id": job_id})
         except Exception as exc:
+            for path in (excel_path, audio_path):
+                if path is None:
+                    continue
+                try:
+                    path.unlink(missing_ok=True)
+                except OSError:
+                    pass
             self._send_json({"ok": False, "error": str(exc)}, 500)
+
+    def _finetune_gold(self) -> None:
+        qs = parse_qs(urlparse(self.path).query)
+        name = unquote((qs.get("name") or [""])[0] or "").strip()
+        self._send_json(ingest_finetune.gold_payload_for(name))
+
+    def _finetune_parse(self) -> None:
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            length = 0
+        if length <= 0:
+            self._send_json({"ok": False, "error": "Thiếu file Excel hội thoại."}, 400)
+            return
+        if length > 32 * 1024 * 1024:
+            self._send_json({"ok": False, "error": "Excel quá lớn."}, 413)
+            return
+        data = self.rfile.read(length)
+        name = self._upload_name()
+        lower = name.lower()
+        if not lower.endswith((".xlsx", ".xls", ".csv")):
+            name = (Path(name).stem or "gold") + ".xlsx"
+        qs = parse_qs(urlparse(self.path).query)
+        audio_name = unquote((qs.get("audio") or [""])[0] or "").strip()
+        fd, tmp = tempfile.mkstemp(suffix=Path(name).suffix or ".xlsx")
+        os.close(fd)
+        path = Path(tmp)
+        try:
+            path.write_bytes(data)
+            payload = ingest_finetune.parse_excel_payload(path, name, audio_name)
+            self._send_json(payload)
+        except Exception as exc:
+            self._send_json({"ok": False, "error": str(exc)}, 400)
+        finally:
+            try:
+                path.unlink(missing_ok=True)
+            except OSError:
+                pass
+
+    def _finetune_seed_glossary(self) -> None:
+        try:
+            seeded = ingest_finetune.seed_glossary_phrases()
+        except Exception as exc:
+            self._send_json({"ok": False, "error": str(exc)}, 500)
+            return
+        payload = dict(seeded)
+        payload["stats"] = ingest_finetune.corpus_stats()
+        self._send_json(payload)
 
     def _library_user_get(self) -> None:
         self._send_json({"ok": True, "entries": load_user_library()})

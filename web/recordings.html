@@ -36,7 +36,7 @@
     <section class="panel rec-stage" aria-label="Phát hình và file">
       <div class="rec-toolbar">
         <button type="button" class="primary" id="btnRecImport">Chọn file</button>
-        <input type="file" id="recFile" hidden multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.webm,.mp4,.mov,.mkv,.m4v,.avi,video/x-msvideo,video/avi">
+        <input type="file" id="recFile" hidden multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.webm,.mp4,.mov,.mkv,.m4v,.avi,.xlsx,.xls,.csv,video/x-msvideo,video/avi">
         <p id="recStatus" class="status rec-toolbar-status"></p>
       </div>
       <div id="recDrop" class="rec-stage-body" tabindex="0">
@@ -71,7 +71,7 @@
         </div>
     <section class="rec-library" aria-label="Danh sách bản ghi">
       <h2>File đã import</h2>
-      <p class="hint">Chọn tên file rồi bấm Phát để nghe và ghi hội thoại.</p>
+      <p class="hint">Chọn băng, hoặc kéo cùng file Excel gold (cùng tên, ví dụ vjc1225.mp4 + VJC1225 text.xlsx). Bấm Phát để chạy kịch bản gold theo nhịp băng.</p>
       <div class="rec-legend" aria-label="Đèn trạng thái">
         <span><i class="rec-lamp lamp-pending" aria-hidden="true"></i> Chưa sẵn sàng</span>
         <span><i class="rec-lamp lamp-ready" aria-hidden="true"></i> Đã sẵn sàng</span>
@@ -121,6 +121,7 @@
           <div class="stream-head">
             <strong>Kịch bản thoại</strong>
             <button type="button" id="copyRecEn">Sao chép kịch bản</button>
+            <button type="button" class="ghost" id="btnRecClear">Xóa kịch bản</button>
           </div>
           <ol id="recTurns" class="reda-turns" aria-label="Lượt nói"></ol>
           <textarea id="recTranscript" placeholder="[0:04] Nội dung English xuất hiện khi nghe…"></textarea>
@@ -136,10 +137,10 @@
       </div>
       <div class="stream stream-en reda-minutes">
         <div class="stream-head">
-          <strong>Biên bản bình giảng (EN)</strong>
-          <button type="button" id="copyRecMinutes">Sao chép biên bản</button>
+          <strong>Biên Bản Hội Thoại (EN)</strong>
+          <button type="button" id="copyRecMinutes">Sao chép biên bản hội thoại</button>
         </div>
-        <textarea id="recMinutes" placeholder="Biên bản English: transcript có vai + lỗi readback + teaching points."></textarea>
+        <textarea id="recMinutes" placeholder="Biên bản hội thoại English: phân vai, cấu trúc câu, dấu câu và ghi chú readback sau khi bấm Phân tích lại."></textarea>
       </div>
     </section>
 

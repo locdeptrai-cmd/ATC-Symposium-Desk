@@ -34,24 +34,28 @@
     </nav>
 
     <section class="panel">
-      <p class="hint">Upload <strong>file ghi âm/video sóng</strong> và <strong>Excel nội dung đúng</strong> (ATCO/PILOT). Máy đối chiếu lời Whisper với Excel, ghi vào corpus vàng và học cụm sửa (TSN Tower, ILSw, HVN…). REDA dùng ngay, không cần GPU. LoRA Whisper chỉ khi có CUDA.</p>
+      <p class="hint">Kéo thả <strong>cả hai file</strong> vào ô dưới (băng VHF + Excel ATCO/PILOT), hoặc bấm từng ô để chọn. Máy đối chiếu lời Whisper với Excel, ghi corpus vàng và học cụm sửa (TSN Tower, ILSw, HVN…). REDA dùng turbo Singularity ngay, không cần GPU. LoRA (khi có CUDA) fine-tune tiếp turbo đó, mix 70% gold VN + 30% ATCO2-1h.</p>
       <p class="hint">Excel: cột <code>t_start</code>, <code>t_end</code>, <code>speaker</code>, <code>text</code> (bắt buộc). Cột <code>asr</code> tùy chọn — lời máy nếu đã có. <a href="/api/finetune/template.xlsx">Tải file mẫu .xlsx</a></p>
-      <div class="ft-grid">
-        <label class="ft-drop" for="ftAudio">
+      <div class="ft-grid" id="ftDropGrid">
+        <label class="ft-drop" id="ftAudioDrop">
           <strong>File ghi âm / video</strong>
-          <span id="ftAudioName" class="meta">AVI, MP4, WAV, MP3…</span>
-          <input id="ftAudio" type="file" accept="audio/*,video/*,.avi,.mp4,.wav,.mp3,.m4a,.mkv" hidden>
+          <span id="ftAudioName" class="meta">Kéo thả AVI, MP4, WAV… hoặc bấm để chọn</span>
+          <input id="ftAudio" class="ft-file" type="file" accept="audio/*,video/*,.avi,.mp4,.wav,.mp3,.m4a,.mkv,.mov,.webm,.mpeg,.mpg">
         </label>
-        <label class="ft-drop" for="ftExcel">
+        <label class="ft-drop" id="ftExcelDrop">
           <strong>Excel hội thoại</strong>
-          <span id="ftExcelName" class="meta">.xlsx nội dung đúng</span>
-          <input id="ftExcel" type="file" accept=".xlsx,.xls,.csv" hidden>
+          <span id="ftExcelName" class="meta">Kéo thả .xlsx nội dung đúng hoặc bấm để chọn</span>
+          <input id="ftExcel" class="ft-file" type="file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
         </label>
       </div>
       <div class="btns" style="margin-top:12px">
         <button type="button" class="primary" id="ftSubmit">Nạp và cập nhật cách ghi</button>
         <button type="button" class="ghost" id="ftRefresh">Làm mới thống kê</button>
+        <button type="button" class="ghost" id="ftSeedGlossary">Nạp phraseology từ Thuật ngữ</button>
+        <button type="button" class="ghost" id="ftEvalWer">Đo WER gold</button>
+        <button type="button" class="ghost" id="ftPrepareMix">Nạp ATCO2-1h (mix 30%)</button>
       </div>
+      <p id="ftRecipe" class="meta">Đang tải mô hình ghi lời…</p>
       <p id="ftStatus" class="status"></p>
       <div id="ftBarWrap" class="ft-bar" hidden><i id="ftBar"></i></div>
     </section>

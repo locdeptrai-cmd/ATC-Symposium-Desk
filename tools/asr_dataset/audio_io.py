@@ -27,6 +27,17 @@ def read_wav_mono(path: Path) -> tuple[np.ndarray, int]:
     return pcm, sr
 
 
+def write_wav_mono(samples: np.ndarray, sr: int, dest: Path) -> None:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    chunk = np.asarray(samples, dtype=np.float32)
+    pcm = np.clip(chunk * 32767.0, -32767, 32767).astype(np.int16)
+    with wave.open(str(dest), "wb") as handle:
+        handle.setnchannels(1)
+        handle.setsampwidth(2)
+        handle.setframerate(int(sr) or 16000)
+        handle.writeframes(pcm.tobytes())
+
+
 def write_wav_slice(
     samples: np.ndarray,
     sr: int,

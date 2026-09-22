@@ -16,6 +16,8 @@ import numpy as np
 import app_paths
 import media_transcode as tx
 from asr_dataset.hotwords import hotwords_for
+from asr_dataset.recipe import resolve_model_id
+from asr_dataset.vocabulary import vocabulary_revision
 
 MAX_UPLOAD_BYTES = tx.MAX_UPLOAD_BYTES
 # CPU CTranslate2 / faster-whisper, English ATC radio only. No GPU / no torch
@@ -23,11 +25,15 @@ MAX_UPLOAD_BYTES = tx.MAX_UPLOAD_BYTES
 # Override with ATC_WHISPER_MODEL.
 ATC_WHISPER_TURBO_DIR = app_paths.whisper_turbo_dir()
 ATC_PROMPT = "Viet Nam Vietjet TSN Tower. Cleared to land. Squawk. QNH."
-LIVE_OVERLAP_SEC = 1.5
+LIVE_OVERLAP_SEC = 0.75
+STREAM_READ_SEC = 0.25
+PTT_CLOSED_HANG_SEC = 0.8
+PTT_FORCE_SEC = 8.0
 STREAM_HOP_SEC = float(os.environ.get("ATC_STT_HOP", "2.0"))
 STREAM_OVERLAP_SEC = 0.35
 STREAM_MIN_RMS = 0.012
 WHISPER_BEAM = max(1, int(os.environ.get("ATC_WHISPER_BEAM", "1")))
+WHISPER_RETRY_BEAM = max(WHISPER_BEAM, int(os.environ.get("ATC_WHISPER_RETRY_BEAM", "1")))
 # VHF band + de-click + light denoise. No gate/dynaudnorm: those chop PTT onsets
 # and pump hiss between syllables.
 RADIO_AF = (
@@ -46,18 +52,40 @@ def reset_live_tail() -> None:
     _live_tail = None
 
 
-def _apply_live_overlap(samples: np.ndarray, sr: int, src_name: str) -> tuple[np.ndarray, float]:
+def _is_live_name(src_name: str) -> bool:
+    return str(src_name or "").lower().startswith("live-")
+
+
+def _take_live_prefix(sr: int, src_name: str) -> tuple[np.ndarray, float]:
     global _live_tail, _live_tail_sr
-    if not str(src_name or "").lower().startswith("live-"):
+    if not _is_live_name(src_name):
+        return np.zeros(0, dtype=np.float32), 0.0
+    stamp = re.search(r"live-(\d+)", str(src_name).lower())
+    if stamp and int(stamp.group(1)) == 0:
         _live_tail = None
-        return samples, 0.0
-    overlap = 0.0
+        return np.zeros(0, dtype=np.float32), 0.0
+    if _live_tail is None or _live_tail_sr != sr or not len(_live_tail):
+        return np.zeros(0, dtype=np.float32), 0.0
+    prefix = np.array(_live_tail, dtype=np.float32, copy=True)
+    return prefix, float(len(prefix) / sr)
+
+
+def _store_live_tail(samples: np.ndarray, sr: int, src_name: str) -> None:
+    global _live_tail, _live_tail_sr
+    if not _is_live_name(src_name) or samples is None or not len(samples):
+        if not _is_live_name(src_name):
+            _live_tail = None
+        return
     n = max(1, int(LIVE_OVERLAP_SEC * sr))
-    if _live_tail is not None and len(_live_tail) and _live_tail_sr == sr:
-        samples = np.concatenate([_live_tail, samples])
-        overlap = float(len(_live_tail) / sr)
     _live_tail = np.array(samples[-n:], dtype=np.float32, copy=True)
     _live_tail_sr = sr
+
+
+def _apply_live_overlap(samples: np.ndarray, sr: int, src_name: str) -> tuple[np.ndarray, float]:
+    prefix, overlap = _take_live_prefix(sr, src_name)
+    if len(prefix):
+        samples = np.concatenate([prefix, samples])
+    _store_live_tail(samples, sr, src_name)
     return samples, overlap
 
 
@@ -80,6 +108,8 @@ _JOBS: dict[str, dict] = {}
 _JOBS_LOCK = threading.Lock()
 _MODEL = None
 _MODEL_LOCK = threading.Lock()
+_INFER_LOCK = threading.Lock()
+_FILE_JOB_LOCK = threading.Lock()
 _MODEL_ERROR = ""
 
 
@@ -105,13 +135,14 @@ def job_snapshot(job_id: str) -> dict | None:
             "analysis": job.get("analysis") or None,
             "done": bool(job.get("done")),
             "error": job.get("error") or "",
+            "vocabulary_revision": job.get("vocabulary_revision") or "",
         }
 
 
 def sweep_jobs(max_age: float = 900) -> None:
     now = time.time()
     with _JOBS_LOCK:
-        stale = [jid for jid, job in _JOBS.items() if now - float(job.get("created") or 0) > max_age]
+        stale = [jid for jid, job in _JOBS.items() if job.get("done") and now - float(job.get("finished") or job.get("created") or 0) > max_age]
     for jid in stale:
         with _JOBS_LOCK:
             job = _JOBS.pop(jid, None)
@@ -156,7 +187,7 @@ def _local_ct2_ready(folder: Path) -> bool:
 def _resolve_model_id() -> str:
     env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
     if env:
-        return env
+        return resolve_model_id(env)
     turbo = app_paths.whisper_turbo_dir()
     if _local_ct2_ready(turbo):
         return str(turbo)
@@ -180,14 +211,14 @@ def load_model():
         env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
         turbo = app_paths.whisper_turbo_dir()
         if env:
-            candidates.append(env)
+            candidates.append(resolve_model_id(env))
         if str(turbo) not in candidates:
             candidates.append(str(turbo))
         last_exc: Exception | None = None
         for name in candidates:
             try:
                 print("  Transcribe EN: dang tai model '%s' (%s/%s)..." % (name, WHISPER_DEVICE, WHISPER_COMPUTE), flush=True)
-                threads = max(2, int(os.environ.get("ATC_WHISPER_THREADS") or 0) or max(4, (os.cpu_count() or 4) - 1))
+                threads = max(1, int(os.environ.get("ATC_WHISPER_THREADS") or 0) or min(4, os.cpu_count() or 4))
                 kwargs_model = dict(
                     device=WHISPER_DEVICE,
                     compute_type=WHISPER_COMPUTE,
@@ -199,15 +230,14 @@ def load_model():
                     _MODEL = WhisperModel(name, **kwargs_model)
                 # First CTranslate2 run compiles kernels; do it at boot, not on the clip.
                 try:
-                    list(
-                        _MODEL.transcribe(
+                    segments, _ = _MODEL.transcribe(
                             np.zeros(8000, dtype=np.float32),
                             language="en",
                             beam_size=1,
                             vad_filter=False,
                             without_timestamps=True,
                         )
-                    )
+                    list(segments)
                 except Exception:
                     pass
                 WHISPER_MODEL = name
@@ -294,7 +324,7 @@ def ptt_windows(samples, sr: int, min_dur: float = 0.4, merge_gap: float = 0.65,
     span = max(0.0, p90 - p20)
     thr = max(0.015, p20 + 0.35 * span)
     if p90 < 0.04:
-        return [(0.0, len(samples) / float(sr or 1))]
+        return []
     raw: list[tuple[float, float]] = []
     start = None
     hang = 10
@@ -319,7 +349,7 @@ def ptt_windows(samples, sr: int, min_dur: float = 0.4, merge_gap: float = 0.65,
         if b - a >= min_dur:
             raw.append((a, b))
     if not raw:
-        return [(0.0, len(samples) / float(sr or 1))]
+        return []
     grouped: list[tuple[float, float]] = []
     cur0, cur1 = raw[0]
     for a, b in raw[1:]:
@@ -330,6 +360,24 @@ def ptt_windows(samples, sr: int, min_dur: float = 0.4, merge_gap: float = 0.65,
             cur0, cur1 = a, b
     grouped.append((cur0, cur1))
     return grouped
+
+
+def _energy_slices(samples: np.ndarray, sr: int, hop_sec: float = 3.0) -> list[tuple[float, float]]:
+    if samples is None or not len(samples):
+        return []
+    hop = max(int(sr * hop_sec), int(sr * 0.8))
+    out: list[tuple[float, float]] = []
+    i = 0
+    min_n = int(sr * 0.35)
+    while i < len(samples):
+        j = min(len(samples), i + hop)
+        chunk = samples[i:j]
+        if j - i >= min_n:
+            rms = float(np.sqrt(np.mean(chunk * chunk) + 1e-12))
+            if rms >= STREAM_MIN_RMS * 0.45:
+                out.append((i / float(sr), j / float(sr)))
+        i = j
+    return out
 
 
 def collapse_loops(text: str) -> str:
@@ -403,9 +451,69 @@ def _write_wav_slice(src_samples, sr: int, t0: float, t1: float, dest: Path) -> 
         handle.writeframes(pcm.tobytes())
 
 
+def _normalize_decode_audio(samples: np.ndarray) -> np.ndarray:
+    audio = np.asarray(samples, dtype=np.float32)
+    if not len(audio):
+        return audio
+    audio = audio - float(np.mean(audio))
+    peak = float(np.max(np.abs(audio)))
+    if peak > 0.98:
+        audio = audio * (0.98 / peak)
+    rms = float(np.sqrt(np.mean(audio * audio) + 1e-12))
+    if 0 < rms < 0.045:
+        gain = min(2.8, 0.075 / max(rms, 1e-6))
+        audio = np.clip(audio * gain, -1.0, 1.0)
+    return np.asarray(audio, dtype=np.float32)
+
+
+def _score_text_quality(text: str) -> float:
+    words = re.findall(r"[A-Za-z0-9']+", text or "")
+    if not words:
+        return -10.0
+    score = float(min(16, len(words))) * 0.45
+    low = " ".join(words).lower()
+    hints = (
+        "tower",
+        "runway",
+        "cleared",
+        "approach",
+        "squawk",
+        "qnh",
+        "descend",
+        "climb",
+        "flight level",
+        "line up",
+        "hold short",
+    )
+    score += 1.25 * sum(1 for hint in hints if hint in low)
+    score -= 0.9 * len(re.findall(r"\b(\w+)(?:\s+\1){2,}\b", low))
+    if len(words) <= 2:
+        score -= 2.0
+    return score
+
+
+def _transcribe_texts(model, audio: np.ndarray, kwargs: dict, tmp_path: Path | None = None) -> list[str]:
+    try:
+        segments, _info = model.transcribe(audio, **kwargs)
+        return [(seg.text or "").strip() for seg in segments]
+    except (TypeError, ValueError):
+        fd, tmp_name = tempfile.mkstemp(suffix=".wav")
+        os.close(fd)
+        tmp = Path(tmp_name)
+        try:
+            _write_wav_slice(audio, 16000, 0.0, len(audio) / 16000.0, tmp)
+            segments, _info = model.transcribe(str(tmp), **kwargs)
+            return [(seg.text or "").strip() for seg in segments]
+        finally:
+            try:
+                tmp.unlink(missing_ok=True)
+            except OSError:
+                pass
+
+
 def _decode_samples(model, samples: np.ndarray, hotwords: str) -> str:
     duration_s = max(0.4, len(samples) / 16000.0)
-    token_cap = max(16, min(48, int(duration_s * 10) + 8))
+    token_cap = max(24, min(192, int(duration_s * 16) + 24))
     kwargs = {
         "language": "en",
         "beam_size": WHISPER_BEAM,
@@ -419,42 +527,56 @@ def _decode_samples(model, samples: np.ndarray, hotwords: str) -> str:
         "no_repeat_ngram_size": 3,
         "compression_ratio_threshold": 2.2,
         "log_prob_threshold": -0.85,
-        "no_speech_threshold": 0.6,
+        "no_speech_threshold": 0.5,
         "max_new_tokens": token_cap,
         "word_timestamps": False,
     }
     if hotwords:
+        tokenizer = getattr(model, "hf_tokenizer", None)
+        if tokenizer is not None:
+            tokens = tokenizer.encode(hotwords, add_special_tokens=False).ids
+            hotwords = tokenizer.decode(tokens[:160])
         kwargs["hotwords"] = hotwords
-    audio = np.asarray(samples, dtype=np.float32)
-    try:
-        segments, _info = model.transcribe(audio, **kwargs)
-    except (TypeError, ValueError):
-        fd, tmp_name = tempfile.mkstemp(suffix=".wav")
-        os.close(fd)
-        tmp = Path(tmp_name)
-        try:
-            _write_wav_slice(audio, 16000, 0.0, len(audio) / 16000.0, tmp)
-            segments, _info = model.transcribe(str(tmp), **kwargs)
-        finally:
-            try:
-                tmp.unlink(missing_ok=True)
-            except OSError:
-                pass
+    audio = _normalize_decode_audio(samples)
+    with _INFER_LOCK:
+        texts = _transcribe_texts(model, audio, kwargs)
+        first = repair_radio_text(" ".join(t for t in texts if t))
+        if (
+            duration_s >= 0.9
+            and WHISPER_RETRY_BEAM > WHISPER_BEAM
+            and _score_text_quality(first) < 3.2
+        ):
+            kwargs_retry = dict(kwargs)
+            kwargs_retry["beam_size"] = WHISPER_RETRY_BEAM
+            kwargs_retry["best_of"] = min(3, WHISPER_RETRY_BEAM)
+            retry_texts = _transcribe_texts(model, audio, kwargs_retry)
+            retry = repair_radio_text(" ".join(t for t in retry_texts if t))
+            if _score_text_quality(retry) >= _score_text_quality(first):
+                texts = retry_texts
     bits = []
-    for seg in segments:
-        chunk = repair_radio_text((seg.text or "").strip())
+    for text in texts:
+        chunk = repair_radio_text(text)
         if chunk and len(chunk) >= 3:
             bits.append(chunk)
     return repair_radio_text(" ".join(bits))
 
 
-def _open_pcm_pipe(ffmpeg: str, src: Path, af: str) -> subprocess.Popen:
+def _open_pcm_pipe(
+    ffmpeg: str,
+    src: Path,
+    af: str,
+    max_sec: float | None = None,
+) -> subprocess.Popen:
     cmd = [
         ffmpeg,
         "-hide_banner",
         "-loglevel",
         "error",
         "-nostdin",
+    ]
+    if max_sec and max_sec > 0:
+        cmd += ["-t", "%.2f" % float(max_sec)]
+    cmd += [
         "-i",
         str(src),
         "-vn",
@@ -498,7 +620,54 @@ def _decode_window(model, wav: Path, duration_s: float, hotwords: str, streaming
     return [{"t_start": 0.0, "t_end": float(duration_s), "text": text}]
 
 
-def transcribe_with_turns(src: Path, on_progress=None, on_turns=None) -> tuple[str, list[dict], str]:
+def _ready_ptt_slices(
+    samples: np.ndarray,
+    sr: int,
+    *,
+    eof: bool,
+    emitted_until: float,
+    origin: float,
+) -> list[tuple[float, float, int, int]]:
+    """Return closed PTT slices as (abs_start, abs_end, i0, i1) not yet emitted."""
+    if samples is None or not len(samples):
+        return []
+    # Remove already decoded sound before estimating the noise floor. Otherwise
+    # a loud first call can mask all later, quieter calls in the same buffer.
+    skip = max(0, min(len(samples), int((emitted_until - origin) * sr)))
+    remaining = samples[skip:]
+    offset = skip / float(sr)
+    windows = ptt_windows(remaining, sr)
+    if not windows:
+        windows = _energy_slices(remaining, sr, hop_sec=PTT_FORCE_SEC)
+    windows = [(a + offset, b + offset) for a, b in windows]
+    dur = len(samples) / float(sr or 1)
+    abs_end = origin + dur
+    out: list[tuple[float, float, int, int]] = []
+    pad = int(0.06 * sr)
+    for a, b in windows:
+        abs_a = origin + a
+        abs_b = origin + b
+        if abs_b <= emitted_until + 0.05:
+            continue
+        abs_a = max(abs_a, emitted_until)
+        span = abs_b - abs_a
+        trailing = abs_end - abs_b
+        force = span >= PTT_FORCE_SEC
+        closed = eof or trailing >= PTT_CLOSED_HANG_SEC or force
+        if not closed or abs_b - abs_a < 0.35:
+            continue
+        while abs_a < abs_b - 0.3:
+            end = min(abs_b, abs_a + PTT_FORCE_SEC)
+            if not eof and abs_b - end < 0.25 and trailing < PTT_CLOSED_HANG_SEC and end - abs_a < PTT_FORCE_SEC:
+                break
+            i0 = max(0, int((abs_a - origin) * sr) - pad)
+            i1 = min(len(samples), int((end - origin) * sr) + pad)
+            out.append((abs_a, end, i0, i1))
+            abs_a = end
+    return out
+
+
+def transcribe_with_turns(src: Path, on_progress=None, on_turns=None, filename: str = "") -> tuple[str, list[dict], str]:
     def note(pct: float, stage: str, text: str = "") -> None:
         if on_progress:
             on_progress(pct, stage, text)
@@ -512,11 +681,14 @@ def transcribe_with_turns(src: Path, on_progress=None, on_turns=None) -> tuple[s
     model = load_model()
     if model is None:
         return "", [], _MODEL_ERROR or "Khong co Whisper."
-    hotwords = hotwords_for(filename=src.name)
+    hotwords = hotwords_for(filename=filename or src.name)
     text, turns, err = _transcribe_stream(src, ffmpeg, model, hotwords, note, on_turns)
-    if not err:
+    if not err and (text or turns):
         return text, turns, ""
-    note(10, "Luồng PCM lỗi, tách cả file…")
+    if _is_live_name(src.name):
+        note(10, "Luồng LIVE lỗi, tách cả file…")
+    else:
+        note(10, "Đang tách cả file để ghi lời ổn định…")
     return _transcribe_file_fallback(src, ffmpeg, model, hotwords, note, on_turns)
 
 
@@ -530,8 +702,9 @@ def _transcribe_stream(
 ) -> tuple[str, list[dict], str]:
     proc = None
     carry = np.zeros(0, dtype=np.float32)
+    max_sec = 16.0 if _is_live_name(src.name) else None
     for af in (RADIO_AF, RADIO_AF_FALLBACK):
-        proc = _open_pcm_pipe(ffmpeg, src, af)
+        proc = _open_pcm_pipe(ffmpeg, src, af, max_sec)
         probe = _read_pcm(proc, 1600)
         if len(probe) > 0:
             carry = probe
@@ -544,46 +717,69 @@ def _transcribe_stream(
     if proc is None:
         return "", [], "File khong co kenh tieng."
     sr = 16000
-    hop_n = max(int(sr * STREAM_HOP_SEC), int(sr * 0.8))
-    ov_n = max(int(sr * STREAM_OVERLAP_SEC), 0)
-    step_n = max(1, hop_n - ov_n)
-    t_cursor = 0.0
+    prefix, overlap = _take_live_prefix(sr, src.name)
+    if len(prefix):
+        carry = np.concatenate([prefix, carry])
+    origin = 0.0
+    emitted_until = 0.0
     turns: list[dict] = []
     parts: list[str] = []
-    hop_i = 0
+    read_n = max(int(sr * STREAM_READ_SEC), 800)
+    heard = len(carry) / float(sr)
+    tail = np.zeros(0, dtype=np.float32)
     try:
-        note(12, "Đang ghi lời từng đoạn ~%.1fs…" % STREAM_HOP_SEC)
+        note(12, "Đang ghi lời theo từng lần PTT…")
         while True:
-            more = _read_pcm(proc, hop_n)
+            more = _read_pcm(proc, read_n)
             if len(more):
                 carry = np.concatenate([carry, more]) if len(carry) else more
             eof = len(more) == 0
-            while len(carry) >= hop_n or (eof and len(carry) >= int(sr * 0.4)):
-                take = hop_n if len(carry) >= hop_n else len(carry)
-                window = carry[:take]
+            heard = origin + len(carry) / float(sr)
+            ready = _ready_ptt_slices(
+                carry, sr, eof=eof, emitted_until=emitted_until, origin=origin
+            )
+            for abs_a, abs_b, i0, i1 in ready:
+                window = carry[i0:i1]
                 rms = float(np.sqrt(np.mean(window * window) + 1e-12))
-                t0 = t_cursor
-                t1 = t_cursor + take / float(sr)
-                if rms >= STREAM_MIN_RMS:
-                    chunk = _decode_samples(model, window, hotwords)
-                    if chunk:
-                        parts.append(chunk)
-                        turns.append({"t_start": t0, "t_end": t1, "text": chunk})
-                        if on_turns:
-                            on_turns([dict(t) for t in turns])
-                hop_i += 1
-                if take == hop_n:
-                    t_cursor += step_n / float(sr)
-                    carry = carry[step_n:]
-                else:
-                    t_cursor += take / float(sr)
-                    carry = np.zeros(0, dtype=np.float32)
+                if rms < STREAM_MIN_RMS * 0.45:
+                    emitted_until = max(emitted_until, abs_b)
+                    continue
+                chunk = _decode_samples(model, window, hotwords)
+                if chunk:
+                    parts.append(chunk)
+                    turns.append({"t_start": abs_a, "t_end": abs_b, "text": chunk})
+                    if on_turns:
+                        on_turns(_drop_overlap_turns([dict(t) for t in turns], overlap))
+                emitted_until = max(emitted_until, abs_b)
                 joined = repair_radio_text(" ".join(parts))
-                note(min(92.0, 12.0 + hop_i * 4.0), "Đang ghi lời English…", joined)
+                pct = min(92.0, 12.0 + 80.0 * (emitted_until / max(heard, 0.5)))
+                note(pct, "Đang ghi lời English…", joined)
+            if not ready and len(carry) >= int(sr * 2.5):
+                quiet_n = len(carry) - int(sr * 0.5)
+                if quiet_n > int(sr * 0.8):
+                    head = carry[:quiet_n]
+                    rms = float(np.sqrt(np.mean(head * head) + 1e-12))
+                    if rms < STREAM_MIN_RMS * 0.45:
+                        emitted_until = max(emitted_until, origin + quiet_n / float(sr))
+            trim = emitted_until - origin - 0.25
+            if trim > 1.2:
+                n = int(trim * sr)
+                if 0 < n < len(carry):
+                    if _is_live_name(src.name):
+                        tail = np.concatenate([tail, carry[:n]]) if len(tail) else carry[:n].copy()
+                    carry = carry[n:]
+                    origin += n / float(sr)
             if eof:
                 break
+        if _is_live_name(src.name):
+            whole = np.concatenate([tail, carry]) if len(tail) and len(carry) else (tail if len(tail) else carry)
+            _store_live_tail(whole, sr, src.name)
+        turns = _drop_overlap_turns(turns, overlap)
         text = repair_radio_text(" ".join(t["text"] for t in turns) if turns else " ".join(parts))
         if not text:
+            if _is_live_name(src.name):
+                note(100, "Đoạn yên.", "")
+                return "", [], ""
             return "", [], "Whisper khong nghe ra loi English trong file nay."
         note(94, "Đã ghi lời English.", text)
         return text, turns, ""
@@ -606,30 +802,41 @@ def _transcribe_file_fallback(
     folder = Path(tempfile.mkdtemp(prefix="atc-stt-"))
     wav = folder / "voice.wav"
     try:
+        note(8, "Đang tách tiếng từ file…")
         ok, err = _extract_wav(src, wav, ffmpeg)
         if not ok:
             return "", [], err
+        note(16, "Đang tìm từng lần PTT…")
         samples, sr = _read_wav_mono(wav)
         samples, overlap = _apply_live_overlap(samples, sr, src.name)
         duration = len(samples) / float(sr or 1)
-        hop = STREAM_HOP_SEC
-        windows = []
-        t = 0.0
-        while t < duration:
-            windows.append((t, min(duration, t + hop)))
-            t += hop - STREAM_OVERLAP_SEC
+        windows = ptt_windows(samples, sr)
         if not windows:
+            windows = _energy_slices(samples, sr)
+        if not windows and duration <= 20:
             windows = [(0.0, duration)]
+        split: list[tuple[float, float]] = []
+        for t0, t1 in windows:
+            a = t0
+            while a < t1:
+                b = min(t1, a + PTT_FORCE_SEC)
+                split.append((a, b))
+                a = b
+        windows = split or windows
         parts: list[str] = []
         turns: list[dict] = []
+        pad = int(0.06 * (sr or 16000))
+        total = max(len(windows), 1)
         for idx, (t0, t1) in enumerate(windows):
-            a = int(t0 * sr)
-            b = int(t1 * sr)
+            if t1 - t0 > PTT_FORCE_SEC + 0.2:
+                t1 = t0 + PTT_FORCE_SEC
+            a = max(0, int(t0 * sr) - pad)
+            b = min(len(samples), int(t1 * sr) + pad)
             window = samples[a:b]
-            if len(window) < int(sr * 0.35):
+            if len(window) < int(sr * 0.3):
                 continue
             rms = float(np.sqrt(np.mean(window * window) + 1e-12))
-            if rms < STREAM_MIN_RMS:
+            if rms < STREAM_MIN_RMS * 0.5:
                 continue
             chunk = _decode_samples(model, window, hotwords)
             if not chunk:
@@ -637,13 +844,16 @@ def _transcribe_file_fallback(
             parts.append(chunk)
             turns.append({"t_start": t0, "t_end": t1, "text": chunk})
             joined = repair_radio_text(" ".join(parts))
-            pct = min(92.0, 18.0 + 74.0 * (t1 / max(duration, 0.01)))
+            pct = min(92.0, 18.0 + 74.0 * ((idx + 1) / total))
             note(pct, "Đang ghi lời English…", joined)
             if on_turns:
                 on_turns(_drop_overlap_turns([dict(t) for t in turns], overlap))
         turns = _drop_overlap_turns(turns, overlap)
         text = repair_radio_text(" ".join(t["text"] for t in turns) if turns else " ".join(parts))
         if not text:
+            if _is_live_name(src.name):
+                note(100, "Đoạn yên.", "")
+                return "", [], ""
             return "", [], "Whisper khong nghe ra loi English trong file nay."
         note(94, "Đã ghi lời English.", text)
         return text, turns, ""
@@ -672,7 +882,7 @@ def _analyze_turns(turns: list[dict], filename: str) -> dict | None:
         return None
 
 
-def start_job(src: Path) -> str:
+def start_job(src: Path, filename: str = "") -> str:
     job_id = uuid.uuid4().hex[:12]
     with _JOBS_LOCK:
         _JOBS[job_id] = {
@@ -685,6 +895,7 @@ def start_job(src: Path) -> str:
             "done": False,
             "error": "",
             "src": src,
+            "filename": filename or src.name,
             "created": time.time(),
         }
     threading.Thread(target=_run_job, args=(job_id, src), daemon=True).start()
@@ -698,10 +909,20 @@ def _run_job(job_id: str, src: Path) -> None:
             fields["text"] = text
         _job_update(job_id, **fields)
 
-    text, turns, err = transcribe_with_turns(
-        src, on_progress=on_progress,
-        on_turns=lambda turns: _job_update(job_id, turns=turns),
-    )
+    text, turns, err = "", [], ""
+    try:
+        _job_update(job_id, stage="Đang chờ bộ nhận dạng…")
+        with _FILE_JOB_LOCK:
+            _job_update(job_id, vocabulary_revision=vocabulary_revision())
+            filename = _JOBS.get(job_id, {}).get("filename", "")
+            extra = {"filename": filename} if filename else {}
+            text, turns, err = transcribe_with_turns(
+                src, on_progress=on_progress,
+                on_turns=lambda turns: _job_update(job_id, turns=turns), **extra,
+            )
+    except Exception as exc:
+        err = "Ghi lời bị lỗi: %s" % exc
+    _job_update(job_id, finished=time.time())
     name = src.name if src else "clip"
     try:
         src.unlink(missing_ok=True)

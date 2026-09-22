@@ -34,6 +34,7 @@ def test_train_lora_dry_run(tmp_path: Path, monkeypatch):
     stats = dry_run(manifest)
     assert stats["ok"] is True
     assert stats["counts"]["train"] == 1
+    assert stats["base"] == "SingularityUS/ATC-whisper-turbo-v1"
     assert gold_root()
 
 
@@ -44,3 +45,15 @@ def test_export_ct2_dry_run(capsys):
     assert main() == 0
     out = capsys.readouterr().out
     assert "atc-vn-ct2" in out
+    assert "SingularityUS/ATC-whisper-turbo-v1" in out
+
+
+def test_export_ct2_tclin_preset_dry_run(capsys):
+    from asr_dataset.export_ct2 import main
+
+    sys.argv = ["export_ct2.py", "--dry-run", "--preset", "tclin"]
+    assert main() == 0
+    out = capsys.readouterr().out
+    assert "tclin/whisper-large-v3-turbo-atcosim-finetune" in out
+    assert "tclin-turbo-ct2" in out
+    assert '"from_hf": true' in out

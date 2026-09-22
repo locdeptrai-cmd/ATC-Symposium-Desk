@@ -12,6 +12,7 @@ if str(_TOOLS) not in sys.path:
     sys.path.insert(0, str(_TOOLS))
 
 from asr_dataset.paths import gold_root, manifest_path
+from asr_dataset.recipe import TRAIN_BASE, load_mix_rows, mix_train_rows, recipe_status
 
 
 def load_split(manifest: Path, split: str) -> list[dict]:
@@ -34,6 +35,8 @@ def load_split(manifest: Path, split: str) -> list[dict]:
         else:
             continue
         rows.append(row)
+    if split == "train":
+        rows = mix_train_rows(rows, load_mix_rows("train"))
     return rows
 
 
@@ -51,12 +54,18 @@ def dry_run(manifest: Path) -> dict:
         if row.get("audio"):
             counts["with_audio"] += 1
         hours += max(0.0, float(row.get("t_end") or 0) - float(row.get("t_start") or 0))
+    mix = load_mix_rows("train")
+    mixed = mix_train_rows([{"id": i} for i in range(counts.get("train", 0))], mix)
     return {
         "ok": True,
         "manifest": str(manifest),
         "counts": counts,
         "hours": round(hours / 3600.0, 3),
-        "note": "Train on CUDA with --train. Mix 70% this gold + 30% ATCO2/ATCoSIM.",
+        "mix_train": len(mix),
+        "train_with_mix": len(mixed),
+        "base": TRAIN_BASE,
+        "recipe": recipe_status(),
+        "note": "Train CUDA --train. Base turbo Singularity. Mix 70% gold VN + 30% ATCO2-1h if mix is loaded.",
     }
 
 
@@ -135,7 +144,7 @@ def train(args: argparse.Namespace) -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Whisper LoRA on VN VHF gold (GPU).")
     parser.add_argument("--manifest", type=Path, default=None)
-    parser.add_argument("--base", default="openai/whisper-small.en")
+    parser.add_argument("--base", default=TRAIN_BASE)
     parser.add_argument("--output", default=str(gold_root().parent / "models" / "whisper" / "atc-vn-lora"))
     parser.add_argument("--batch", type=int, default=4)
     parser.add_argument("--steps", type=int, default=400)

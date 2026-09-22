@@ -1,41 +1,75 @@
-"""Regression checks for incremental file transcription without auto analysis."""
-from pathlib import Path
-from unittest.mock import patch
+"""Regression checks for PTT-window file transcription without auto analysis."""
+from unittest.mock import MagicMock, patch
 
 import numpy as np
 
 import media_transcribe as mt
 
 
-def test_continuous_audio_publishes_bounded_turns_before_completion(tmp_path):
-    src = tmp_path / "radio.wav"
-    src.write_bytes(b"sample")
-    updates = []
-    spans = []
+def _burst_track(sr=16000, duration=10.0, bursts=((0.4, 1.5), (4.0, 5.2), (7.4, 8.6))):
+    samples = np.zeros(int(duration * sr), dtype=np.float32)
+    for start, end in bursts:
+        a = int(start * sr)
+        b = int(end * sr)
+        samples[a:b] = 0.25
+    return samples, sr
 
-    def decode(model, wav, duration, hotwords, streaming=False):
-        assert streaming
-        spans.append(duration)
-        return [{"t_start": 0, "t_end": duration, "text": "cleared to land"}]
+
+def test_ptt_windows_separates_talkspurts():
+    samples, sr = _burst_track()
+    windows = mt.ptt_windows(samples, sr)
+    assert len(windows) == 3
+    assert windows[0][1] - windows[0][0] < 2.2
+    assert windows[1][0] > 3.2
+
+
+def test_stream_emits_each_closed_ptt_before_eof(tmp_path):
+    src = tmp_path / "live-radio.webm"
+    src.write_bytes(b"RIFF" + b"\x00" * 80)
+    samples, sr = _burst_track()
+    cursor = {"i": 0}
+    read_n = int(sr * 0.25)
+
+    def read_pcm(proc, n_samples):
+        i = cursor["i"]
+        take = min(n_samples, max(0, len(samples) - i))
+        if take <= 0:
+            return np.zeros(0, dtype=np.float32)
+        chunk = samples[i : i + take]
+        cursor["i"] = i + take
+        return chunk
+
+    updates = []
+    decoded = []
+
+    def decode(model, window, hotwords):
+        decoded.append(len(window) / 16000.0)
+        return "cleared to land"
+
+    proc = MagicMock()
+    proc.poll.return_value = None
+    proc.stdout = object()
 
     with patch.object(mt.tx, "find_ffmpeg", return_value="ffmpeg"), \
-         patch.object(mt, "_extract_wav", return_value=(True, "")), \
+         patch.object(mt, "_open_pcm_pipe", return_value=proc), \
+         patch.object(mt, "_read_pcm", side_effect=read_pcm), \
          patch.object(mt, "load_model", return_value=object()), \
-         patch.object(mt, "_read_wav_mono", return_value=(np.zeros(160000), 16000)), \
-         patch.object(mt, "_write_wav_slice"), \
-         patch.object(mt, "_decode_window", side_effect=decode):
-        text, turns, error = mt.transcribe_with_turns(src, on_turns=lambda ts: updates.append(ts))
+         patch.object(mt, "_decode_samples", side_effect=decode):
+        text, turns, error = mt.transcribe_with_turns(
+            src,
+            on_turns=lambda ts: updates.append(list(ts)),
+        )
     assert not error and text
+    assert len(turns) == 3
     assert len(updates) == 3
-    assert [len(ts) for ts in updates] == [1, 2, 3]
-    assert max(spans) <= 4.36
-    assert updates[0][0]["t_end"] < 5
+    assert updates[0][0]["t_end"] < 3
+    assert max(decoded) < 3.5
     assert all("speaker_role" not in t for t in turns)
 
 
-def test_job_keeps_partial_turns_and_never_analyzes(tmp_path):
-    src = tmp_path / "radio.wav"
-    src.write_bytes(b"sample")
+def test_job_keeps_partial_turns_and_never_analyzes():
+    src = MagicMock()
+    src.name = "radio.wav"
     job_id = "stream-test"
     mt._JOBS[job_id] = {"id": job_id, "done": False}
     turns = [{"t_start": 0, "t_end": 4, "text": "cleared to land"}]
@@ -56,3 +90,52 @@ def test_job_keeps_partial_turns_and_never_analyzes(tmp_path):
         assert snap["analysis"] is None
     finally:
         mt._JOBS.pop(job_id, None)
+
+
+def test_energy_slices_when_ptt_sees_silence():
+    sr = 16000
+    samples = np.zeros(int(12 * sr), dtype=np.float32)
+    samples[int(8.0 * sr) : int(9.4 * sr)] = 0.03
+    assert mt.ptt_windows(samples, sr) == []
+    slices = mt._energy_slices(samples, sr)
+    assert slices
+    assert slices[0][0] < 9.0
+
+
+def test_decode_retries_with_stronger_beam_for_low_quality():
+    class Seg:
+        def __init__(self, text):
+            self.text = text
+
+    calls = []
+
+    class FakeModel:
+        def transcribe(self, audio, **kwargs):
+            calls.append(kwargs.copy())
+            if len(calls) == 1:
+                return [Seg("uh uh")], None
+            return [Seg("cleared to land runway two five right")], None
+
+    audio = np.ones(16000, dtype=np.float32) * 0.01
+    text = mt._decode_samples(FakeModel(), audio, "Vietjet")
+    assert "cleared to land" in text.lower()
+    assert len(calls) == 2
+    assert calls[1]["beam_size"] >= calls[0]["beam_size"]
+
+
+def test_decode_skips_retry_when_first_pass_is_good():
+    class Seg:
+        def __init__(self, text):
+            self.text = text
+
+    calls = []
+
+    class FakeModel:
+        def transcribe(self, audio, **kwargs):
+            calls.append(kwargs.copy())
+            return [Seg("TSN Tower Vietjet one two two five continue approach runway two five right")], None
+
+    audio = np.ones(20000, dtype=np.float32) * 0.02
+    text = mt._decode_samples(FakeModel(), audio, "Vietjet")
+    assert "rwy 25r" in text.lower()
+    assert len(calls) == 1
