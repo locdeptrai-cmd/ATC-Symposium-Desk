@@ -466,6 +466,7 @@
       return;
     }
     state.listenLang = lang;
+    if (ATC.floatingSubtitles) ATC.floatingSubtitles.reset();
     state.finalBits = transcriptValue() ? [transcriptValue()] : [];
     if (!state.units.length && transcriptValue()) rebuildUnitsFromTranscript();
     updateStreamLabels();
@@ -487,6 +488,9 @@
         var shown = (state.finalBits.join(" ") + " " + (res.interim || "")).replace(/\s+/g, " ").trim();
         if (!res.finalText) $("transcript").value = shown || base;
         $("interim").textContent = res.interim || "";
+        if (ATC.floatingSubtitles && (res.interim || res.finalText)) {
+          ATC.floatingSubtitles.push(res.interim || res.finalText, translateOpts());
+        }
       },
       onError: function (code) {
         setStatus(errorMessage(code), "warn");
@@ -810,6 +814,7 @@
       stopListen({ skipSuggest: true });
       ATC.speech.silence();
       state.finalBits = [];
+      if (ATC.floatingSubtitles) ATC.floatingSubtitles.reset();
       state.units = [];
       state.unitCache = {};
       state.inflight = {};

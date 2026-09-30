@@ -1,6 +1,7 @@
 """Transcribe English from a recording file (not the microphone)."""
 from __future__ import annotations
 
+import gc
 import os
 import re
 import subprocess
@@ -10,6 +11,28 @@ import time
 import uuid
 import wave
 from pathlib import Path
+
+
+def _cpu_thread_budget() -> int:
+    raw = str(os.environ.get("ATC_WHISPER_THREADS") or "").strip()
+    if raw.isdigit() and int(raw) > 0:
+        return max(1, int(raw))
+    return 2
+
+
+def _apply_low_mem_env() -> None:
+    """Cap MKL/OpenMP arenas before numpy or CTranslate2 load."""
+    threads = str(_cpu_thread_budget())
+    os.environ.setdefault("CT2_PACKED_GEMM", "0")
+    os.environ.setdefault("OMP_NUM_THREADS", threads)
+    os.environ.setdefault("MKL_NUM_THREADS", threads)
+    os.environ.setdefault("OPENBLAS_NUM_THREADS", threads)
+    os.environ.setdefault("NUMEXPR_NUM_THREADS", threads)
+    os.environ.setdefault("KMP_BLOCKTIME", "0")
+    os.environ.setdefault("KMP_AFFINITY", "disabled")
+
+
+_apply_low_mem_env()
 
 import numpy as np
 
@@ -197,64 +220,212 @@ def _resolve_model_id() -> str:
 WHISPER_MODEL = _resolve_model_id()
 
 
+def _is_memory_error(exc: BaseException | str) -> bool:
+    text = str(exc or "").lower()
+    needles = (
+        "mkl_malloc",
+        "failed to allocate",
+        "cannot allocate",
+        "out of memory",
+        "memoryerror",
+        "std::bad_alloc",
+        "not enough memory",
+        "paged out",
+    )
+    return any(needle in text for needle in needles)
+
+
+def memory_status() -> dict:
+    """Probe physical RAM + commit/pagefile (Windows MEMORYSTATUSEX)."""
+    out: dict = {
+        "ok": True,
+        "platform": os.name,
+        "pagefile_enabled": None,
+        "ram_total_mb": None,
+        "ram_avail_mb": None,
+        "commit_total_mb": None,
+        "commit_avail_mb": None,
+    }
+    if os.name != "nt":
+        return out
+    try:
+        import ctypes
+        from ctypes import wintypes
+
+        class MEMORYSTATUSEX(ctypes.Structure):
+            _fields_ = [
+                ("dwLength", wintypes.DWORD),
+                ("dwMemoryLoad", wintypes.DWORD),
+                ("ullTotalPhys", ctypes.c_uint64),
+                ("ullAvailPhys", ctypes.c_uint64),
+                ("ullTotalPageFile", ctypes.c_uint64),
+                ("ullAvailPageFile", ctypes.c_uint64),
+                ("ullTotalVirtual", ctypes.c_uint64),
+                ("ullAvailVirtual", ctypes.c_uint64),
+                ("ullAvailExtendedVirtual", ctypes.c_uint64),
+            ]
+
+        stat = MEMORYSTATUSEX()
+        stat.dwLength = ctypes.sizeof(MEMORYSTATUSEX)
+        if not ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat)):
+            return out
+        ram_total = int(stat.ullTotalPhys)
+        commit_total = int(stat.ullTotalPageFile)
+        out["ram_total_mb"] = round(ram_total / (1024 * 1024))
+        out["ram_avail_mb"] = round(int(stat.ullAvailPhys) / (1024 * 1024))
+        out["commit_total_mb"] = round(commit_total / (1024 * 1024))
+        out["commit_avail_mb"] = round(int(stat.ullAvailPageFile) / (1024 * 1024))
+        # Pagefile present when commit limit clearly exceeds physical RAM.
+        out["pagefile_enabled"] = commit_total > ram_total + 256 * 1024 * 1024
+        out["memory_load_pct"] = int(stat.dwMemoryLoad)
+    except Exception as exc:
+        out["ok"] = False
+        out["error"] = str(exc)
+    return out
+
+
+def _friendly_model_error(exc: BaseException | str) -> str:
+    raw = str(exc).strip() or "không tải được mô hình"
+    if not _is_memory_error(exc):
+        return "Không tải được mô hình Whisper: " + raw
+    mem = memory_status()
+    page_on = mem.get("pagefile_enabled")
+    avail = mem.get("ram_avail_mb")
+    bits = ["Hết RAM khi nạp bộ nhận dạng (mkl_malloc)."]
+    if avail is not None:
+        bits.append("RAM trống khoảng %s MB." % avail)
+    if page_on is True:
+        bits.append(
+            "Pagefile Windows đang bật — đóng app nặng (Edge/Chrome nhiều tab, IDE), "
+            "rồi khởi động lại ATC Desk; không cần bật lại pagefile."
+        )
+    elif page_on is False:
+        bits.append(
+            "Pagefile đang tắt hoặc rất nhỏ — bật Virtual Memory trong Windows, "
+            "rồi khởi động lại ATC Desk."
+        )
+    else:
+        bits.append("Đóng app khác rồi khởi động lại ATC Desk.")
+    bits.append("Chi tiết: " + raw)
+    return " ".join(bits)
+
+
+def _unload_model() -> None:
+    global _MODEL
+    _MODEL = None
+    gc.collect()
+
+
+def _model_candidates() -> list[str]:
+    names: list[str] = []
+    env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
+    turbo = str(app_paths.whisper_turbo_dir())
+    if env:
+        names.append(resolve_model_id(env))
+    if turbo not in names:
+        names.append(turbo)
+    return names
+
+
+def _thread_attempts() -> list[int]:
+    budget = _cpu_thread_budget()
+    seen: list[int] = []
+    for value in (budget, 1):
+        if value not in seen:
+            seen.append(value)
+    return seen
+
+
+def _warmup_model(model) -> None:
+    segments, _info = model.transcribe(
+        np.zeros(4000, dtype=np.float32),
+        language="en",
+        beam_size=1,
+        vad_filter=False,
+        without_timestamps=True,
+    )
+    list(segments)
+
+
 def load_model():
     global _MODEL, _MODEL_ERROR, WHISPER_MODEL
     with _MODEL_LOCK:
         if _MODEL is not None:
             return _MODEL
+        if _MODEL_ERROR:
+            return None
         try:
             from faster_whisper import WhisperModel
         except ImportError:
-            _MODEL_ERROR = "May nay chua cai faster-whisper. pip install faster-whisper."
+            _MODEL_ERROR = "Máy này chưa cài faster-whisper. pip install faster-whisper."
             return None
-        candidates = []
-        env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
-        turbo = app_paths.whisper_turbo_dir()
-        if env:
-            candidates.append(resolve_model_id(env))
-        if str(turbo) not in candidates:
-            candidates.append(str(turbo))
         last_exc: Exception | None = None
-        for name in candidates:
-            try:
-                print("  Transcribe EN: dang tai model '%s' (%s/%s)..." % (name, WHISPER_DEVICE, WHISPER_COMPUTE), flush=True)
-                threads = max(1, int(os.environ.get("ATC_WHISPER_THREADS") or 0) or min(4, os.cpu_count() or 4))
-                kwargs_model = dict(
-                    device=WHISPER_DEVICE,
-                    compute_type=WHISPER_COMPUTE,
-                    download_root=str(_model_cache_dir()),
-                )
+        for name in _model_candidates():
+            for threads in _thread_attempts():
                 try:
-                    _MODEL = WhisperModel(name, cpu_threads=threads, num_workers=1, **kwargs_model)
-                except TypeError:
-                    _MODEL = WhisperModel(name, **kwargs_model)
-                # First CTranslate2 run compiles kernels; do it at boot, not on the clip.
-                try:
-                    segments, _ = _MODEL.transcribe(
-                            np.zeros(8000, dtype=np.float32),
-                            language="en",
-                            beam_size=1,
-                            vad_filter=False,
-                            without_timestamps=True,
+                    print(
+                        "  Transcribe EN: dang tai model '%s' (%s/%s, %s thread)..."
+                        % (name, WHISPER_DEVICE, WHISPER_COMPUTE, threads),
+                        flush=True,
+                    )
+                    kwargs_model = dict(
+                        device=WHISPER_DEVICE,
+                        compute_type=WHISPER_COMPUTE,
+                        download_root=str(_model_cache_dir()),
+                    )
+                    try:
+                        model = WhisperModel(
+                            name, cpu_threads=threads, num_workers=1, **kwargs_model
                         )
-                    list(segments)
-                except Exception:
-                    pass
-                WHISPER_MODEL = name
-                _MODEL_ERROR = ""
-                return _MODEL
-            except Exception as exc:
-                last_exc = exc
-                print("  Transcribe EN: bo qua '%s': %s" % (name, exc), flush=True)
-                _MODEL = None
-        _MODEL_ERROR = "Khong tai duoc mo hinh Whisper: %s" % last_exc
+                    except TypeError:
+                        model = WhisperModel(name, **kwargs_model)
+                    _warmup_model(model)
+                    _MODEL = model
+                    WHISPER_MODEL = name
+                    _MODEL_ERROR = ""
+                    print(
+                        "  Transcribe EN: whisper %s (%s/%s, %s thread)"
+                        % (name, WHISPER_DEVICE, WHISPER_COMPUTE, threads),
+                        flush=True,
+                    )
+                    return _MODEL
+                except Exception as exc:
+                    last_exc = exc
+                    print("  Transcribe EN: bo qua '%s'/%s thread: %s" % (name, threads, exc), flush=True)
+                    _unload_model()
+        _MODEL_ERROR = _friendly_model_error(last_exc or "khong tai duoc mo hinh")
         return None
+
+
+def model_status() -> dict:
+    mem = memory_status()
+    return {
+        "ok": True,
+        "ready": _MODEL is not None,
+        "loading": _MODEL is None and not _MODEL_ERROR,
+        "error": _MODEL_ERROR or "",
+        "model": WHISPER_MODEL,
+        "compute": WHISPER_COMPUTE,
+        "threads": _cpu_thread_budget(),
+        "pagefile_enabled": mem.get("pagefile_enabled"),
+        "ram_total_mb": mem.get("ram_total_mb"),
+        "ram_avail_mb": mem.get("ram_avail_mb"),
+        "commit_total_mb": mem.get("commit_total_mb"),
+        "commit_avail_mb": mem.get("commit_avail_mb"),
+    }
 
 
 def warm_model() -> None:
     model = load_model()
     if model is not None:
-        print("  Transcribe EN: whisper %s (%s/%s)" % (WHISPER_MODEL, WHISPER_DEVICE, WHISPER_COMPUTE), flush=True)
+        print(
+            "  Transcribe EN: whisper %s (%s/%s, %s thread)"
+            % (WHISPER_MODEL, WHISPER_DEVICE, WHISPER_COMPUTE, _cpu_thread_budget()),
+            flush=True,
+        )
+        return
+    if _MODEL_ERROR:
+        print("  Transcribe EN: %s" % _MODEL_ERROR, flush=True)
 
 
 def _run_ffmpeg_wav(ffmpeg: str, src: Path, wav: Path, af: str, timeout: int) -> tuple[bool, str]:
@@ -393,7 +564,12 @@ def collapse_loops(text: str) -> str:
 
 _RADIO_FIXES = (
     (r"\b(?:charlie|charley)\s+jet\b", "Vietjet"),
+    # ASR: "sion way" ≈ taxiway/runway; must run before "sion + digit → Vietjet".
+    (r"\bsion\s+ways?\b", "taxiway"),
     (r"\bsion\s+(?=one|two|three|four|five|six|seven|eight|nine|zero)", "Vietjet "),
+    (r"\bvietjen\b", "Vietjet"),
+    (r"\bvietjin\b", "Vietjet"),
+    (r"\bviet\s*jen\b", "Vietjet"),
     (r"\bviet\s*jet(?:air)?\b", "Vietjet"),
     (r"\bvietnam(?:\s+airlines?)?\b", "Viet Nam"),
     (r"\bviet\s*nam(?:\s+airlines?)?\b", "Viet Nam"),
@@ -414,6 +590,10 @@ _RADIO_FIXES = (
     (r"\bover\s+to\s+ukraine\b", ""),
     (r"\btwo\s+fellay\b", "two five"),
     (r"\bfellay\b", "five"),
+    (r"\b(?:runway|rwy|taxiway|twy)\s+two\s+final(?:ly)?\b", "runway two five"),
+    (r"\b(?:runway|rwy|taxiway|twy)\s+(\d)\s+final(?:ly)?\b", r"runway \1 five"),
+    (r"\btwo\s+finally\b", "two five"),
+    (r"\b(\d)\s+finally\b", r"\1 five"),
     (r"\brunway\s+two\s+final\b", "runway two five"),
     (r"\bniner\b", "nine"),
     (r"\btree\b", "three"),
@@ -496,7 +676,11 @@ def _transcribe_texts(model, audio: np.ndarray, kwargs: dict, tmp_path: Path | N
     try:
         segments, _info = model.transcribe(audio, **kwargs)
         return [(seg.text or "").strip() for seg in segments]
-    except (TypeError, ValueError):
+    except Exception as exc:
+        if _is_memory_error(exc):
+            raise RuntimeError(_friendly_model_error(exc)) from exc
+        if not isinstance(exc, (TypeError, ValueError)):
+            raise
         fd, tmp_name = tempfile.mkstemp(suffix=".wav")
         os.close(fd)
         tmp = Path(tmp_name)
@@ -504,11 +688,24 @@ def _transcribe_texts(model, audio: np.ndarray, kwargs: dict, tmp_path: Path | N
             _write_wav_slice(audio, 16000, 0.0, len(audio) / 16000.0, tmp)
             segments, _info = model.transcribe(str(tmp), **kwargs)
             return [(seg.text or "").strip() for seg in segments]
+        except Exception as inner:
+            if _is_memory_error(inner):
+                raise RuntimeError(_friendly_model_error(inner)) from inner
+            raise
         finally:
             try:
                 tmp.unlink(missing_ok=True)
             except OSError:
                 pass
+
+
+def _safe_decode(model, window: np.ndarray, hotwords: str) -> tuple[str, str]:
+    try:
+        return _decode_samples(model, window, hotwords), ""
+    except Exception as exc:
+        if _is_memory_error(exc):
+            return "", _friendly_model_error(exc)
+        return "", "Ghi lời bị lỗi: %s" % exc
 
 
 def _decode_samples(model, samples: np.ndarray, hotwords: str) -> str:
@@ -685,6 +882,8 @@ def transcribe_with_turns(src: Path, on_progress=None, on_turns=None, filename: 
     text, turns, err = _transcribe_stream(src, ffmpeg, model, hotwords, note, on_turns)
     if not err and (text or turns):
         return text, turns, ""
+    if err and _is_memory_error(err):
+        return text, turns, err
     if _is_live_name(src.name):
         note(10, "Luồng LIVE lỗi, tách cả file…")
     else:
@@ -744,7 +943,11 @@ def _transcribe_stream(
                 if rms < STREAM_MIN_RMS * 0.45:
                     emitted_until = max(emitted_until, abs_b)
                     continue
-                chunk = _decode_samples(model, window, hotwords)
+                chunk, derr = _safe_decode(model, window, hotwords)
+                if derr:
+                    joined = repair_radio_text(" ".join(parts))
+                    note(100, derr, joined)
+                    return joined, _drop_overlap_turns(turns, overlap), derr
                 if chunk:
                     parts.append(chunk)
                     turns.append({"t_start": abs_a, "t_end": abs_b, "text": chunk})
@@ -838,7 +1041,11 @@ def _transcribe_file_fallback(
             rms = float(np.sqrt(np.mean(window * window) + 1e-12))
             if rms < STREAM_MIN_RMS * 0.5:
                 continue
-            chunk = _decode_samples(model, window, hotwords)
+            chunk, derr = _safe_decode(model, window, hotwords)
+            if derr:
+                joined = repair_radio_text(" ".join(parts))
+                note(100, derr, joined)
+                return joined, _drop_overlap_turns(turns, overlap), derr
             if not chunk:
                 continue
             parts.append(chunk)
@@ -884,6 +1091,9 @@ def _analyze_turns(turns: list[dict], filename: str) -> dict | None:
 
 def start_job(src: Path, filename: str = "") -> str:
     job_id = uuid.uuid4().hex[:12]
+    early_error = ""
+    if _MODEL is None and _MODEL_ERROR:
+        early_error = _MODEL_ERROR
     with _JOBS_LOCK:
         _JOBS[job_id] = {
             "id": job_id,
@@ -892,12 +1102,14 @@ def start_job(src: Path, filename: str = "") -> str:
             "text": "",
             "turns": [],
             "analysis": None,
-            "done": False,
-            "error": "",
+            "done": bool(early_error),
+            "error": early_error,
             "src": src,
             "filename": filename or src.name,
             "created": time.time(),
         }
+    if early_error:
+        return job_id
     threading.Thread(target=_run_job, args=(job_id, src), daemon=True).start()
     return job_id
 
@@ -911,7 +1123,7 @@ def _run_job(job_id: str, src: Path) -> None:
 
     text, turns, err = "", [], ""
     try:
-        _job_update(job_id, stage="Đang chờ bộ nhận dạng…")
+        _job_update(job_id, stage="Đang nạp bộ nhận dạng (lần đầu có thể 2–4 phút)…")
         with _FILE_JOB_LOCK:
             _job_update(job_id, vocabulary_revision=vocabulary_revision())
             filename = _JOBS.get(job_id, {}).get("filename", "")
@@ -921,7 +1133,7 @@ def _run_job(job_id: str, src: Path) -> None:
                 on_turns=lambda turns: _job_update(job_id, turns=turns), **extra,
             )
     except Exception as exc:
-        err = "Ghi lời bị lỗi: %s" % exc
+        err = _friendly_model_error(exc) if _is_memory_error(exc) else ("Ghi lời bị lỗi: %s" % exc)
     _job_update(job_id, finished=time.time())
     name = src.name if src else "clip"
     try:

@@ -127,13 +127,9 @@ def _station_matches(row: dict[str, str], unit: str | None) -> bool:
 
 def hotwords_for(filename: str = "", unit: str | None = None) -> str:
     resolved = infer_unit(filename, unit)
-    bits: list[str] = list(CORE_PHRASEOLOGY)
+    bits: list[str] = ["Vietjet", "Viet Nam"] + list(CORE_PHRASEOLOGY)
     seen = {b.lower() for b in bits}
-    for phrase in excel_phrases(filename):
-        key = phrase.lower()
-        if key not in seen:
-            seen.add(key)
-            bits.append(phrase)
+    stations = []
     for row in _rows():
         kind = (row.get("kind") or "").strip()
         icao = (row.get("icao") or "").strip().upper()
@@ -148,6 +144,7 @@ def hotwords_for(filename: str = "", unit: str | None = None) -> str:
         elif kind == "station":
             if not _station_matches(row, resolved):
                 continue
+            stations.append(spoken)
         else:
             continue
         key = spoken.lower()
@@ -158,17 +155,20 @@ def hotwords_for(filename: str = "", unit: str | None = None) -> str:
         bits[0:0] = ["Vietjet", "Viet Nam"]
     # Whisper's prompt has a small token budget. A full library dump silently
     # loses the tail and wastes decoding time. Prioritize human Excel hints.
-    bits.extend(_seeded_glossary_phrases())
+    base = bits[:9] + stations[:2]
+    groups = [(base, 28), (excel_phrases(filename), 32), (_seeded_glossary_phrases(), 12), (bits[9:], 10)]
     selected, used = [], set()
     words_left = 75
-    for phrase in bits:
-        key = phrase.lower()
-        size = len(phrase.split())
-        if key in used or size > words_left:
-            continue
-        selected.append(phrase)
-        used.add(key)
-        words_left -= size
-        if not words_left:
-            break
+    for candidates, budget in groups:
+        for phrase in candidates:
+            key = phrase.lower()
+            size = len(phrase.split())
+            if key in used or size > min(words_left, budget):
+                continue
+            selected.append(phrase)
+            used.add(key)
+            words_left -= size
+            budget -= size
+            if not words_left or not budget:
+                break
     return ", ".join(selected)

@@ -21,12 +21,13 @@ _ILS_LETTER_CODE = {
     "x-ray": "x",
     "zulu": "z",
 }
+_RWY_WORD = r"(?:runway|rwy|taxiway|twy)"
 _RUNWAY = re.compile(
-    rf"\b(?:runway|rwy)\s+((?:{_DIGIT}\s+){{0,1}}{_DIGIT})(?:\s+({_SIDE}))?\b",
+    rf"\b{_RWY_WORD}\s+((?:{_DIGIT}\s+){{0,1}}{_DIGIT})(?:\s+({_SIDE}))?\b",
     re.IGNORECASE,
 )
 _RWY_DIGITS = re.compile(
-    r"\b(?:runway|rwy)\s+(\d{1,2})(?:\s*([lrc]|left|right|center|centre))?\b",
+    rf"\b{_RWY_WORD}\s+(\d{{1,2}})(?:\s*([lrc]|left|right|center|centre))?\b",
     re.I,
 )
 
@@ -89,6 +90,15 @@ _PHRASE_FIXES = (
     (r"\bcontinue\s+of\s+course\b", "continue approach"),
     (r"\bsaigon\s+tower\b", "TSN Tower"),
     (r"\btsn\s+tower\b", "TSN Tower"),
+    # Temporary ASR patches (no Whisper retrain): common VHF mishears.
+    (r"\bsion\s+ways?\b", "taxiway"),
+    (r"\bvietjen\b", "Vietjet"),
+    (r"\bvietjin\b", "Vietjet"),
+    (r"\bviet\s*jen\b", "Vietjet"),
+    (r"\b(?:runway|rwy|taxiway|twy)\s+two\s+final(?:ly)?\b", "runway two five"),
+    (r"\b(?:runway|rwy|taxiway|twy)\s+(\d)\s+final(?:ly)?\b", r"runway \1 five"),
+    (r"\btwo\s+finally\b", "two five"),
+    (r"\b(\d)\s+finally\b", r"\1 five"),
 )
 
 

@@ -132,7 +132,7 @@
       (stats.rule_count || 0) +
       " cụm sửa đã lưu · " +
       (stats.glossary_phrase_count || 0) +
-      " phraseology đã nạp.";
+      " phraseology · " + (stats.excel_phrase_count || 0) + " cụm từ Excel dùng cho ASR. REDA tự cập nhật bản ghi máy khi từ vựng thay đổi.";
     if (stats.recipe) renderRecipe(stats.recipe);
     if (!($("ftLearned") && $("ftLearned").children.length)) {
       renderLearned(stats.rules || []);

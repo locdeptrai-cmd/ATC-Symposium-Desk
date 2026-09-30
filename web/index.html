@@ -71,6 +71,7 @@
         <button type="button" class="en" id="btnEn">NGHE DIỄN GIẢ (EN)</button>
         <button type="button" class="vi" id="btnVi">NGHE (VI)</button>
         <button type="button" class="ghost" id="btnStop">Dừng</button>
+        <button type="button" class="ghost" id="btnSubtitles" aria-pressed="false">Phụ đề nổi EN + VI</button>
         <button type="button" class="primary" id="btnGo">DỊCH + ĐỀ XUẤT</button>
       </div>
       <div class="listen-opts">
@@ -121,6 +122,7 @@
         <button type="button" class="ghost" id="btnSpeakShort">ĐỌC BẢN NGẮN</button>
       </div>
       <p id="status" class="status"></p>
+      <p id="subtitleHint" class="meta">Phụ đề nổi trên desktop khi thu nhỏ cửa sổ chính. Dịch đoạn ngắn, mục tiêu trễ tối đa 1 giây sau chữ gốc; cần gói dịch trên máy.</p>
       <p class="hint">Thử nhanh (không cần micro):</p>
       <div id="samples" class="samples"></div>
     </section>
@@ -209,6 +211,7 @@
   <script src="js/replies.js"></script>
   <script src="js/speech-repair.js"></script>
   <script src="js/speech.js"></script>
+  <script src="js/floating-subtitles.js"></script>
   <script src="js/app.js"></script>
   <script src="js/pwa.js"></script>
 </body>

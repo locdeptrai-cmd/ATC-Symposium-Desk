@@ -558,11 +558,17 @@
 
   function analyzeRow(row) {
     if (!row) return Promise.resolve();
+    var boxText = ($("recTranscript") && $("recTranscript").value) || "";
     var body = {
       filename: row.name || "",
-      text: row.transcriptEn || ($("recTranscript") && $("recTranscript").value) || "",
+      // Prefer structured turns; fall back to box / stored text (clock lines OK).
+      text: transcriptEdited ? boxText : (row.transcriptEn || boxText || ""),
       turns: transcriptEdited ? [] : row.turns || []
     };
+    // If turns look empty but box has clock lines, force text path.
+    if ((!body.turns || !body.turns.length) && boxText.trim()) {
+      body.text = boxText;
+    }
     return fetch("/api/reda/analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -698,35 +704,44 @@
   }
 
   function transcribeOnServer(blob, name, onPartial) {
-    return new Promise(function (resolve, reject) {
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", "/api/media/transcribe?name=" + encodeURIComponent(name || "clip.mp4"));
-      xhr.setRequestHeader("Content-Type", blob.type || "application/octet-stream");
-      xhr.setRequestHeader("X-Filename", encodeURIComponent(name || "clip.mp4"));
-      xhr.onerror = function () {
-        reject(new Error("Không gửi được file để ghi lời."));
-      };
-      xhr.onload = function () {
-        var payload = {};
-        try {
-          payload = JSON.parse(xhr.responseText || "{}");
-        } catch (e) {
-          reject(new Error("Máy chủ ghi lời trả lời không hợp lệ."));
-          return;
+    return fetch("/api/media/asr-status", { cache: "no-store" })
+      .then(function (res) { return res.ok ? res.json() : {}; })
+      .catch(function () { return {}; })
+      .then(function (st) {
+        if (st && st.error && !st.ready) {
+          throw new Error(st.error);
         }
-        if (xhr.status >= 400 || !payload.ok || !payload.id) {
-          reject(new Error(payload.error || "Không ghi được lời English từ file."));
-          return;
-        }
-        pollTranscribeJob(payload.id, onPartial, resolve, reject);
-      };
-      xhr.send(blob);
-    });
+        return new Promise(function (resolve, reject) {
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "/api/media/transcribe?name=" + encodeURIComponent(name || "clip.mp4"));
+          xhr.setRequestHeader("Content-Type", blob.type || "application/octet-stream");
+          xhr.setRequestHeader("X-Filename", encodeURIComponent(name || "clip.mp4"));
+          xhr.onerror = function () {
+            reject(new Error("Không gửi được file để ghi lời."));
+          };
+          xhr.onload = function () {
+            var payload = {};
+            try {
+              payload = JSON.parse(xhr.responseText || "{}");
+            } catch (e) {
+              reject(new Error("Máy chủ ghi lời trả lời không hợp lệ."));
+              return;
+            }
+            if (xhr.status >= 400 || !payload.ok || !payload.id) {
+              reject(new Error(payload.error || "Không ghi được lời English từ file."));
+              return;
+            }
+            pollTranscribeJob(payload.id, onPartial, resolve, reject);
+          };
+          xhr.send(blob);
+        });
+      });
   }
 
   function pollTranscribeJob(jobId, onPartial, resolve, reject) {
     var tries = 0;
     var failures = 0;
+    var startedAt = Date.now();
     function tick() {
       fetch("/api/media/transcribe/status?id=" + encodeURIComponent(jobId), { cache: "no-store" })
         .then(function (res) {
@@ -738,14 +753,24 @@
           }
           failures = 0;
           if (onPartial) onPartial(job.text || "", job.stage, job.turns || []);
-          if (job.error) throw new Error(job.error);
+          if (job.error) { reject(new Error(job.error)); return; }
           if (job.done) {
             resolve({
               text: job.text || "",
               turns: job.turns || [],
-              analysis: job.analysis || null
-              , vocabularyRevision: job.vocabulary_revision || ""
+              analysis: job.analysis || null,
+              vocabularyRevision: job.vocabulary_revision || ""
             });
+            return;
+          }
+          var waiting = /chờ bộ nhận dạng|nạp bộ|đã nhận file/i.test(String(job.stage || ""));
+          // First Whisper CT2 load on CPU often exceeds 90s; do not blame pagefile.
+          if (!job.text && waiting && Date.now() - startedAt > 300000) {
+            reject(
+              new Error(
+                "Nạp bộ nhận dạng quá lâu (>5 phút). Job có thể vẫn chạy trong cửa sổ ATC Desk — đợi thêm, hoặc đóng app nặng rồi thử Phân tích lại. (Pagefile Windows không liên quan nếu máy đã bật Virtual Memory.)"
+              )
+            );
             return;
           }
           tries += 1;
@@ -764,6 +789,11 @@
     if (!row || !row.blob) return;
     if (row.manualTranscript || (row.goldTurns && row.goldTurns.length)) {
       showPlaybackTranscript(row);
+      return;
+    }
+    if (!force && row.asrError && isAsrMemoryError(row.asrError)) {
+      setTranscriptBox(row.transcriptEn || "", row.asrError);
+      setStatus(row.asrError, "warn");
       return;
     }
     if (row.transcriptEn && row.asrComplete && row.asrRevision === vocabularyRevision && !force) {
@@ -788,17 +818,25 @@
     }
     row.asrComplete = false;
     row.asrFailedRevision = "";
+    row.asrError = "";
     transcribeBusy[row.id] = true;
     putRow(row);
+    var lastPartial = "";
+    var lastPartialSave = 0;
     setStatus("Đang ghi lời English từ file…", "live");
     return transcribeOnServer(row.blob, row.name, function (partial, stage, turns) {
       if (!findRow(row.id)) return;
       if (row.manualTranscript || (row.goldTurns && row.goldTurns.length)) return;
       row.asrStage = stage || "";
+      if (partial === lastPartial) { showPlaybackTranscript(row); return; }
+      lastPartial = partial;
       if (turns && turns.length) row.partialTurns = turns;
       if (partial) row.transcriptEn = polishEn(partial);
       showPlaybackTranscript(row);
-      putRow(row);
+      if (Date.now() - lastPartialSave >= 15000) {
+        lastPartialSave = Date.now();
+        putRow(row);
+      }
     })
       .then(function (payload) {
         if (!findRow(row.id)) return;
@@ -813,14 +851,23 @@
         showPlaybackTranscript(row);
         return putRow(row).then(function () {
           render();
-          if (player.id === row.id) setStatus("Đã ghi lời. Bấm Phân tích lại để phân vai và đối chiếu readback.", "ok");
+          if (player.id !== row.id) return;
+          setStatus("Đã ghi lời. Đang phân tích REDA…", "live");
+          return analyzeRow(row)
+            .then(function () {
+              setStatus(statusAfterAnalysis(row, row.transcriptEn), "ok");
+            })
+            .catch(function (err) {
+              setStatus(
+                "Đã ghi lời. Phân tích REDA lỗi — bấm Phân tích lại. " +
+                  ((err && err.message) || ""),
+                "warn"
+              );
+            });
         });
       })
       .catch(function (err) {
-        row.asrFailedRevision = vocabularyRevision;
-        row.asrComplete = false;
-        putRow(row);
-        if (player.id === row.id) setStatus((err && err.message) || "Không ghi được lời từ file.", "warn");
+        markAsrFailure(row, err);
       })
       .then(function () {
         delete transcribeBusy[row.id];
@@ -835,6 +882,7 @@
       return row.blob && !row.live && !row.manualTranscript && !(row.goldTurns && row.goldTurns.length) &&
         (row.status === "ready" || row.status === "heard") &&
         (row.transcriptEn || row.id === player.id) && row.asrFailedRevision !== vocabularyRevision &&
+        !(row.asrError && isAsrMemoryError(row.asrError)) &&
         (!row.asrComplete || row.asrRevision !== vocabularyRevision);
     });
     eligible.sort(function (a, b) { return (b.id === player.id ? 1 : 0) - (a.id === player.id ? 1 : 0); });
@@ -870,6 +918,10 @@
     }
     var text = visible.map(function (t) { return "[" + clock(t.t_start) + "] " + (t.text || ""); }).join("\n");
     if (!text && row.transcriptEn) text = row.transcriptEn;
+    if (row.asrError) {
+      setTranscriptBox(text, row.asrError);
+      return;
+    }
     var box = $("recTranscript");
     if (box && (busy || document.activeElement !== box) && box.value !== text) {
       box.value = text;
@@ -1006,6 +1058,49 @@
     if (!el) return;
     el.textContent = msg || "";
     el.className = "status " + (kind || "");
+  }
+
+  function isAsrMemoryError(msg) {
+    // Only real OOM from the server — not client timeout / speculative pagefile hints.
+    return /mkl_malloc|hết ram khi nạp|het ram khi nap|failed to allocate|out of memory|std::bad_alloc/i.test(
+      String(msg || "")
+    );
+  }
+
+  function markAsrFailure(row, err) {
+    var msg = (err && err.message) || String(err || "Không ghi được lời.");
+    if (row) {
+      row.asrError = msg;
+      row.asrComplete = false;
+      row.asrFailedRevision = vocabularyRevision;
+      putRow(row);
+    }
+    setTranscriptBox((row && row.transcriptEn) || "", msg);
+    setStatus(msg, "warn");
+  }
+
+  function checkAsrStatus() {
+    return fetch("/api/media/asr-status", { cache: "no-store" })
+      .then(function (res) { return res.ok ? res.json() : {}; })
+      .then(function (st) {
+        if (st && st.error) {
+          setStatus(st.error, "warn");
+          return st;
+        }
+        if (st && !st.ready) {
+          if (st.pagefile_enabled === true && st.ram_avail_mb != null) {
+            setStatus(
+              "Đang nạp bộ nhận dạng… RAM trống ~" +
+                st.ram_avail_mb +
+                " MB, pagefile đang bật.",
+              "live"
+            );
+          }
+          setTimeout(checkAsrStatus, 8000);
+        }
+        return st || {};
+      })
+      .catch(function () { return {}; });
   }
 
   function hasAudioTrack(el) {
@@ -1444,7 +1539,14 @@
       });
     }
     setStatus("Đang phát “" + row.name + "”.", "live");
-    checkVocabulary().then(function () { startFileTranscript(row, !row.asrComplete || row.asrRevision !== vocabularyRevision); });
+    checkVocabulary().then(function () {
+      if (row.asrError && isAsrMemoryError(row.asrError)) {
+        setTranscriptBox(row.transcriptEn || "", row.asrError);
+        setStatus(row.asrError, "warn");
+        return;
+      }
+      startFileTranscript(row, !row.asrComplete || row.asrRevision !== vocabularyRevision);
+    });
   }
 
   function pauseRow(id) {
@@ -1707,11 +1809,16 @@
           row.transcriptEn = box.value.trim();
           putRow(row);
         }
-        setStatus((err && err.message) || "LIVE không ghi được đoạn này.", "warn");
+        var msg = (err && err.message) || "LIVE không ghi được đoạn này.";
+        markAsrFailure(row, err);
+        if (isAsrMemoryError(msg)) {
+          liveRadio.queue = [];
+          if (liveRadio.on) stopLiveRadio(true);
+        }
       })
       .then(function () {
         liveRadio.busy = false;
-        drainLiveQueue();
+        if (!(row.asrError && isAsrMemoryError(row.asrError))) drainLiveQueue();
       });
   }
 
@@ -2155,6 +2262,7 @@
   render();
   loadList();
   checkVocabulary();
+  checkAsrStatus();
   setInterval(checkVocabulary, 5000);
   window.addEventListener("focus", checkVocabulary);
 })();

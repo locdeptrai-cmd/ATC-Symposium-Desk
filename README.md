@@ -11,6 +11,22 @@ Một codebase cho **máy tính (PWA)** và **điện thoại (Capacitor — iOS
 
 Không gọi Google Translate API, không gọi Whisper đám mây.
 
+## Phụ đề nổi trên desktop
+
+Trong trang chính, bấm **Phụ đề nổi EN + VI**, rồi **NGHE DIỄN GIẢ (EN)**
+(hoặc **Nghe EN** trong khung nổi). Sau đó thu nhỏ cửa sổ chính bằng nút thu nhỏ
+của Windows; khung phụ đề vẫn nổi trên các cửa sổ khác. Có thể kéo và đổi kích thước
+khung, dừng nghe hoặc đóng phụ đề riêng. Giữ tab chính mở và máy đang thức;
+khung không hiển thị trên màn hình khóa Windows.
+
+Cần trình duyệt máy tính hỗ trợ Document Picture-in-Picture, chạy qua localhost
+hoặc HTTPS. Dịch dùng gói EN→VI trên máy; lần đầu có thể cần tải gói.
+Phụ đề hiển thị phần mới nhất, tối đa 12 từ, dịch ngay từ chữ nhận dạng tạm thời.
+Khi mô hình chậm, bỏ đoạn chờ cũ để bám lời mới. Độ trễ đo từ lúc đoạn chữ được
+hiển thị đến lúc có bản dịch; mục tiêu ≤1 giây, không bao gồm độ trễ nhận dạng
+giọng nói. Khung báo khi vượt mục tiêu hoặc chỉ có bản thay cụm từ. Chức năng này
+áp dụng luồng nghe ở trang chính, chưa áp dụng trình phát tệp trong Recordings.
+
 ## Ba file chạy
 
 | File | Máy | Việc |

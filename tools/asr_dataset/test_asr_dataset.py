@@ -91,10 +91,14 @@ def test_infer_unit_from_filename():
     assert infer_unit("noi_bai_app.wav") == "han"
 
 
-def test_radio_fixes_each_rule():
+def test_radio_fixes_each_rule(tmp_path, monkeypatch):
+    monkeypatch.setenv("ATC_ASR_GOLD", str(tmp_path))
     cases = [
         ("charlie jet one two", "VJC12"),
         ("sion one two three", "VJC123"),
+        ("sion way two five left", "RWY 25L"),
+        ("sion way 2 finally", "RWY 25"),
+        ("vietjen one six two eight", "VJC1628"),
         ("viet jet air", "Vietjet"),
         ("vietnam airlines one", "HVN1"),
         ("viet nam one", "HVN1"),

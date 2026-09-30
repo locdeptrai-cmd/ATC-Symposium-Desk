@@ -96,7 +96,7 @@ TEMPLATES = [
         template_id="TPL_LINE_UP",
         intent="LINE_UP",
         role="BOTH",
-        regex=r"line up(?: and wait)?(?: (?:runway |rwy )?(?P<rwy>[0-9]{2}[lrc]?))?",
+        regex=r"line up(?: and wait)?(?: (?:runway |rwy |taxiway |twy )?(?P<rwy>[0-9]{2}[lrc]?))?",
         param_map={"rwy": "runway"},
         must_readback=True,
     ),

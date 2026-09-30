@@ -236,7 +236,7 @@ def normalize_runway(text: str) -> str | None:
     m = re.search(r"\brwy\s*(\d{1,2})\s*([lrc])?\b", t)
     if m:
         return f"{int(m.group(1)):02d}{(m.group(2) or '').upper()}"
-    m = re.search(r"runway\s+(\d{1,2})\s*([lrc])?", t)
+    m = re.search(r"(?:runway|taxiway|twy)\s+(\d{1,2})\s*([lrc])?", t)
     if m:
         num = int(m.group(1))
         side = (m.group(2) or "").upper()
@@ -247,7 +247,7 @@ def normalize_runway(text: str) -> str | None:
         side = side_map.get(m.group(2), m.group(2).upper())
         return f"{int(m.group(1)):02d}{side}"
     spoken = re.search(
-        r"(?:runway|rwy)\s+((?:zero|one|two|three|tree|four|five|fife|six|seven|eight|nine|niner|\d)"
+        r"(?:runway|rwy|taxiway|twy)\s+((?:zero|one|two|three|tree|four|five|fife|six|seven|eight|nine|niner|\d)"
         r"(?:\s+(?:zero|one|two|three|tree|four|five|fife|six|seven|eight|nine|niner|\d))?)"
         r"(?:\s+(left|right|center|centre|[lrc]))?",
         t,

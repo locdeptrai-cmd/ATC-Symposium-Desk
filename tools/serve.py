@@ -28,6 +28,16 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
+# Cap MKL/OpenMP arenas before numpy/CTranslate2 import (low-RAM PCs, no pagefile).
+_ASR_THREADS = os.environ.get("ATC_WHISPER_THREADS") or "2"
+os.environ.setdefault("CT2_PACKED_GEMM", "0")
+os.environ.setdefault("OMP_NUM_THREADS", _ASR_THREADS)
+os.environ.setdefault("MKL_NUM_THREADS", _ASR_THREADS)
+os.environ.setdefault("OPENBLAS_NUM_THREADS", _ASR_THREADS)
+os.environ.setdefault("NUMEXPR_NUM_THREADS", _ASR_THREADS)
+os.environ.setdefault("KMP_BLOCKTIME", "0")
+os.environ.setdefault("KMP_AFFINITY", "disabled")
+
 _TOOLS_DIR = Path(__file__).resolve().parent
 if str(_TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(_TOOLS_DIR))
@@ -585,6 +595,9 @@ class DeskHandler(SimpleHTTPRequestHandler):
         if path == "/api/media/transcribe/status":
             self._transcribe_status()
             return
+        if path == "/api/media/asr-status":
+            self._asr_status()
+            return
         if path == "/api/library/user":
             self._library_user_get()
             return
@@ -756,7 +769,14 @@ class DeskHandler(SimpleHTTPRequestHandler):
         job["ok"] = True
         self._send_json(job)
 
+    def _asr_status(self) -> None:
+        self._send_json(media_transcribe.model_status())
+
     def _transcribe_upload(self) -> None:
+        status = media_transcribe.model_status()
+        if status.get("error") and not status.get("ready"):
+            self._send_json({"ok": False, "error": status["error"]}, 503)
+            return
         try:
             length = int(self.headers.get("Content-Length") or 0)
         except ValueError:
@@ -1107,6 +1127,29 @@ def main(argv: list[str] | None = None) -> None:
         raise SystemExit("Thieu DB thu vien: %s" % db)
     model = media_transcribe._resolve_model_id()
     print("  Model STT ATC:    %s" % model, flush=True)
+    print(
+        "  ASR RAM:          threads=%s compute=%s packed_gemm=%s"
+        % (
+            media_transcribe._cpu_thread_budget(),
+            os.environ.get("ATC_WHISPER_COMPUTE", "int8"),
+            os.environ.get("CT2_PACKED_GEMM", ""),
+        ),
+        flush=True,
+    )
+    mem = media_transcribe.memory_status()
+    if mem.get("ram_total_mb") is not None:
+        page = mem.get("pagefile_enabled")
+        page_txt = "bat" if page is True else ("tat" if page is False else "?")
+        print(
+            "  Bo nho:          RAM %s/%s MB · pagefile %s · commit %s MB"
+            % (
+                mem.get("ram_avail_mb"),
+                mem.get("ram_total_mb"),
+                page_txt,
+                mem.get("commit_total_mb"),
+            ),
+            flush=True,
+        )
     ffmpeg = media_transcode.find_ffmpeg()
     print("  ffmpeg:           %s" % (ffmpeg or "KHONG THAY — khong ghi loi file duoc"), flush=True)
     if APK_PATH is not None:

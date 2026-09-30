@@ -28,6 +28,11 @@ SCRIPT_LINE = re.compile(
     r"^\s*(ATCO|PILOT|UNKNOWN)\s*:\s*(.*?)\s*(?:\[([0-9:.]+)\])?\s*$",
     re.IGNORECASE,
 )
+# Playback / paste format: "[2:03] text" or "[2:03] ATCO  text"
+CLOCK_LINE = re.compile(
+    r"^\s*\[(\d{1,2}:\d{2}(?::\d{2})?)\]\s*(?:(ATCO|PILOT|UNKNOWN)\s+)?(.*)$",
+    re.IGNORECASE,
+)
 
 
 def _fmt_clock(sec: float) -> str:
@@ -91,13 +96,23 @@ def parse_script(text: str, filename: str = "") -> list[dict]:
     out: list[dict] = []
     for line in (text or "").splitlines():
         match = SCRIPT_LINE.match(line)
-        if not match:
-            continue
-        role = match.group(1).upper()
-        body = (match.group(2) or "").strip()
+        role = None
+        body = ""
+        stamp = ""
+        if match:
+            role = match.group(1).upper()
+            body = (match.group(2) or "").strip()
+            stamp = match.group(3) or ""
+        else:
+            clock = CLOCK_LINE.match(line)
+            if not clock:
+                continue
+            stamp = clock.group(1) or ""
+            role = (clock.group(2) or "UNKNOWN").upper()
+            body = (clock.group(3) or "").strip()
         if not body:
             continue
-        t0 = _clock_to_seconds(match.group(3) or "", origin) if match.group(3) else float(len(out) * 3)
+        t0 = _clock_to_seconds(stamp, origin) if stamp else float(len(out) * 3)
         out.append({"text": body, "t_start": t0, "t_end": t0 + 2.0, "speaker_role": role})
     return out
 
@@ -118,9 +133,21 @@ def fill_unknown_roles(utterances: list[dict]) -> None:
 
 def _as_turn(item: dict, index: int) -> dict:
     text = str(item.get("text") or item.get("asr_text") or "").strip()
+    # Playback box may have leaked "[mm:ss] …" into turn.text.
+    clock = CLOCK_LINE.match(text)
+    if clock:
+        text = (clock.group(3) or "").strip()
+        role_hint = (clock.group(2) or "").upper() or None
+    else:
+        role_hint = None
     start = float(item.get("t_start") if item.get("t_start") is not None else index * 2.0)
+    if clock and clock.group(1):
+        try:
+            start = _clock_to_seconds(clock.group(1), None)
+        except Exception:
+            pass
     end = float(item.get("t_end") if item.get("t_end") is not None else start + 1.8)
-    role = item.get("speaker_role") or item.get("speaker") or None
+    role = item.get("speaker_role") or item.get("speaker") or role_hint
     return {"text": text, "t_start": start, "t_end": max(end, start + 0.2), "speaker_role": role}
 
 
@@ -150,6 +177,14 @@ def turns_from_text(text: str) -> list[dict]:
     raw = (text or "").strip()
     if not raw:
         return []
+    # Prefer clock-prefixed playback lines when present (even a single line).
+    clocked = parse_script(raw)
+    if clocked and (
+        len(clocked) >= 2
+        or CLOCK_LINE.match(raw.splitlines()[0] if raw.splitlines() else "")
+        or SCRIPT_LINE.match(raw.splitlines()[0] if raw.splitlines() else "")
+    ):
+        return split_mixed_turns(clocked)
     chunks = [c.strip() for c in re.split(r"(?<=[.!?])\s+|\n+", raw) if c.strip()]
     if len(chunks) < 2:
         return split_mixed_turns([{"text": raw, "t_start": 0.0, "t_end": 8.0, "speaker_role": None}])
@@ -361,7 +396,8 @@ def analyze(turns: list[dict] | None = None, filename: str = "", text: str = "")
     raw = [_as_turn(t, i) for i, t in enumerate(turns or []) if str(t.get("text") or t.get("asr_text") or "").strip()]
     if not raw and text:
         scripted = parse_script(text, filename)
-        raw = scripted if len(scripted) >= 2 else turns_from_text(text)
+        # Accept role script OR playback "[mm:ss] …" lines (even a single turn).
+        raw = scripted if scripted else turns_from_text(text)
     else:
         raw = split_mixed_turns(raw)
 
