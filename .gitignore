@@ -39,3 +39,10 @@ lac/
 .venv-llama-build/
 .venv/
 output/reda-backup-*/
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.zip
+*.rar
+*.7z
