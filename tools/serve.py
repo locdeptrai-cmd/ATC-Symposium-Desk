@@ -39,8 +39,12 @@ os.environ.setdefault("KMP_BLOCKTIME", "0")
 os.environ.setdefault("KMP_AFFINITY", "disabled")
 
 _TOOLS_DIR = Path(__file__).resolve().parent
+_ROOT_DIR = _TOOLS_DIR.parent
+if str(_ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(_ROOT_DIR))
 if str(_TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(_TOOLS_DIR))
+from atc_cleaner import ATCCleaner  # noqa: E402
 import app_paths  # noqa: E402
 import media_transcode  # noqa: E402
 import media_transcribe  # noqa: E402
@@ -272,6 +276,7 @@ CERTS = WEB / "certs"
 APK_PATH: Path | None = None
 APP_VERSION = ""
 USER_LIBRARY_MAX = 2000
+TEXT_CLEANER = ATCCleaner()
 
 
 def user_library_path() -> Path:
@@ -663,6 +668,12 @@ class DeskHandler(SimpleHTTPRequestHandler):
         if self._route_path() == "/api/reda/analyze":
             self._reda_analyze()
             return
+        if self._route_path() == "/api/v1/clean-text":
+            self._clean_single_text()
+            return
+        if self._route_path() == "/api/v1/clean-batch":
+            self._clean_batch_text()
+            return
         if self._route_path() == "/api/reda/correction":
             self._reda_correction()
             return
@@ -698,6 +709,37 @@ class DeskHandler(SimpleHTTPRequestHandler):
         if not isinstance(payload, dict):
             raise ValueError("JSON phải là object")
         return payload
+
+    def _clean_single_text(self) -> None:
+        try:
+            body = self._read_json_body()
+        except ValueError as exc:
+            self._send_json({"status": "error", "error": str(exc)}, 400)
+            return
+        raw_text = str(body.get("raw_text") or "")
+        try:
+            cleaned = TEXT_CLEANER.clean(raw_text)
+        except Exception as exc:
+            self._send_json({"status": "error", "error": str(exc)}, 500)
+            return
+        self._send_json({"status": "success", "raw": raw_text, "cleaned": cleaned})
+
+    def _clean_batch_text(self) -> None:
+        try:
+            body = self._read_json_body()
+        except ValueError as exc:
+            self._send_json({"status": "error", "error": str(exc)}, 400)
+            return
+        transcripts = body.get("transcripts") or []
+        if not isinstance(transcripts, list):
+            self._send_json({"status": "error", "error": "transcripts phải là list"}, 400)
+            return
+        try:
+            cleaned_list = TEXT_CLEANER.clean_batch([str(text or "") for text in transcripts])
+        except Exception as exc:
+            self._send_json({"status": "error", "error": str(exc)}, 500)
+            return
+        self._send_json({"status": "success", "total": len(cleaned_list), "data": cleaned_list})
 
     def _reda_analyze(self) -> None:
         try:

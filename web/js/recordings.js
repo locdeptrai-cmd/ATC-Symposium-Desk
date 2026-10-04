@@ -337,6 +337,26 @@
     return text;
   }
 
+  function cleanTranscriptText(text) {
+    var local = polishEn(text || "");
+    if (!local || !window.fetch) return Promise.resolve(local);
+    return fetch("/api/v1/clean-text", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ raw_text: local })
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error("clean-text " + res.status);
+        return res.json();
+      })
+      .then(function (payload) {
+        return (payload && payload.status === "success" && payload.cleaned) || local;
+      })
+      .catch(function () {
+        return local;
+      });
+  }
+
   function clock(sec) {
     return formatTime(sec);
   }
@@ -844,26 +864,16 @@
         row.asrComplete = true;
         if (row.manualTranscript || (row.goldTurns && row.goldTurns.length)) return putRow(row);
         var text = typeof payload === "string" ? payload : (payload && payload.text) || "";
-        var cleaned = polishEn(text);
-        if (cleaned) row.transcriptEn = cleaned;
         row.turns = (payload && payload.turns) || row.partialTurns || row.turns || [];
-        delete row.partialTurns;
-        showPlaybackTranscript(row);
-        return putRow(row).then(function () {
+        return cleanTranscriptText(text).then(function (cleaned) {
+          if (cleaned) row.transcriptEn = cleaned;
+          delete row.partialTurns;
+          showPlaybackTranscript(row);
+          return putRow(row);
+        }).then(function () {
           render();
           if (player.id !== row.id) return;
-          setStatus("Đã ghi lời. Đang phân tích REDA…", "live");
-          return analyzeRow(row)
-            .then(function () {
-              setStatus(statusAfterAnalysis(row, row.transcriptEn), "ok");
-            })
-            .catch(function (err) {
-              setStatus(
-                "Đã ghi lời. Phân tích REDA lỗi — bấm Phân tích lại. " +
-                  ((err && err.message) || ""),
-                "warn"
-              );
-            });
+          setStatus("Đã ghi lời English. Bấm Phân tích lại để chạy REDA.", "ok");
         });
       })
       .catch(function (err) {
