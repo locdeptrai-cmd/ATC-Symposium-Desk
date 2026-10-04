@@ -881,6 +881,35 @@
     });
   }
 
+  function refreshAsrLoadStatus() {
+    fetch("/api/media/asr-status", { cache: "no-store" })
+      .then(function (res) { return res.ok ? res.json() : {}; })
+      .then(function (st) {
+        if (!st || state.listening) return;
+        if (st.ready) {
+          setStatus("Bộ nhận dạng sẵn sàng. Nghe diễn giả hoặc dán biên bản.", "ok");
+          return;
+        }
+        if (st.phase === "loading") {
+          var pct = Number(st.progress || 0);
+          var msg = st.message || "Đang nạp bộ nhận dạng...";
+          if (!isNaN(pct) && pct > 0) msg += " (" + Math.round(pct) + "% )";
+          setStatus(msg, "live");
+          return;
+        }
+        if (st.error) {
+          setStatus(st.error, "warn");
+          return;
+        }
+        if (!ATC.speech.available()) {
+          setStatus(errorMessage("no-engine"), "warn");
+        } else {
+          setStatus("Sẵn sàng. Nghe diễn giả hoặc dán biên bản.", "");
+        }
+      })
+      .catch(function () {});
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     loadState();
     fillSelects();
@@ -889,10 +918,10 @@
     setNetBadge();
     paintUnits();
     setupNativeMtPack();
+    refreshAsrLoadStatus();
+    setInterval(refreshAsrLoadStatus, 4000);
     if (!ATC.speech.available()) {
       setStatus(errorMessage("no-engine"), "warn");
-    } else {
-      setStatus("Sẵn sàng. Nghe diễn giả hoặc dán biên bản.", "");
     }
     try {
       var pending = localStorage.getItem("atc-pending-transcript");

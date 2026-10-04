@@ -134,6 +134,17 @@ _MODEL_LOCK = threading.Lock()
 _INFER_LOCK = threading.Lock()
 _FILE_JOB_LOCK = threading.Lock()
 _MODEL_ERROR = ""
+_MODEL_LOAD_STATE = {"phase": "idle", "progress": 0, "message": ""}
+
+
+def _set_model_load_state(phase: str, progress: int | float, message: str) -> None:
+    global _MODEL_LOAD_STATE
+    pct = max(0, min(100, int(float(progress))))
+    _MODEL_LOAD_STATE = {
+        "phase": phase,
+        "progress": pct,
+        "message": str(message or ""),
+    }
 
 
 def _job_update(job_id: str, **fields) -> None:
@@ -351,17 +362,29 @@ def load_model():
     global _MODEL, _MODEL_ERROR, WHISPER_MODEL
     with _MODEL_LOCK:
         if _MODEL is not None:
+            _set_model_load_state("ready", 100, "Bộ nhận dạng sẵn sàng")
             return _MODEL
         if _MODEL_ERROR:
+            _set_model_load_state("error", 100, _MODEL_ERROR)
             return None
         try:
             from faster_whisper import WhisperModel
         except ImportError:
             _MODEL_ERROR = "Máy này chưa cài faster-whisper. pip install faster-whisper."
+            _set_model_load_state("error", 100, _MODEL_ERROR)
             return None
         last_exc: Exception | None = None
-        for name in _model_candidates():
-            for threads in _thread_attempts():
+        candidates = _model_candidates()
+        attempts = _thread_attempts()
+        total = max(1, len(candidates) * len(attempts))
+        for idx, name in enumerate(candidates):
+            for jdx, threads in enumerate(attempts):
+                progress = 10 + ((idx * len(attempts)) + jdx) * 80 / total
+                _set_model_load_state(
+                    "loading",
+                    progress,
+                    "Đang nạp bộ nhận dạng... %s (%s thread)" % (name, threads),
+                )
                 try:
                     print(
                         "  Transcribe EN: dang tai model '%s' (%s/%s, %s thread)..."
@@ -383,6 +406,7 @@ def load_model():
                     _MODEL = model
                     WHISPER_MODEL = name
                     _MODEL_ERROR = ""
+                    _set_model_load_state("ready", 100, "Bộ nhận dạng sẵn sàng")
                     print(
                         "  Transcribe EN: whisper %s (%s/%s, %s thread)"
                         % (name, WHISPER_DEVICE, WHISPER_COMPUTE, threads),
@@ -394,16 +418,42 @@ def load_model():
                     print("  Transcribe EN: bo qua '%s'/%s thread: %s" % (name, threads, exc), flush=True)
                     _unload_model()
         _MODEL_ERROR = _friendly_model_error(last_exc or "khong tai duoc mo hinh")
+        _set_model_load_state("error", 100, _MODEL_ERROR)
         return None
+
+
+def schedule_model_preload() -> None:
+    if _MODEL is not None or _MODEL_ERROR:
+        return
+    if _MODEL_LOAD_STATE.get("phase") == "loading":
+        return
+
+    def worker() -> None:
+        _set_model_load_state("loading", 6, "Đang nạp bộ nhận dạng...")
+        load_model()
+
+    threading.Thread(target=worker, daemon=True).start()
 
 
 def model_status() -> dict:
     mem = memory_status()
+    state = dict(_MODEL_LOAD_STATE)
+    if _MODEL is not None:
+        state.update({"phase": "ready", "progress": 100, "message": "Bộ nhận dạng sẵn sàng"})
+    elif _MODEL_ERROR:
+        state.update({"phase": "error", "progress": 100, "message": _MODEL_ERROR})
+    elif _MODEL_LOAD_STATE.get("phase") in ("idle", "loading"):
+        state.setdefault("phase", "loading")
+        state.setdefault("progress", 0)
+        state.setdefault("message", "Đang nạp bộ nhận dạng...")
     return {
         "ok": True,
         "ready": _MODEL is not None,
-        "loading": _MODEL is None and not _MODEL_ERROR,
+        "loading": _MODEL is None and not _MODEL_ERROR and state.get("phase") == "loading",
         "error": _MODEL_ERROR or "",
+        "phase": state.get("phase", "idle"),
+        "progress": int(state.get("progress", 0)),
+        "message": state.get("message", ""),
         "model": WHISPER_MODEL,
         "compute": WHISPER_COMPUTE,
         "threads": _cpu_thread_budget(),
@@ -416,6 +466,9 @@ def model_status() -> dict:
 
 
 def warm_model() -> None:
+    if _MODEL is not None:
+        _set_model_load_state("ready", 100, "Bộ nhận dạng sẵn sàng")
+        return
     model = load_model()
     if model is not None:
         print(

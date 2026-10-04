@@ -1197,7 +1197,7 @@ def main(argv: list[str] | None = None) -> None:
     if APK_PATH is not None:
         print("  APK Android:      %s" % APK_PATH, flush=True)
     threading.Thread(target=media_transcode.warm_encoder, daemon=True).start()
-    threading.Thread(target=media_transcribe.warm_model, daemon=True).start()
+    media_transcribe.schedule_model_preload()
     ips = lan_ipv4s()
     print("Dang cap chung chi HTTPS cho: %s" % (", ".join(ips) or "localhost"), flush=True)
     certfile, keyfile, ca_cer = ensure_certs(ips)

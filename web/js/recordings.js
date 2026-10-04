@@ -1152,21 +1152,31 @@
     return fetch("/api/media/asr-status", { cache: "no-store" })
       .then(function (res) { return res.ok ? res.json() : {}; })
       .then(function (st) {
-        if (st && st.error) {
+        if (st && st.error && !st.ready) {
           setStatus(st.error, "warn");
           return st;
         }
-        if (st && !st.ready) {
-          if (st.pagefile_enabled === true && st.ram_avail_mb != null) {
-            setStatus(
-              "Đang nạp bộ nhận dạng… RAM trống ~" +
-                st.ram_avail_mb +
-                " MB, pagefile đang bật.",
-              "live"
-            );
-          }
-          setTimeout(checkAsrStatus, 8000);
+        if (st && st.phase === "loading") {
+          var pct = (typeof st.progress === "number") ? Math.max(0, Math.min(100, st.progress)) : 0;
+          var msg = st.message || "Đang nạp bộ nhận dạng...";
+          if (pct > 0) msg += " (" + pct + "% )";
+          setStatus(msg, "live");
+          setTimeout(checkAsrStatus, 4000);
+          return st;
         }
+        if (st && st.ready) {
+          setStatus("Bộ nhận dạng sẵn sàng.", "ok");
+          return st;
+        }
+        if (st && !st.ready && st.pagefile_enabled === true && st.ram_avail_mb != null) {
+          setStatus(
+            "Đang nạp bộ nhận dạng… RAM trống ~" +
+              st.ram_avail_mb +
+              " MB, pagefile đang bật.",
+            "live"
+          );
+        }
+        setTimeout(checkAsrStatus, 8000);
         return st || {};
       })
       .catch(function () { return {}; });

@@ -194,6 +194,37 @@ def test_apply_low_mem_env_caps_thread_arenas():
     assert os.environ.get("OMP_NUM_THREADS")
 
 
+def test_model_status_reports_loading_progress():
+    saved_state = mt._MODEL_LOAD_STATE.copy()
+    mt._MODEL = None
+    mt._MODEL_ERROR = ""
+    mt._MODEL_LOAD_STATE = {"phase": "loading", "progress": 42, "message": "Đang nạp bộ nhận dạng..."}
+    try:
+        st = mt.model_status()
+        assert st["phase"] == "loading"
+        assert 0 <= st["progress"] <= 100
+        assert "nạp" in st["message"].lower()
+    finally:
+        mt._MODEL_LOAD_STATE = saved_state
+
+
+def test_schedule_model_preload_starts_background_load():
+    saved_model = mt._MODEL
+    saved_error = mt._MODEL_ERROR
+    saved_state = mt._MODEL_LOAD_STATE.copy()
+    mt._MODEL = None
+    mt._MODEL_ERROR = ""
+    mt._MODEL_LOAD_STATE = {"phase": "idle", "progress": 0, "message": ""}
+    try:
+        with patch.object(mt, "load_model", return_value=object()) as load_mock:
+            mt.schedule_model_preload()
+            assert load_mock.called
+    finally:
+        mt._MODEL = saved_model
+        mt._MODEL_ERROR = saved_error
+        mt._MODEL_LOAD_STATE = saved_state
+
+
 def test_load_model_reports_warmup_oom():
     class BoomModel:
         def __init__(self, *args, **kwargs):
