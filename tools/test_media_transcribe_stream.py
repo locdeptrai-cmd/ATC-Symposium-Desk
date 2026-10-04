@@ -144,6 +144,23 @@ def test_decode_skips_retry_when_first_pass_is_good():
     assert len(calls) == 1
 
 
+def test_decode_supports_notebook_beam_override():
+    class Seg:
+        text = "cleared to land runway two five right"
+
+    calls = []
+
+    class FakeModel:
+        def transcribe(self, audio, **kwargs):
+            calls.append(kwargs.copy())
+            return [Seg()], None
+
+    audio = np.ones(20000, dtype=np.float32) * 0.02
+    mt._decode_samples(FakeModel(), audio, "", beam_size=5, best_of=5)
+    assert calls[0]["beam_size"] == 5
+    assert calls[0]["best_of"] == 5
+
+
 def test_friendly_model_error_explains_mkl_malloc(monkeypatch):
     monkeypatch.setattr(
         mt,

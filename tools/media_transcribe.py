@@ -761,13 +761,23 @@ def _safe_decode(model, window: np.ndarray, hotwords: str) -> tuple[str, str]:
         return "", "Ghi lời bị lỗi: %s" % exc
 
 
-def _decode_samples(model, samples: np.ndarray, hotwords: str) -> str:
+def _decode_samples(
+    model,
+    samples: np.ndarray,
+    hotwords: str,
+    *,
+    beam_size: int | None = None,
+    best_of: int | None = None,
+) -> str:
     duration_s = max(0.4, len(samples) / 16000.0)
     token_cap = max(24, min(192, int(duration_s * 16) + 24))
+    active_beam = WHISPER_BEAM if beam_size is None else max(1, int(beam_size))
+    active_best_of = 1 if best_of is None else max(1, int(best_of))
+    retry_beam = max(active_beam, WHISPER_RETRY_BEAM)
     kwargs = {
         "language": "en",
-        "beam_size": WHISPER_BEAM,
-        "best_of": 1,
+        "beam_size": active_beam,
+        "best_of": active_best_of,
         "vad_filter": False,
         "without_timestamps": True,
         "condition_on_previous_text": False,
@@ -793,12 +803,12 @@ def _decode_samples(model, samples: np.ndarray, hotwords: str) -> str:
         first = repair_radio_text(" ".join(t for t in texts if t))
         if (
             duration_s >= 0.9
-            and WHISPER_RETRY_BEAM > WHISPER_BEAM
+            and retry_beam > active_beam
             and _score_text_quality(first) < 3.2
         ):
             kwargs_retry = dict(kwargs)
-            kwargs_retry["beam_size"] = WHISPER_RETRY_BEAM
-            kwargs_retry["best_of"] = min(3, WHISPER_RETRY_BEAM)
+            kwargs_retry["beam_size"] = retry_beam
+            kwargs_retry["best_of"] = min(3, retry_beam)
             retry_texts = _transcribe_texts(model, audio, kwargs_retry)
             retry = repair_radio_text(" ".join(t for t in retry_texts if t))
             if _score_text_quality(retry) >= _score_text_quality(first):
