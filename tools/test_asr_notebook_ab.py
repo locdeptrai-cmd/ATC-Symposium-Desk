@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from asr_notebook_ab import PROFILES, normalize_notebook_audio
 

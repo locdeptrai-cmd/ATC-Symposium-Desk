@@ -65,8 +65,9 @@ def _read_audio_window(
     end: float,
     audio_filter: str,
 ) -> np.ndarray:
-    start = max(0.0, float(start) - WINDOW_PAD_SEC)
-    duration = max(0.4, float(end) - float(start) + WINDOW_PAD_SEC * 2)
+    window_start = max(0.0, float(start) - WINDOW_PAD_SEC)
+    window_end = max(window_start + 0.4, float(end) + WINDOW_PAD_SEC)
+    duration = window_end - window_start
     command = [
         ffmpeg,
         "-hide_banner",
@@ -74,7 +75,7 @@ def _read_audio_window(
         "error",
         "-nostdin",
         "-ss",
-        "%.3f" % start,
+        "%.3f" % window_start,
         "-i",
         str(source),
         "-t",
