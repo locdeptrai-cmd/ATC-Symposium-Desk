@@ -821,6 +821,24 @@ def _decode_samples(
     return repair_radio_text(" ".join(bits))
 
 
+def decode_for_evaluation(
+    model,
+    samples: np.ndarray,
+    hotwords: str,
+    *,
+    beam_size: int | None = None,
+    best_of: int | None = None,
+) -> str:
+    """Run the production decoder with optional controlled evaluation settings."""
+    return _decode_samples(
+        model,
+        samples,
+        hotwords,
+        beam_size=beam_size,
+        best_of=best_of,
+    )
+
+
 def _open_pcm_pipe(
     ffmpeg: str,
     src: Path,

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -19,8 +18,6 @@ import media_transcribe
 from asr_dataset.audio_io import find_source_audio
 from asr_dataset.metrics import summarize_pairs
 from asr_dataset.paths import manifest_path
-from asr_dataset.recipe import resolve_model_id
-from reda import store as reda_store
 
 NOTEBOOK_FILTER = "highpass=f=300:poles=2,lowpass=f=3400:poles=2"
 WINDOW_PAD_SEC = 0.18
@@ -97,8 +94,8 @@ def _read_audio_window(
     proc = subprocess.run(
         command,
         capture_output=True,
+        check=False,
         timeout=max(90, int(duration * 4)),
-        **media_transcribe.tx._popen_flags(),
     )
     if proc.returncode != 0 or len(proc.stdout) < 64:
         detail = (proc.stderr or b"").decode("utf-8", "replace").strip()
@@ -139,7 +136,6 @@ def evaluate(
     gold: Path | None = None,
     split: str = "test",
     limit: int | None = None,
-    model_id: str | None = None,
 ) -> dict:
     manifest = gold or manifest_path()
     if not manifest.is_file():
@@ -151,17 +147,12 @@ def evaluate(
     if not ffmpeg:
         raise RuntimeError("Không tìm thấy ffmpeg để đọc audio gold.")
 
-    configured_model = model_id or os.environ.get("ATC_WHISPER_MODEL") or "runtime"
-    resolved_model = resolve_model_id(configured_model)
-    from faster_whisper import WhisperModel
-
-    model = WhisperModel(
-        resolved_model,
-        device="cpu",
-        compute_type="int8",
-        cpu_threads=media_transcribe._cpu_thread_budget(),
-        num_workers=1,
-    )
+    resolved_model = media_transcribe.WHISPER_MODEL
+    model = media_transcribe.load_model()
+    if model is None:
+        raise RuntimeError(
+            media_transcribe.model_status().get("error") or "Không nạp được model runtime."
+        )
     pairs = {name: [] for name, *_ in PROFILES}
     failures: list[dict[str, str]] = []
     audio_cache: dict[tuple[str, float, float, str], np.ndarray] = {}
@@ -185,7 +176,7 @@ def evaluate(
                     audio_cache[key] = samples
                 if notebook_norm:
                     samples = normalize_notebook_audio(samples)
-                hyp = media_transcribe._decode_samples(
+                hyp = media_transcribe.decode_for_evaluation(
                     model,
                     samples,
                     hotwords,
@@ -198,8 +189,8 @@ def evaluate(
 
     return {
         "model": resolved_model,
-        "device": "cpu",
-        "compute_type": "int8",
+        "device": media_transcribe.WHISPER_DEVICE,
+        "compute_type": media_transcribe.WHISPER_COMPUTE,
         "split": split,
         "rows_with_audio": len(rows),
         "skipped_audio": skipped_audio,
@@ -216,11 +207,10 @@ def main() -> int:
     parser.add_argument("--gold", type=Path, default=None, help="Gold JSONL manifest.")
     parser.add_argument("--split", choices=("train", "dev", "test", "all"), default="test")
     parser.add_argument("--limit", type=int, default=None, help="Maximum gold utterances to compare.")
-    parser.add_argument("--model", default=None, help="CT2 path or runtime alias; defaults to packaged turbo.")
     args = parser.parse_args()
     if args.limit is not None and args.limit < 1:
         parser.error("--limit phải lớn hơn 0.")
-    result = evaluate(gold=args.gold, split=args.split, limit=args.limit, model_id=args.model)
+    result = evaluate(gold=args.gold, split=args.split, limit=args.limit)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 
