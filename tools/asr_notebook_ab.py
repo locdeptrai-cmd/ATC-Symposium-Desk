@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -150,7 +151,8 @@ def evaluate(
     if not ffmpeg:
         raise RuntimeError("Không tìm thấy ffmpeg để đọc audio gold.")
 
-    resolved_model = resolve_model_id(model_id or "runtime")
+    configured_model = model_id or os.environ.get("ATC_WHISPER_MODEL") or "runtime"
+    resolved_model = resolve_model_id(configured_model)
     from faster_whisper import WhisperModel
 
     model = WhisperModel(
