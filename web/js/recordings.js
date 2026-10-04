@@ -357,6 +357,53 @@
       });
   }
 
+  function cleanTranscriptPayload(text, turns) {
+    var sourceTurns = (turns || []).filter(function (turn) {
+      return turn && String(turn.text || turn.asr_text || "").trim();
+    });
+    if (!sourceTurns.length || !window.fetch) {
+      return cleanTranscriptText(text).then(function (cleanedText) {
+        return { text: cleanedText, turns: [] };
+      });
+    }
+    var rawTexts = sourceTurns.map(function (turn) {
+      return polishEn(turn.text || turn.asr_text || "");
+    });
+    return fetch("/api/v1/clean-batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ transcripts: rawTexts })
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error("clean-batch " + res.status);
+        return res.json();
+      })
+      .then(function (payload) {
+        var cleanedList = payload && payload.status === "success" && payload.data;
+        if (!Array.isArray(cleanedList) || cleanedList.length !== sourceTurns.length) {
+          cleanedList = rawTexts;
+        }
+        var cleanedTurns = sourceTurns.map(function (turn, index) {
+          var copy = {};
+          Object.keys(turn).forEach(function (key) { copy[key] = turn[key]; });
+          copy.text = cleanedList[index] || rawTexts[index] || "";
+          copy.asr_text = copy.text;
+          delete copy.speaker_role;
+          delete copy.speaker;
+          return copy;
+        });
+        return {
+          text: cleanedList.filter(Boolean).join(" "),
+          turns: cleanedTurns
+        };
+      })
+      .catch(function () {
+        return cleanTranscriptText(text).then(function (cleanedText) {
+          return { text: cleanedText, turns: [] };
+        });
+      });
+  }
+
   function clock(sec) {
     return formatTime(sec);
   }
@@ -864,16 +911,28 @@
         row.asrComplete = true;
         if (row.manualTranscript || (row.goldTurns && row.goldTurns.length)) return putRow(row);
         var text = typeof payload === "string" ? payload : (payload && payload.text) || "";
-        row.turns = (payload && payload.turns) || row.partialTurns || row.turns || [];
-        return cleanTranscriptText(text).then(function (cleaned) {
-          if (cleaned) row.transcriptEn = cleaned;
+        var rawTurns = (payload && payload.turns) || row.partialTurns || row.turns || [];
+        return cleanTranscriptPayload(text, rawTurns).then(function (cleaned) {
+          if (cleaned.text) row.transcriptEn = cleaned.text;
+          row.turns = cleaned.turns || [];
           delete row.partialTurns;
           showPlaybackTranscript(row);
           return putRow(row);
         }).then(function () {
           render();
           if (player.id !== row.id) return;
-          setStatus("Đã ghi lời English. Bấm Phân tích lại để chạy REDA.", "ok");
+          setStatus("Đã clean lời English. Đang phân vai REDA…", "live");
+          return analyzeRow(row)
+            .then(function () {
+              setStatus(statusAfterAnalysis(row, row.transcriptEn), "ok");
+            })
+            .catch(function (err) {
+              setStatus(
+                "Đã clean lời. Phân vai REDA lỗi — bấm Phân tích lại. " +
+                  ((err && err.message) || ""),
+                "warn"
+              );
+            });
         });
       })
       .catch(function (err) {
