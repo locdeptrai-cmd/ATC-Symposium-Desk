@@ -218,6 +218,11 @@ def _local_ct2_ready(folder: Path) -> bool:
     )
 
 
+# 86 đoạn Tân Sơn Nhất trên T4: large-v3-turbo đúng hơn ATC-whisper-turbo-v1
+# và giải mã nhanh hơn tiếng nói khoảng 30 lần. Dùng khi máy chưa có CT2 local.
+FALLBACK_MODEL = "large-v3-turbo"
+
+
 def _resolve_model_id() -> str:
     env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
     if env:
@@ -225,7 +230,7 @@ def _resolve_model_id() -> str:
     turbo = app_paths.whisper_turbo_dir()
     if _local_ct2_ready(turbo):
         return str(turbo)
-    return str(turbo)
+    return FALLBACK_MODEL
 
 
 WHISPER_MODEL = _resolve_model_id()
@@ -329,12 +334,15 @@ def _unload_model() -> None:
 
 def _model_candidates() -> list[str]:
     names: list[str] = []
-    env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
-    turbo = str(app_paths.whisper_turbo_dir())
-    if env:
-        names.append(resolve_model_id(env))
-    if turbo not in names:
-        names.append(turbo)
+    chosen = _resolve_model_id()
+    names.append(chosen)
+    turbo = app_paths.whisper_turbo_dir()
+    if _local_ct2_ready(turbo):
+        local = str(turbo)
+        if local not in names:
+            names.append(local)
+    if FALLBACK_MODEL not in names:
+        names.append(FALLBACK_MODEL)
     return names
 
 
