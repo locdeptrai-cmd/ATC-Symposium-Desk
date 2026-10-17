@@ -89,6 +89,18 @@ def test_hotwords_unit_saigon_not_library_dump():
 def test_infer_unit_from_filename():
     assert infer_unit("2026_VVTS_TWR.wav") == "sgn"
     assert infer_unit("noi_bai_app.wav") == "han"
+    assert infer_unit("20260225_118-7_2220-2250.mp3") == "sgn"
+
+
+def test_saigon_frequency_file_does_not_bias_other_towers():
+    text = hotwords_for("20260225_118-7_2220-2250.mp3").lower()
+    items = [part.strip() for part in text.split(",")]
+    assert "noi bai tower" not in text
+    assert "danang tower" not in text
+    assert "tsn tower" in items
+    assert "acknowledge" not in items
+    assert "break" not in items
+    assert "cleared" not in items
 
 
 def test_radio_fixes_each_rule(tmp_path, monkeypatch):
@@ -273,6 +285,23 @@ def test_hotwords_include_seeded_glossary_phrases(tmp_path):
     lower = text.lower()
     assert "read back" in lower
     assert "hold position" in lower
+
+
+def test_hotwords_skip_single_word_glossary_echo(tmp_path):
+    from asr_dataset import hotwords as hw
+
+    seeded = tmp_path / "glossary_phrases.json"
+    seeded.write_text(
+        json.dumps({"phrases": ["ACKNOWLEDGE", "BREAK", "CLEARED", "READ BACK", "HOLD POSITION"]}),
+        encoding="utf-8",
+    )
+    with patch.object(hw, "gold_root", return_value=tmp_path):
+        items = [part.strip() for part in hw.hotwords_for(filename="twr_sgn.wav", unit="sgn").lower().split(",")]
+    assert "acknowledge" not in items
+    assert "break" not in items
+    assert "cleared" not in items
+    assert "read back" in items
+    assert "hold position" in items
 
 
 def test_multipart_uploads_excel_and_audio():

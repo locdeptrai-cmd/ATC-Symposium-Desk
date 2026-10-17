@@ -29,8 +29,9 @@ CORE_PHRASEOLOGY = (
 _VN_ICAO = {"HVN", "VJC", "BAV", "PIC", "VAG", "VFC", "SPQ", "VSM", "SAV", "HAI", "TVJ"}
 
 _UNIT_KEYS = (
-    ("sgn", ("sgn", "vvts", "saigon", "tan son nhat", "118.7", "118.70")),
-    ("han", ("han", "vvnb", "noi bai", "hanoi", "ha noi", "120.1")),
+    # fold_name() turns 118-7 into "118 7", so the dotted needle never matched.
+    ("sgn", ("sgn", "vvts", "saigon", "tan son nhat", "118.7", "118.70", "118 7", "118 70")),
+    ("han", ("han", "vvnb", "noi bai", "hanoi", "ha noi", "120.1", "120 1")),
     ("dad", ("dad", "vvdn", "danang", "da nang")),
     ("cxr", ("cxr", "vvcr", "cam ranh")),
     ("pqc", ("pqc", "vvpq", "phu quoc")),
@@ -72,6 +73,15 @@ def _seeded_glossary_phrases() -> list[str]:
         seen.add(key)
         out.append(phrase)
     return out[:1200]
+
+
+def _glossary_bias_phrases() -> list[str]:
+    """Multi-word phrases only.
+
+    Single Doc 4444 words (CLEARED, BREAK, CONTACT) are already in Whisper.
+    Passing them as hotwords made the decoder print that list instead of the call.
+    """
+    return [phrase for phrase in _seeded_glossary_phrases() if len(phrase.split()) >= 2]
 
 
 @lru_cache(maxsize=1)
@@ -156,7 +166,7 @@ def hotwords_for(filename: str = "", unit: str | None = None) -> str:
     # Whisper's prompt has a small token budget. A full library dump silently
     # loses the tail and wastes decoding time. Prioritize human Excel hints.
     base = bits[:9] + stations[:2]
-    groups = [(base, 28), (excel_phrases(filename), 32), (_seeded_glossary_phrases(), 12), (bits[9:], 10)]
+    groups = [(base, 28), (excel_phrases(filename), 32), (_glossary_bias_phrases(), 12), (bits[9:], 10)]
     selected, used = [], set()
     words_left = 75
     for candidates, budget in groups:

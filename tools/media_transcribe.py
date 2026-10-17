@@ -47,7 +47,9 @@ MAX_UPLOAD_BYTES = tx.MAX_UPLOAD_BYTES
 # at inference. Local turbo CT2 (ATCO2 + ATCoSIM, published WER 7.83%).
 # Override with ATC_WHISPER_MODEL.
 ATC_WHISPER_TURBO_DIR = app_paths.whisper_turbo_dir()
-ATC_PROMPT = "Viet Nam Vietjet TSN Tower. Cleared to land. Squawk. QNH."
+# Do not put a clearance here. On the Tan Son Nhat tape, "Cleared to land."
+# was copied onto a take-off call ("take off, right away" became "Cleared to land").
+ATC_PROMPT = "Viet Nam Vietjet TSN Tower. Squawk. QNH."
 LIVE_OVERLAP_SEC = 0.75
 STREAM_READ_SEC = 0.25
 PTT_CLOSED_HANG_SEC = 0.8
