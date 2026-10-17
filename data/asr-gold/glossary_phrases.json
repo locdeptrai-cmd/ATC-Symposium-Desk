@@ -1,10 +1,10 @@
 {
-  "updated": 1791124308.998696,
+  "updated": 1792235511.132828,
   "count": 610,
   "sources": [
-    "F:\\ATC-Symposium-Desk\\data\\doc4444-phraseology.tsv",
-    "F:\\ATC-Symposium-Desk\\data\\vn-callsigns.tsv",
-    "F:\\ATC-Symposium-Desk\\data\\user-phraseology.json"
+    "D:\\ATC Symposium dék\\ATC-Symposium-Desk\\data\\doc4444-phraseology.tsv",
+    "D:\\ATC Symposium dék\\ATC-Symposium-Desk\\data\\vn-callsigns.tsv",
+    "D:\\ATC Symposium dék\\ATC-Symposium-Desk\\data\\user-phraseology.json"
   ],
   "phrases": [
     "ACKNOWLEDGE",
