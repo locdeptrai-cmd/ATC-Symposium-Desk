@@ -210,14 +210,17 @@ def _model_cache_dir() -> Path:
     return folder
 
 
-def _local_ct2_ready(folder: Path) -> bool:
+def _local_ct2_ready(folder: Path, min_bytes: int = 400_000_000) -> bool:
     weights = folder / "model.bin"
-    return (
-        weights.is_file()
-        and weights.stat().st_size > 400_000_000
-        and (folder / "config.json").is_file()
-        and (folder / "vocabulary.json").is_file()
-    )
+    try:
+        return (
+            weights.is_file()
+            and weights.stat().st_size > min_bytes
+            and (folder / "config.json").is_file()
+            and (folder / "vocabulary.json").is_file()
+        )
+    except OSError:
+        return False
 
 
 # 86 đoạn Tân Sơn Nhất trên T4: large-v3-turbo đúng hơn ATC-whisper-turbo-v1
@@ -229,6 +232,11 @@ def _resolve_model_id() -> str:
     env = (os.environ.get("ATC_WHISPER_MODEL") or "").strip()
     if env:
         return resolve_model_id(env)
+    # Whisper small int8 is the CPU runtime. Turbo stays available via
+    # ATC_WHISPER_MODEL=turbo. The 400 MB floor still rejects a partial turbo download.
+    small = app_paths.whisper_small_dir()
+    if _local_ct2_ready(small, 80_000_000):
+        return str(small)
     turbo = app_paths.whisper_turbo_dir()
     if _local_ct2_ready(turbo):
         return str(turbo)
@@ -338,6 +346,11 @@ def _model_candidates() -> list[str]:
     names: list[str] = []
     chosen = _resolve_model_id()
     names.append(chosen)
+    small = app_paths.whisper_small_dir()
+    if _local_ct2_ready(small, 80_000_000):
+        local_small = str(small)
+        if local_small not in names:
+            names.append(local_small)
     turbo = app_paths.whisper_turbo_dir()
     if _local_ct2_ready(turbo):
         local = str(turbo)

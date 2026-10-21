@@ -89,6 +89,23 @@ def whisper_turbo_dir() -> Path:
     return candidates[0]
 
 
+def whisper_small_dir() -> Path:
+    """CPU CTranslate2 int8 of the ATC Whisper-small fine-tune."""
+    candidates = [
+        bundle_root() / "models" / "whisper" / "atc-small-ct2",
+        exe_dir() / "models" / "whisper" / "atc-small-ct2",
+        app_home() / "models" / "whisper" / "atc-small-ct2",
+    ]
+    for path in candidates:
+        weights = path / "model.bin"
+        try:
+            if weights.is_file() and weights.stat().st_size > 80_000_000:
+                return path
+        except OSError:
+            continue
+    return candidates[0]
+
+
 def ffmpeg_candidates() -> list[Path]:
     found: list[Path] = []
     bundled = [
