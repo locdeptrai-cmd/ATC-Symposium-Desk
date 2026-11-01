@@ -402,6 +402,53 @@ def test_corpus_stats_includes_recipe():
     assert stats["recipe"]["ab_hf"].endswith("turbo-atcosim-finetune")
 
 
+def test_gold_text_from_filename():
+    from asr_dataset.ingest_finetune import gold_text_from_filename
+
+    assert gold_text_from_filename("tan son nhat tower.mp3") == "Tan Son Nhat Tower"
+    assert gold_text_from_filename("vietjet.mp3") == "Vietjet"
+    assert gold_text_from_filename("xin chao.mp3") == "xin chao"
+    assert gold_text_from_filename("xin chao mau.mp3") == "xin chao mau"
+
+
+def test_ingest_named_clips_writes_wav_and_manifest(tmp_path):
+    import wave
+
+    from asr_dataset import ingest_finetune as inf
+
+    src = tmp_path / "vietjet.wav"
+    with wave.open(str(src), "wb") as handle:
+        handle.setnchannels(1)
+        handle.setsampwidth(2)
+        handle.setframerate(16000)
+        handle.writeframes(b"\x00\x00" * 1600)
+
+    gold = tmp_path / "gold"
+    wavs = gold / "dataset_v1" / "wav"
+    man = gold / "dataset_v1" / "manifest.jsonl"
+    with patch.object(inf, "gold_root", return_value=gold), patch.object(
+        inf, "audio_root", return_value=gold / "source"
+    ), patch.object(inf, "wav_dir", return_value=wavs), patch.object(
+        inf, "manifest_path", return_value=man
+    ), patch.object(inf, "ensure_gold_dirs", return_value=gold / "dataset_v1"):
+        result = inf.ingest_named_clips([src], session_id="pilot-gold")
+        pack = inf.export_named_clip_pack(result["records"], tmp_path / "pack")
+
+    assert result["added"] == 1
+    rec = result["records"][0]
+    assert rec["text"] == "Vietjet"
+    assert rec["speaker"] == "PILOT"
+    assert rec["split"] == "train"
+    assert rec["source"] == "HUMAN"
+    wav_out = wavs / "pilot-gold-vietjet.wav"
+    assert wav_out.is_file()
+    with wave.open(str(wav_out), "rb") as handle:
+        assert handle.getnframes() / handle.getframerate() >= 0.6
+    assert "Vietjet" in man.read_text(encoding="utf-8")
+    assert (pack / "pilot_gold.jsonl").is_file()
+    assert (pack / "audio" / "pilot-gold-vietjet.wav").is_file()
+
+
 if __name__ == "__main__":
     test_wer_identical()
     test_wer_substitution()
@@ -422,6 +469,9 @@ if __name__ == "__main__":
     test_mix_train_rows_keeps_gold_and_fills_30_percent()
     test_resolve_model_alias_tclin()
     test_corpus_stats_includes_recipe()
+    test_gold_text_from_filename()
+    with tempfile.TemporaryDirectory() as folder:
+        test_ingest_named_clips_writes_wav_and_manifest(Path(folder))
     with tempfile.TemporaryDirectory() as folder:
         test_gold_record_roundtrip(Path(folder))
     with tempfile.TemporaryDirectory() as folder:

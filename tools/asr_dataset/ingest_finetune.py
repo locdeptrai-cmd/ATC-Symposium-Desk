@@ -790,6 +790,7 @@ _NAMED_GOLD = {
 }
 _CLIP_SUFFIXES = {".mp3", ".wav", ".m4a", ".flac", ".ogg", ".wma"}
 _MIN_CLIP_SEC = 0.6
+_MAX_NAMED_CLIP_BYTES = 80_000
 
 
 def gold_text_from_filename(name: str) -> str:
@@ -896,6 +897,11 @@ def ingest_named_clips(
     for src in files:
         src = Path(src)
         if not src.is_file() or src.suffix.lower() not in _CLIP_SUFFIXES:
+            continue
+        try:
+            if src.stat().st_size > _MAX_NAMED_CLIP_BYTES:
+                continue
+        except OSError:
             continue
         text = gold_text_from_filename(src.name)
         if not text:
