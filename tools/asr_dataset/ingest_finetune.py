@@ -3,13 +3,16 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import re
 import shutil
+import subprocess
 import tempfile
 import threading
 import time
 import unicodedata
 import uuid
+import wave
 from datetime import datetime, time as dt_time, timedelta
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -18,7 +21,7 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font
 
 from asr_dataset.export_gold import build_record
-from asr_dataset.paths import audio_root, ensure_gold_dirs, gold_root, manifest_path
+from asr_dataset.paths import audio_root, ensure_gold_dirs, gold_root, manifest_path, wav_dir
 from asr_dataset.recipe import recipe_status
 from asr_dataset.vocabulary import excel_phrases, vocabulary_revision
 
@@ -777,3 +780,227 @@ def _run_ingest(job_id: str, audio: Path | None, excel: Path, audio_name: str, e
 
 def tempfile_dir() -> Path:
     return Path(tempfile.gettempdir())
+
+
+_NAMED_GOLD = {
+    "tan son nhat tower": "Tan Son Nhat Tower",
+    "vietjet": "Vietjet",
+    "xin chao": "xin chao",
+    "xin chao mau": "xin chao mau",
+}
+_CLIP_SUFFIXES = {".mp3", ".wav", ".m4a", ".flac", ".ogg", ".wma"}
+_MIN_CLIP_SEC = 0.6
+
+
+def gold_text_from_filename(name: str) -> str:
+    stem = Path(str(name or "")).stem
+    stem = re.sub(r"\s+", " ", stem).strip()
+    if not stem:
+        return ""
+    mapped = _NAMED_GOLD.get(stem.casefold())
+    if mapped:
+        return mapped
+    return stem
+
+
+def _ffmpeg_to_wav(src: Path, dest: Path) -> None:
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        raise RuntimeError("Cần ffmpeg để chuyển MP3 sang WAV 16 kHz.")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    cmd = [
+        ffmpeg,
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-y",
+        "-i",
+        str(src),
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        str(dest),
+    ]
+    flags = {"creationflags": 0x08000000} if os.name == "nt" else {}
+    proc = subprocess.run(cmd, capture_output=True, timeout=90, **flags)
+    if proc.returncode != 0 or not dest.is_file() or dest.stat().st_size < 64:
+        err = (proc.stderr or b"").decode("utf-8", "replace").strip()[:200]
+        raise RuntimeError("Không chuyển được " + src.name + ((": " + err) if err else "."))
+
+
+def _pad_wav_min(path: Path, min_sec: float = _MIN_CLIP_SEC) -> float:
+    with wave.open(str(path), "rb") as handle:
+        sr = handle.getframerate() or 16000
+        nch = handle.getnchannels() or 1
+        sw = handle.getsampwidth() or 2
+        frames = handle.readframes(handle.getnframes())
+    frame_bytes = max(1, nch * sw)
+    nframes = len(frames) // frame_bytes
+    duration = nframes / float(sr)
+    need_frames = int(round(min_sec * sr))
+    if nframes >= need_frames:
+        return duration
+    frames = frames + (b"\x00" * ((need_frames - nframes) * frame_bytes))
+    with wave.open(str(path), "wb") as handle:
+        handle.setnchannels(nch)
+        handle.setsampwidth(sw)
+        handle.setframerate(sr)
+        handle.writeframes(frames)
+    return min_sec
+
+
+def convert_named_clip(src: Path, dest: Path, min_sec: float = _MIN_CLIP_SEC) -> float:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if src.resolve() != dest.resolve():
+        if src.suffix.lower() == ".wav":
+            shutil.copy2(src, dest)
+        else:
+            _ffmpeg_to_wav(src, dest)
+    return _pad_wav_min(dest, min_sec)
+
+
+def ingest_named_clips(
+    files: list[Path],
+    *,
+    speaker: str = "PILOT",
+    split: str = "train",
+    session_id: str = "pilot-gold",
+) -> dict:
+    ensure_gold_dirs()
+    source_dir = audio_root()
+    source_dir.mkdir(parents=True, exist_ok=True)
+    dest_wav = wav_dir()
+    dest_wav.mkdir(parents=True, exist_ok=True)
+    path = manifest_path()
+    existing: list[str] = []
+    seen: set[str] = set()
+    if path.is_file():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            try:
+                old = json.loads(line)
+            except json.JSONDecodeError:
+                existing.append(line)
+                continue
+            uid = str(old.get("utterance_id") or old.get("id") or "")
+            if uid:
+                seen.add(uid)
+            existing.append(line)
+    started = time.time()
+    records: list[dict] = []
+    for src in files:
+        src = Path(src)
+        if not src.is_file() or src.suffix.lower() not in _CLIP_SUFFIXES:
+            continue
+        text = gold_text_from_filename(src.name)
+        if not text:
+            continue
+        key = stem_key(src.name) or uuid.uuid4().hex[:8]
+        uid = f"{session_id}-{key}"
+        source_copy = source_dir / src.name
+        if src.resolve() != source_copy.resolve():
+            shutil.copy2(src, source_copy)
+        wav_path = dest_wav / f"{uid}.wav"
+        duration = convert_named_clip(src, wav_path)
+        rec = build_record(
+            utterance_id=uid,
+            session_id=session_id,
+            text=text,
+            speaker=speaker,
+            t_start=0.0,
+            t_end=round(float(duration), 3),
+            filename=src.name,
+            started_at=started,
+            audio_rel=f"wav/{uid}.wav",
+        )
+        rec["split"] = split
+        rec["source"] = "HUMAN"
+        rec["notes"] = "filename_is_transcript"
+        records.append(rec)
+        seen.add(uid)
+    if records:
+        keep: list[str] = []
+        drop = {str(r.get("utterance_id") or r.get("id") or "") for r in records}
+        for line in existing:
+            if not line.strip().startswith("{"):
+                keep.append(line)
+                continue
+            try:
+                old = json.loads(line)
+            except json.JSONDecodeError:
+                keep.append(line)
+                continue
+            uid = str(old.get("utterance_id") or old.get("id") or "")
+            if uid in drop:
+                continue
+            keep.append(line)
+        for rec in records:
+            keep.append(json.dumps(rec, ensure_ascii=False))
+        path.write_text("\n".join(keep) + ("\n" if keep else ""), encoding="utf-8")
+    return {
+        "ok": True,
+        "added": len(records),
+        "records": records,
+        "manifest": str(path),
+        "wav_dir": str(dest_wav),
+    }
+
+
+def export_named_clip_pack(records: list[dict], dest: Path, dataset_id: str = "tunlcphm/atc-vn-pilot-gold") -> Path:
+    dest = Path(dest)
+    dest.mkdir(parents=True, exist_ok=True)
+    audio = dest / "audio"
+    audio.mkdir(parents=True, exist_ok=True)
+    lines: list[str] = []
+    for rec in records:
+        name = Path(str(rec.get("audio") or "")).name
+        src = wav_dir() / name
+        if not src.is_file():
+            continue
+        shutil.copy2(src, audio / name)
+        packed = dict(rec)
+        packed["audio"] = f"audio/{name}"
+        lines.append(json.dumps(packed, ensure_ascii=False))
+    (dest / "pilot_gold.jsonl").write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
+    meta = dest / "dataset-metadata.json"
+    if not meta.is_file():
+        meta.write_text(
+            json.dumps(
+                {
+                    "title": "ATC VN real pilot clips",
+                    "id": dataset_id,
+                    "licenses": [{"name": "CC0-1.0"}],
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+    return dest
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Ingest named VHF clips (filename = gold transcript).")
+    parser.add_argument("clips", nargs="+", type=Path, help="MP3/WAV files or a folder.")
+    parser.add_argument("--pack", type=Path, default=None, help="Also copy WAV+JSONL to this Kaggle dataset folder.")
+    args = parser.parse_args()
+    files: list[Path] = []
+    for item in args.clips:
+        if item.is_dir():
+            files.extend(sorted(p for p in item.iterdir() if p.suffix.lower() in _CLIP_SUFFIXES))
+        else:
+            files.append(item)
+    result = ingest_named_clips(files)
+    print(json.dumps({k: v for k, v in result.items() if k != "records"}, ensure_ascii=False, indent=2))
+    for rec in result.get("records") or []:
+        print(rec.get("id"), rec.get("text"), rec.get("audio"))
+    if args.pack:
+        export_named_clip_pack(result.get("records") or [], args.pack)
+        print("pack", args.pack)
