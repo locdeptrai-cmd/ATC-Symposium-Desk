@@ -1,0 +1,28 @@
+﻿t_start,t_end,speaker,text,asr,callsign,freq_mhz,source_file,clip_id,notes
+5.0,12.0,PILOT,"TSN Tower, VJC1225 on the ILSw approach RWY 25R",,VJC1225,118.7,20260225_118-7_2220-2250.mp3,,first contact
+13.0,18.0,ATCO,"VJC1225, TWR, continue approach RWY 25R",Vietjet one two two five tower continue approach runway two five right,VJC1225,118.7,20260225_118-7_2220-2250.mp3,,
+19.0,24.0,PILOT,"Continue approach RWY 25R, VJC1225",continue approach runway two five right vietjet one two two five,VJC1225,118.7,20260225_118-7_2220-2250.mp3,,readback
+56.0,62.0,ATCO,VJC3909 vacate left via P5 cross RWY 25L,,VJC3909,118.7,,,
+63.0,70.0,PILOT,"Vacate P5 cross RWY 25L, VJC3909",,VJC3909,118.7,,,
+108.0,115.0,ATCO,"VJC1225 wind 310 degrees 2 knots, RWY 25R cleared to land",,VJC1225,118.7,,,landing clearance
+116.0,121.0,PILOT,"Cleared to land RWY 25R, VJC1225",,VJC1225,118.7,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,

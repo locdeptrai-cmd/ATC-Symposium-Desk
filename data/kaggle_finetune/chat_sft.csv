@@ -1,0 +1,43 @@
+﻿id,instruction,input,output,speaker,split,task
+utt_vjc1225_01_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_vjc1225_01.wav] speaker=PILOT freq=118.7,"TSN Tower, VJC1225 on the ILS approach runway 25R",PILOT,test,asr_text
+utt_vjc1225_02_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_vjc1225_02.wav] speaker=ATCO freq=118.7,"VJC1225, Tower, continue approach runway 25R",ATCO,dev,asr_text
+utt_vjc1225_03_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_vjc1225_03.wav] speaker=PILOT freq=118.7,"Continue approach runway 25R, VJC1225",PILOT,dev,asr_text
+utt_vjc3909_01_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_vjc3909_01.wav] speaker=ATCO freq=118.7,VJC3909 vacate left via P5 cross runway 25L,ATCO,test,asr_text
+utt_vjc3909_02_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_vjc3909_02.wav] speaker=PILOT freq=118.7,"Vacate P5 cross runway 25L, VJC3909",PILOT,train,asr_text
+utt_vjc1225_04_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_vjc1225_04.wav] speaker=ATCO freq=118.7,"VJC1225 wind 310 degrees 2 knots, runway 25R cleared to land",ATCO,train,asr_text
+utt_vjc1225_05_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_vjc1225_05.wav] speaker=PILOT freq=118.7,"Cleared to land runway 25R, VJC1225",PILOT,train,asr_text
+utt_hvn_01_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_hvn_01.wav] speaker=PILOT freq=121.9,"Tan Son Nhat Ground, HVN123 request pushback and start",PILOT,train,asr_text
+utt_hvn_02_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_hvn_02.wav] speaker=ATCO freq=121.9,"HVN123, Ground, pushback and start approved, face east",ATCO,train,asr_text
+utt_hvn_03_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_hvn_03.wav] speaker=PILOT freq=121.9,"Pushback and start approved face east, HVN123",PILOT,train,asr_text
+utt_vjc_taxi_01_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_vjc_taxi_01.wav] speaker=ATCO freq=121.9,VJC456 taxi via A hold short runway 25R,ATCO,dev,asr_text
+utt_vjc_taxi_02_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/utt_vjc_taxi_02.wav] speaker=PILOT freq=121.9,"Taxi via A hold short runway 25R, VJC456",PILOT,test,asr_text
+repair_000,"Correct noisy ASR of ATC radio speech into standard phraseology. Fix callsigns, runway designators, and numbers.",vietjet one two two five tower continue approach runway two five right,"VJC1225, Tower, continue approach runway 25R",,dev,asr_repair
+repair_001,"Correct noisy ASR of ATC radio speech into standard phraseology. Fix callsigns, runway designators, and numbers.",continue approach runway two five right vietjet one two two five,"Continue approach runway 25R, VJC1225",,train,asr_repair
+repair_002,"Correct noisy ASR of ATC radio speech into standard phraseology. Fix callsigns, runway designators, and numbers.",cleared to land runway two five right vietnam airlines one two three,"Cleared to land runway 25R, HVN123",,train,asr_repair
+repair_003,"Correct noisy ASR of ATC radio speech into standard phraseology. Fix callsigns, runway designators, and numbers.",hold short of runway two five right,Hold short of runway 25R,,train,asr_repair
+repair_004,"Correct noisy ASR of ATC radio speech into standard phraseology. Fix callsigns, runway designators, and numbers.",contact tower one one eight decimal seven,Contact Tower 118.7,,train,asr_repair
+repair_005,"Correct noisy ASR of ATC radio speech into standard phraseology. Fix callsigns, runway designators, and numbers.",squawk seven seven zero zero,Squawk 7700,,train,asr_repair
+repair_006,"Correct noisy ASR of ATC radio speech into standard phraseology. Fix callsigns, runway designators, and numbers.",q n h one zero one three,QNH 1013,,train,asr_repair
+repair_007,"Correct noisy ASR of ATC radio speech into standard phraseology. Fix callsigns, runway designators, and numbers.",vacate left via papa five cross runway two five left,Vacate left via P5 cross runway 25L,,train,asr_repair
+repair_008,"Correct noisy ASR of ATC radio speech into standard phraseology. Fix callsigns, runway designators, and numbers.",line up and wait runway two five right,Line up and wait runway 25R,,train,asr_repair
+repair_009,"Correct noisy ASR of ATC radio speech into standard phraseology. Fix callsigns, runway designators, and numbers.",wind three one zero degrees two knots runway two five right cleared to land,"Wind 310 degrees 2 knots, runway 25R cleared to land",,train,asr_repair
+phrase_000,Normalize ATC phraseology to standard form.,AFFIRM,AFFIRM,,train,phraseology
+phrase_001,Normalize ATC phraseology to standard form.,NEGATIVE,NEGATIVE,,train,phraseology
+phrase_002,Normalize ATC phraseology to standard form.,WILCO,WILCO,,train,phraseology
+phrase_003,Normalize ATC phraseology to standard form.,STANDBY,STANDBY,,train,phraseology
+phrase_004,Normalize ATC phraseology to standard form.,ROGER,ROGER,,dev,phraseology
+phrase_005,Normalize ATC phraseology to standard form.,SAY AGAIN,SAY AGAIN,,train,phraseology
+phrase_006,Normalize ATC phraseology to standard form.,CORRECTION,CORRECTION,,train,phraseology
+phrase_007,Normalize ATC phraseology to standard form.,GO AHEAD,GO AHEAD,,train,phraseology
+phrase_008,Normalize ATC phraseology to standard form.,HOLD SHORT OF RUNWAY 25R,HOLD SHORT OF RUNWAY 25R,,train,phraseology
+phrase_009,Normalize ATC phraseology to standard form.,CLEARED TO LAND RUNWAY 25R,CLEARED TO LAND RUNWAY 25R,,train,phraseology
+phrase_010,Normalize ATC phraseology to standard form.,LINE UP AND WAIT RUNWAY 25R,LINE UP AND WAIT RUNWAY 25R,,dev,phraseology
+phrase_011,Normalize ATC phraseology to standard form.,CONTACT TOWER 118.7,CONTACT TOWER ONE ONE EIGHT DECIMAL SEVEN,,train,phraseology
+phrase_012,Normalize ATC phraseology to standard form.,SQUAWK 7700,SQUAWK SEVEN SEVEN ZERO ZERO,,test,phraseology
+phrase_013,Normalize ATC phraseology to standard form.,QNH 1013,QNH ONE ZERO ONE THREE,,train,phraseology
+phrase_014,Normalize ATC phraseology to standard form.,WIND 310 DEGREES 8 KNOTS,WIND THREE ONE ZERO DEGREES EIGHT KNOTS,,train,phraseology
+phrase_015,Normalize ATC phraseology to standard form.,VACATE LEFT VIA P5,VACATE LEFT VIA P5,,train,phraseology
+phrase_016,Normalize ATC phraseology to standard form.,CROSS RUNWAY 25L,CROSS RUNWAY 25L,,train,phraseology
+phrase_017,Normalize ATC phraseology to standard form.,TAXI VIA A HOLD SHORT RUNWAY 25R,TAXI VIA A HOLD SHORT RUNWAY 25R,,train,phraseology
+phrase_018,Normalize ATC phraseology to standard form.,PUSHBACK AND START APPROVED,PUSHBACK AND START APPROVED,,train,phraseology
+phrase_019,Normalize ATC phraseology to standard form.,CONTINUE APPROACH RUNWAY 25R,CONTINUE APPROACH RUNWAY 25R,,train,phraseology

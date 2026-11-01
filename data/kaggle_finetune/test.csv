@@ -1,0 +1,4 @@
+﻿id,audio,text,speaker,callsign,freq_mhz,t_start,t_end,duration,source_file,clip_id,notes,split,language,task,domain,dataset_version,has_audio
+utt_vjc1225_01,audio/utt_vjc1225_01.wav,"TSN Tower, VJC1225 on the ILS approach runway 25R",PILOT,VJC1225,118.7,5.0,12.0,7.0,20260225_118-7_2220-2250.mp3,,first contact,test,en,transcribe,atc_vhf,kaggle_v1,0
+utt_vjc3909_01,audio/utt_vjc3909_01.wav,VJC3909 vacate left via P5 cross runway 25L,ATCO,VJC3909,118.7,56.0,62.0,6.0,20260225_118-7_2220-2250.mp3,,,test,en,transcribe,atc_vhf,kaggle_v1,0
+utt_vjc_taxi_02,audio/utt_vjc_taxi_02.wav,"Taxi via A hold short runway 25R, VJC456",PILOT,VJC456,121.9,37.0,42.0,5.0,,,,test,en,transcribe,atc_vhf,kaggle_v1,0

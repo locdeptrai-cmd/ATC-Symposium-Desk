@@ -1,0 +1,4 @@
+﻿id,audio,text,speaker,callsign,freq_mhz,t_start,t_end,duration,source_file,clip_id,notes,split,language,task,domain,dataset_version,has_audio
+utt_vjc1225_02,audio/utt_vjc1225_02.wav,"VJC1225, Tower, continue approach runway 25R",ATCO,VJC1225,118.7,13.0,18.0,5.0,20260225_118-7_2220-2250.mp3,,,dev,en,transcribe,atc_vhf,kaggle_v1,0
+utt_vjc1225_03,audio/utt_vjc1225_03.wav,"Continue approach runway 25R, VJC1225",PILOT,VJC1225,118.7,19.0,24.0,5.0,20260225_118-7_2220-2250.mp3,,readback,dev,en,transcribe,atc_vhf,kaggle_v1,0
+utt_vjc_taxi_01,audio/utt_vjc_taxi_01.wav,VJC456 taxi via A hold short runway 25R,ATCO,VJC456,121.9,30.0,36.0,6.0,,,,dev,en,transcribe,atc_vhf,kaggle_v1,0

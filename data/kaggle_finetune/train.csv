@@ -1,0 +1,7 @@
+﻿id,audio,text,speaker,callsign,freq_mhz,t_start,t_end,duration,source_file,clip_id,notes,split,language,task,domain,dataset_version,has_audio
+utt_vjc3909_02,audio/utt_vjc3909_02.wav,"Vacate P5 cross runway 25L, VJC3909",PILOT,VJC3909,118.7,63.0,70.0,7.0,20260225_118-7_2220-2250.mp3,,,train,en,transcribe,atc_vhf,kaggle_v1,0
+utt_vjc1225_04,audio/utt_vjc1225_04.wav,"VJC1225 wind 310 degrees 2 knots, runway 25R cleared to land",ATCO,VJC1225,118.7,108.0,115.0,7.0,20260225_118-7_2220-2250.mp3,,landing clearance,train,en,transcribe,atc_vhf,kaggle_v1,0
+utt_vjc1225_05,audio/utt_vjc1225_05.wav,"Cleared to land runway 25R, VJC1225",PILOT,VJC1225,118.7,116.0,121.0,5.0,20260225_118-7_2220-2250.mp3,,,train,en,transcribe,atc_vhf,kaggle_v1,0
+utt_hvn_01,audio/utt_hvn_01.wav,"Tan Son Nhat Ground, HVN123 request pushback and start",PILOT,HVN123,121.9,0.0,6.0,6.0,,,sample GND,train,en,transcribe,atc_vhf,kaggle_v1,0
+utt_hvn_02,audio/utt_hvn_02.wav,"HVN123, Ground, pushback and start approved, face east",ATCO,HVN123,121.9,7.0,13.0,6.0,,,,train,en,transcribe,atc_vhf,kaggle_v1,0
+utt_hvn_03,audio/utt_hvn_03.wav,"Pushback and start approved face east, HVN123",PILOT,HVN123,121.9,14.0,19.0,5.0,,,readback,train,en,transcribe,atc_vhf,kaggle_v1,0
