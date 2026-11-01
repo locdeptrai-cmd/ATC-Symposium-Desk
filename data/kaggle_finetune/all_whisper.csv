@@ -11,3 +11,7 @@ audio/utt_hvn_02.wav,"HVN123, Ground, pushback and start approved, face east",tr
 audio/utt_hvn_03.wav,"Pushback and start approved face east, HVN123",train
 audio/utt_vjc_taxi_01.wav,VJC456 taxi via A hold short runway 25R,dev
 audio/utt_vjc_taxi_02.wav,"Taxi via A hold short runway 25R, VJC456",test
+audio/pilot-gold-tansonnhattower.wav,Tan Son Nhat Tower,train
+audio/pilot-gold-vietjet.wav,Vietjet,train
+audio/pilot-gold-xinchaomau.wav,xin chao mau,train
+audio/pilot-gold-xinchao.wav,xin chao,train

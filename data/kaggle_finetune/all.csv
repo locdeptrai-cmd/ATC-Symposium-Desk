@@ -11,3 +11,7 @@ utt_hvn_02,audio/utt_hvn_02.wav,"HVN123, Ground, pushback and start approved, fa
 utt_hvn_03,audio/utt_hvn_03.wav,"Pushback and start approved face east, HVN123",PILOT,HVN123,121.9,14.0,19.0,5.0,,,readback,train,en,transcribe,atc_vhf,kaggle_v1,0
 utt_vjc_taxi_01,audio/utt_vjc_taxi_01.wav,VJC456 taxi via A hold short runway 25R,ATCO,VJC456,121.9,30.0,36.0,6.0,,,,dev,en,transcribe,atc_vhf,kaggle_v1,0
 utt_vjc_taxi_02,audio/utt_vjc_taxi_02.wav,"Taxi via A hold short runway 25R, VJC456",PILOT,VJC456,121.9,37.0,42.0,5.0,,,,test,en,transcribe,atc_vhf,kaggle_v1,0
+pilot-gold-tansonnhattower,audio/pilot-gold-tansonnhattower.wav,Tan Son Nhat Tower,PILOT,,,0.0,0.634,0.634,tan son nhat tower.mp3,,real pilot filename-is-transcript,train,en,transcribe,atc_vhf,kaggle_v1,1
+pilot-gold-vietjet,audio/pilot-gold-vietjet.wav,Vietjet,PILOT,,,0.0,0.6,0.6,vietjet.mp3,,real pilot filename-is-transcript,train,en,transcribe,atc_vhf,kaggle_v1,1
+pilot-gold-xinchaomau,audio/pilot-gold-xinchaomau.wav,xin chao mau,PILOT,,,0.0,0.6,0.6,xin chao mau.mp3,,real pilot filename-is-transcript,train,en,transcribe,atc_vhf,kaggle_v1,1
+pilot-gold-xinchao,audio/pilot-gold-xinchao.wav,xin chao,PILOT,,,0.0,1.119,1.119,xin chao.mp3,,real pilot filename-is-transcript,train,en,transcribe,atc_vhf,kaggle_v1,1

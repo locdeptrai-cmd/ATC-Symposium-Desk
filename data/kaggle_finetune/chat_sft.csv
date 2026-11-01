@@ -41,3 +41,7 @@ phrase_016,Normalize ATC phraseology to standard form.,CROSS RUNWAY 25L,CROSS RU
 phrase_017,Normalize ATC phraseology to standard form.,TAXI VIA A HOLD SHORT RUNWAY 25R,TAXI VIA A HOLD SHORT RUNWAY 25R,,train,phraseology
 phrase_018,Normalize ATC phraseology to standard form.,PUSHBACK AND START APPROVED,PUSHBACK AND START APPROVED,,train,phraseology
 phrase_019,Normalize ATC phraseology to standard form.,CONTINUE APPROACH RUNWAY 25R,CONTINUE APPROACH RUNWAY 25R,,train,phraseology
+pilot-gold-tansonnhattower_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/pilot-gold-tansonnhattower.wav] speaker=PILOT,Tan Son Nhat Tower,PILOT,train,asr_text
+pilot-gold-vietjet_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/pilot-gold-vietjet.wav] speaker=PILOT,Vietjet,PILOT,train,asr_text
+pilot-gold-xinchaomau_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/pilot-gold-xinchaomau.wav] speaker=PILOT,xin chao mau,PILOT,train,asr_text
+pilot-gold-xinchao_asr,"Transcribe this ATC VHF radio transmission in standard ICAO phraseology. Keep callsigns, runway numbers, and frequencies exact.",[audio:audio/pilot-gold-xinchao.wav] speaker=PILOT,xin chao,PILOT,train,asr_text
