@@ -861,7 +861,11 @@ def convert_named_clip(src: Path, dest: Path, min_sec: float = _MIN_CLIP_SEC) ->
             shutil.copy2(src, dest)
         else:
             _ffmpeg_to_wav(src, dest)
-    return _pad_wav_min(dest, min_sec)
+    duration = _pad_wav_min(dest, min_sec)
+    with wave.open(str(dest), "rb") as handle:
+        if handle.getnchannels() != 1 or handle.getframerate() != 16000:
+            raise RuntimeError("WAV không phải 16 kHz mono: " + dest.name)
+    return duration
 
 
 def ingest_named_clips(

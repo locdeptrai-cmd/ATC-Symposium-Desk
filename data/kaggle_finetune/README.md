@@ -19,7 +19,7 @@ kaggle_finetune/
   blank_template.csv     # empty rows to fill gold labels
   blank_template.xlsx
   README.md              # this file
-  audio/                 # PUT your .wav here (utt_*.wav or keep paths in CSV)
+  audio/                 # gold WAV, including real pilot clips (filename = transcript)
   notebook_snippet.py    # copy into Kaggle notebook
 ```
 

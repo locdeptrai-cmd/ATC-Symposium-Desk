@@ -1,2 +1,2 @@
-Place 16 kHz mono WAV files named like utt_vjc1225_01.wav matching CSV `audio` column.
-Or rename paths in train.csv to your part_0000.mp3 clips.
+16 kHz mono WAV matching CSV `audio` column.
+Real pilot clips (filename = transcript) are already here as pilot-gold-*.wav.
